@@ -50,7 +50,15 @@ Project follows semantic versioning.
 - Established no-direct-commit-to-main rule
 
 ---
-
+├── 1.1 Root Project Structure
+│   ├── 1.1.1 Create /frontend
+│   ├── 1.1.2 Create /backend
+│   ├── 1.1.3 Create /database
+│   ├── 1.1.4 Create /docs
+│   ├── 1.1.5 Create /scripts
+│   ├── 1.1.6 Create /docker
+│   ├── 1.1.7 Add docker-compose.yml
+│   └── 1.1.8 Add .env.example
 ## Upcoming
 
 - Docker Compose environment
