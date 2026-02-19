@@ -83,7 +83,7 @@
 * [x] `/scripts`
 * [x] `/docker`
 * [x] `docker-compose.yml`
-* [x] `.env.example`
+- [x] `.env.example`
 
 ---
 
@@ -105,14 +105,14 @@
 
 ## Backend Structure
 
-* [ ] `app/api`
-* [ ] `app/graphql`
-* [ ] `app/models`
-* [ ] `app/services`
-* [ ] `app/schemas`
-* [ ] `app/auth`
-* [ ] `app/middleware`
-* [ ] `app/utils`
+* [X] `app/api`
+* [X] `app/graphql`
+* [X] `app/models`
+* [X] `app/services`
+* [X] `app/schemas`
+* [X] `app/auth`
+* [X] `app/middleware`
+* [X] `app/utils`
 
 ---
 
