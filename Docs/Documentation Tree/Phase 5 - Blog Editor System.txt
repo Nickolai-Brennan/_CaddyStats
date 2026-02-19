@@ -1,0 +1,174 @@
+PHASE 5 – BLOG EDITOR SYSTEM (Block Editor + Templates + Embeds)
+│
+├── 5.0 Editor Product Requirements (Non-Negotiables)
+│   ├── 5.0.1 Block-based editing (not plain textarea)
+│   ├── 5.0.2 Supports: embeds, code blocks, HTML, Markdown
+│   ├── 5.0.3 Drag-and-drop block ordering
+│   ├── 5.0.4 Table builder (stats-ready)
+│   ├── 5.0.5 Chart embed (data-driven)
+│   ├── 5.0.6 Stat query embed (REST → block)
+│   ├── 5.0.7 Image upload + crop/resize hooks (frontend UI)
+│   ├── 5.0.8 Internal linking selector (pick post → link)
+│   ├── 5.0.9 SEO preview panel (title/meta/OG)
+│   ├── 5.0.10 Slug preview + auto-slug generator
+│   ├── 5.0.11 Auto-tag suggestions (rules-based first)
+│   └── 5.0.12 Revision safety (autosave + restore)
+│
+├── 5.1 Editor Stack Selection & Integration
+│   ├── 5.1.1 Decide editor engine
+│   │   ├── Option A: Editor.js (recommended for blocks)
+│   │   ├── Option B: TipTap (ProMirror, rich WYSIWYG)
+│   │   └── Option C: Lexical (Meta, high control)
+│   ├── 5.1.2 Define canonical content format
+│   │   ├── Store blocks as JSON in content.posts.content_jsonb
+│   │   ├── Maintain derived text for FTS (content.posts.content_text)
+│   │   └── Version snapshots into content.revisions.snapshot_jsonb
+│   ├── 5.1.3 Create editor module folder
+│   │   ├── /frontend/src/editor/core
+│   │   ├── /frontend/src/editor/blocks
+│   │   ├── /frontend/src/editor/renderers
+│   │   ├── /frontend/src/editor/plugins
+│   │   └── /frontend/src/editor/ui
+│   ├── 5.1.4 Create EditorPage route
+│   │   ├── /editor/new
+│   │   └── /editor/:postId/edit
+│   └── 5.1.5 Build permissions gating (RBAC)
+│       ├── contributor: draft only
+│       ├── editor: publish
+│       └── admin: all actions
+│
+├── 5.2 Editor Shell UI (The Whole “Post Builder” Screen)
+│   ├── 5.2.1 Create Post Settings Panel (right sidebar)
+│   │   ├── Title input
+│   │   ├── Slug preview + override
+│   │   ├── Status (draft/published)
+│   │   ├── Publish date selector
+│   │   ├── Featured image chooser
+│   │   ├── Template selector
+│   │   ├── Category selector
+│   │   ├── Tag selector
+│   │   └── Author selector
+│   ├── 5.2.2 Create SEO Panel (tab in sidebar)
+│   │   ├── Title tag field
+│   │   ├── Meta description field + char count
+│   │   ├── OG title/description
+│   │   ├── OG image
+│   │   ├── Canonical URL preview
+│   │   └── SERP preview component
+│   ├── 5.2.3 Create Actions Bar (top)
+│   │   ├── Save Draft
+│   │   ├── Preview
+│   │   ├── Publish / Unpublish
+│   │   ├── View Revisions
+│   │   └── Delete (soft delete)
+│   ├── 5.2.4 Create Autosave indicator
+│   ├── 5.2.5 Add unsaved-changes guard (route leave confirm)
+│   └── 5.2.6 Add toast notifications (save/publish/errors)
+│
+├── 5.3 Core Blocks (MVP Set)
+│   ├── 5.3.1 Paragraph / Rich text block
+│   ├── 5.3.2 Heading block (H2/H3/H4)
+│   ├── 5.3.3 Divider / Spacer block
+│   ├── 5.3.4 Quote block
+│   ├── 5.3.5 List block (ordered/unordered)
+│   ├── 5.3.6 Image block
+│   │   ├── upload
+│   │   ├── alt text
+│   │   ├── caption
+│   │   └── alignment (left/center/right/full)
+│   ├── 5.3.7 Embed block
+│   │   ├── YouTube
+│   │   ├── X/Twitter
+│   │   ├── Instagram
+│   │   └── generic iframe (whitelist)
+│   ├── 5.3.8 Code block
+│   │   ├── language selector
+│   │   └── copy button
+│   ├── 5.3.9 HTML block (admin-only / sanitized)
+│   └── 5.3.10 Markdown block (convert → blocks)
+│
+├── 5.4 Data Blocks (CaddyStats Specialty)
+│   ├── 5.4.1 Stats Table block
+│   │   ├── choose dataset (leaderboard/trends/projections/odds)
+│   │   ├── choose filters (tournament, golfer, window)
+│   │   ├── render as table
+│   │   └── optional “show raw JSON” toggle (dev)
+│   ├── 5.4.2 Chart block
+│   │   ├── select metric
+│   │   ├── select chart type (line/bar)
+│   │   ├── bind to REST query
+│   │   └── render with ChartComponent
+│   ├── 5.4.3 Betting Card block
+│   │   ├── golfer + market selection
+│   │   ├── odds + implied prob
+│   │   ├── model prob + edge
+│   │   └── CTA link field (affiliate)
+│   ├── 5.4.4 Player Card block
+│   │   ├── headshot (optional)
+│   │   ├── key stats snapshot
+│   │   ├── recent form summary
+│   │   └── links to player page (future)
+│   └── 5.4.5 “Query Embed” block (advanced)
+│       ├── choose endpoint + params
+│       ├── preview results
+│       └── lock params into block JSON
+│
+├── 5.5 Media Library Integration
+│   ├── 5.5.1 Build MediaLibrary modal (select/upload)
+│   ├── 5.5.2 Connect to backend media endpoints
+│   │   ├── POST /api/media/upload
+│   │   ├── GET /api/media/list
+│   │   └── DELETE /api/media/:id
+│   ├── 5.5.3 Add image metadata editor (alt/caption)
+│   ├── 5.5.4 Add folder/tags inside media (optional v1)
+│   └── 5.5.5 Implement client-side crop/resize UI hooks
+│       ├── crop rectangle
+│       ├── aspect ratio presets
+│       └── generate resized variants (later backend)
+│
+├── 5.6 Internal Linking & Content Utilities
+│   ├── 5.6.1 Internal Link Picker
+│   │   ├── search posts
+│   │   ├── select → insert link
+│   │   └── auto populate anchor suggestion
+│   ├── 5.6.2 Auto-tag suggestions (rules engine)
+│   │   ├── detect tournament names
+│   │   ├── detect golfers mentioned
+│   │   └── detect markets (outright, top10, etc.)
+│   ├── 5.6.3 Slug preview + uniqueness check
+│   ├── 5.6.4 Read-time estimator
+│   └── 5.6.5 Content validation warnings
+│       ├── missing featured image
+│       ├── missing meta description
+│       ├── no categories/tags
+│       └── broken embed URL
+│
+├── 5.7 Preview, Rendering & Compatibility
+│   ├── 5.7.1 Create PostPreview route (/preview/:postId)
+│   ├── 5.7.2 Build block renderer (frontend)
+│   │   ├── render each block type
+│   │   ├── sanitize HTML blocks
+│   │   └── graceful fallback for unknown blocks
+│   ├── 5.7.3 Ensure Article View renders editor output
+│   ├── 5.7.4 Ensure Archive + Home use excerpt/metadata
+│   └── 5.7.5 Add social preview mock card (OG preview)
+│
+├── 5.8 Autosave, Revisions & Recovery
+│   ├── 5.8.1 Autosave schedule (e.g., 10–20s idle)
+│   ├── 5.8.2 Save draft mutation wiring
+│   ├── 5.8.3 Create revision on publish and major edits
+│   ├── 5.8.4 Revision list UI (restore version)
+│   ├── 5.8.5 Conflict handling (last write wins v1)
+│   └── 5.8.6 “Restore last autosave” flow
+│
+└── 5.9 Phase 5 Validation Gate
+    ├── 5.9.1 Editor renders (no textarea-only fallback)
+    ├── 5.9.2 Can create + save draft with blocks JSON
+    ├── 5.9.3 Can upload/select image from media library
+    ├── 5.9.4 Can insert code + embed blocks successfully
+    ├── 5.9.5 Can insert stats table block (REST → render)
+    ├── 5.9.6 SEO panel updates seo_meta on save
+    ├── 5.9.7 Preview renders identical to Article View
+    ├── 5.9.8 Publish toggles status and sets published_at
+    ├── 5.9.9 Revision created and restorable
+    └── 5.9.10 Commit stable “Phase 5 – Editor Ready” checkpoint
