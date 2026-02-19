@@ -1,0 +1,185 @@
+PHASE 6 – POST TEMPLATES & VIEW BUILDERS (Templates → Structured Drafts)
+│
+├── 6.0 Template System Foundations
+│   ├── 6.0.1 Define “Template = Blueprint” rule
+│   │   ├── template stored as JSON in content.post_templates.schema_jsonb
+│   │   ├── template instantiates editor blocks into posts.content_jsonb
+│   │   └── template can include default SEO + default tags/categories
+│   ├── 6.0.2 Define template metadata fields
+│   │   ├── name (human readable)
+│   │   ├── slug (unique)
+│   │   ├── description
+│   │   ├── default_category_ids[]
+│   │   ├── default_tag_ids[]
+│   │   ├── default_seo_meta (title/meta patterns)
+│   │   └── version (template versioning)
+│   ├── 6.0.3 Define template block “slot” system
+│   │   ├── static blocks (headings, copy)
+│   │   ├── variable blocks (placeholders)
+│   │   ├── data blocks (stats/charts/odds)
+│   │   └── callouts (tips, warnings, best bets)
+│   ├── 6.0.4 Build template registry
+│   │   ├── TemplateSelector UI in Editor
+│   │   ├── TemplatePreview modal
+│   │   └── TemplateApply action (instantiate blocks)
+│   ├── 6.0.5 Add template CRUD (admin/editor)
+│   │   ├── list templates
+│   │   ├── create template
+│   │   ├── update template
+│   │   └── archive template (soft delete)
+│   └── 6.0.6 Add template validation rules
+│       ├── required blocks present
+│       ├── allowed block types only
+│       ├── required placeholders present
+│       └── safe embeds policy
+│
+├── 6.1 Template Engine (Instantiation + Placeholders)
+│   ├── 6.1.1 Implement “Create Post from Template” flow
+│   │   ├── select template
+│   │   ├── apply template defaults
+│   │   └── open editor with prebuilt draft
+│   ├── 6.1.2 Implement placeholder rendering rules
+│   │   ├── {{TOURNAMENT_NAME}}
+│   │   ├── {{COURSE_NAME}}
+│   │   ├── {{DATE_RANGE}}
+│   │   ├── {{BEST_BETS}}
+│   │   ├── {{MODEL_NOTES}}
+│   │   └── {{PLAYER_POOL}}
+│   ├── 6.1.3 Implement variable “token fill” UI (optional v1)
+│   │   ├── quick-fill modal (tournament/course)
+│   │   └── auto-update placeholders
+│   ├── 6.1.4 Implement dynamic default SEO patterns
+│   │   ├── title tag template: “{Tournament} Preview | Caddy Stats”
+│   │   ├── meta description template generator
+│   │   └── OG defaults
+│   ├── 6.1.5 Implement dynamic default tags/categories
+│   │   ├── tournament tag auto-create (optional)
+│   │   ├── “Betting”, “DFS”, “Fantasy” categories
+│   │   └── apply on instantiation
+│   └── 6.1.6 Implement template versioning strategy
+│       ├── bump template version on schema changes
+│       ├── do not retroactively change old posts
+│       └── allow “Re-apply template” (optional)
+│
+├── 6.2 Required Template 1 – Tournament Preview
+│   ├── 6.2.1 Core structure blocks
+│   │   ├── Hero intro + stakes of the week
+│   │   ├── Course breakdown section
+│   │   ├── Key stats that matter (table + bullets)
+│   │   ├── Player tiers / targets
+│   │   ├── Betting card section
+│   │   ├── DFS salary targets section
+│   │   ├── Fade list section
+│   │   └── Final picks + recap
+│   ├── 6.2.2 Required data blocks
+│   │   ├── Course History table (REST embed)
+│   │   ├── Projections table (REST embed)
+│   │   ├── Betting Edge table (REST embed)
+│   │   └── “Model signals” chart (optional)
+│   ├── 6.2.3 Defaults
+│   │   ├── category: Tournament Preview
+│   │   ├── tags: Tournament, Betting, DFS, Fantasy
+│   │   └── SEO defaults applied
+│   └── 6.2.4 Acceptance checks
+│       ├── all placeholders included
+│       ├── all embeds render
+│       └── article reads clean on mobile
+│
+├── 6.3 Required Template 2 – Player Deep Dive
+│   ├── 6.3.1 Core structure blocks
+│   │   ├── Player intro + narrative angle
+│   │   ├── Recent form overview
+│   │   ├── Skill profile (SG split)
+│   │   ├── Course fit discussion
+│   │   ├── Betting market angles
+│   │   ├── DFS usage guidance
+│   │   └── Outlook / summary
+│   ├── 6.3.2 Required data blocks
+│   │   ├── Player Trend chart (REST embed)
+│   │   ├── Rolling form table (REST embed)
+│   │   ├── Event stats table (REST embed)
+│   │   └── Betting card block (optional)
+│   ├── 6.3.3 Defaults
+│   │   ├── category: Player Deep Dive
+│   │   └── tags: player name + “Trends” + “Betting”
+│   └── 6.3.4 Acceptance checks
+│       ├── player selector required
+│       ├── charts render correctly
+│       └── “key takeaways” callout present
+│
+├── 6.4 Required Template 3 – Betting Card (Article / Micro-Post)
+│   ├── 6.4.1 Core structure blocks
+│   │   ├── Bet summary (market + odds)
+│   │   ├── Why it’s an edge (bullet proof points)
+│   │   ├── Model vs market table
+│   │   ├── Risk note + unit sizing note
+│   │   └── CTA link (affiliate)
+│   ├── 6.4.2 Required data blocks
+│   │   ├── Betting Edge block (REST embed)
+│   │   └── Projection snippet (optional)
+│   ├── 6.4.3 Defaults
+│   │   ├── category: Betting
+│   │   └── tags: market type (outright/top10/etc.)
+│   └── 6.4.4 Acceptance checks
+│       ├── edge calculation visible
+│       ├── disclaimer block included
+│       └── CTA link validated
+│
+├── 6.5 Required Template 4 – Fantasy Salary Template
+│   ├── 6.5.1 Core structure blocks
+│   │   ├── Slate overview
+│   │   ├── Value plays section
+│   │   ├── Mid-tier anchors section
+│   │   ├── Pay-up studs section
+│   │   ├── Contrarian pivots
+│   │   └── lineup construction notes
+│   ├── 6.5.2 Required data blocks
+│   │   ├── Salary cap values table (REST embed)
+│   │   ├── Projections table (REST embed)
+│   │   └── “Value score” chart (optional)
+│   ├── 6.5.3 Defaults
+│   │   ├── category: Fantasy
+│   │   └── tags: platform (DK/FD)
+│   └── 6.5.4 Acceptance checks
+│       ├── platform selection required
+│       ├── table sorts correctly
+│       └── mobile readability verified
+│
+├── 6.6 Required Template 5 – Data Breakdown Template
+│   ├── 6.6.1 Core structure blocks
+│   │   ├── Question / hypothesis statement
+│   │   ├── Dataset description
+│   │   ├── Method notes (plain English)
+│   │   ├── Key findings
+│   │   ├── Table + chart section
+│   │   ├── Implications for betting/DFS
+│   │   └── Limitations + next steps
+│   ├── 6.6.2 Required data blocks
+│   │   ├── Custom table block (manual or REST)
+│   │   ├── Chart block
+│   │   └── Code block (optional)
+│   ├── 6.6.3 Defaults
+│   │   ├── category: Data
+│   │   └── tags: “Model”, “Trends”, “Stats”
+│   └── 6.6.4 Acceptance checks
+│       ├── method section present
+│       ├── chart renders
+│       └── conclusion + takeaway present
+│
+├── 6.7 Template Rendering & View Compatibility
+│   ├── 6.7.1 Ensure Home (Magazine) renders template-based posts
+│   ├── 6.7.2 Ensure Archive filters work with template types
+│   ├── 6.7.3 Ensure Article View renders all template blocks
+│   ├── 6.7.4 Add “Template Badge” on posts (optional)
+│   ├── 6.7.5 Add “Related Posts” logic by template/category
+│   └── 6.7.6 Add “Next/Prev” navigation in Article View
+│
+└── 6.8 Phase 6 Validation Gate
+    ├── 6.8.1 Template selector works in Editor
+    ├── 6.8.2 Creating post from template produces structured draft
+    ├── 6.8.3 All 5 required templates exist in DB
+    ├── 6.8.4 Each template renders correctly on Article View
+    ├── 6.8.5 Default SEO + tags/categories applied correctly
+    ├── 6.8.6 Data embeds (tables/charts) render for each template
+    ├── 6.8.7 No template breaks mobile layout
+    └── 6.8.8 Commit stable “Phase 6 – Templates Ready” checkpoint
