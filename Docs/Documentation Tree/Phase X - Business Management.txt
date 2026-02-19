@@ -1,0 +1,170 @@
+PHASE X – BUSINESS (Monetization, Brand, Growth, Operations)
+│
+├── X.0 Business Foundation & Positioning
+│   ├── X.0.1 Define Core Value Proposition
+│   │   ├── Data-first golf betting analysis
+│   │   ├── Fantasy + DFS optimization
+│   │   ├── Transparent model accuracy tracking
+│   │   └── AI-assisted structured insights
+│   ├── X.0.2 Define Target Audiences
+│   │   ├── Casual bettors
+│   │   ├── Sharp bettors
+│   │   ├── DFS players
+│   │   ├── Data-driven fantasy players
+│   │   └── Sports analytics enthusiasts
+│   ├── X.0.3 Define Competitive Positioning
+│   │   ├── vs generic golf blogs
+│   │   ├── vs betting tout services
+│   │   ├── vs pure data dashboards
+│   │   └── Differentiator: Transparent + Model-backed + Structured
+│   ├── X.0.4 Define Brand Identity
+│   │   ├── Voice (analytical but readable)
+│   │   ├── Visual identity (modern, dark-friendly)
+│   │   ├── Trust signals (model reports)
+│   │   └── Parent tie-in to Strik3Zone
+│   └── X.0.5 Define Legal Structure
+│       ├── Business entity registration
+│       ├── Terms of service
+│       ├── Privacy policy
+│       └── Betting disclaimer compliance
+│
+├── X.1 Monetization Model
+│   ├── X.1.1 Define Revenue Streams
+│   │   ├── Subscription tiers
+│   │   ├── Affiliate commissions (sportsbooks)
+│   │   ├── Sponsored placements
+│   │   ├── Premium data exports
+│   │   └── API access (future)
+│   ├── X.1.2 Define Subscription Tiers
+│   │   ├── Free
+│   │   │   ├── Limited articles
+│   │   │   ├── Basic stats tables
+│   │   │   └── Newsletter access
+│   │   ├── Pro
+│   │   │   ├── Full projections
+│   │   │   ├── Betting edge dashboard
+│   │   │   └── Premium templates
+│   │   └── Elite
+│   │       ├── Advanced model explorer
+│   │       ├── Downloadable datasets
+│   │       └── Early access previews
+│   ├── X.1.3 Define Pricing Strategy
+│   │   ├── Monthly pricing
+│   │   ├── Annual discount pricing
+│   │   └── Intro promo strategy
+│   ├── X.1.4 Define Affiliate Strategy
+│   │   ├── Best odds links in Betting Card
+│   │   ├── CTA placements in articles
+│   │   └── Track ROI by provider
+│   └── X.1.5 Define Upsell Funnel
+│       ├── Free → Pro upgrade prompts
+│       ├── Locked premium charts
+│       └── Newsletter gated content
+│
+├── X.2 Traffic & Growth Strategy
+│   ├── X.2.1 SEO Content Strategy
+│   │   ├── Tournament weekly previews
+│   │   ├── Evergreen player pages
+│   │   ├── Course data pages
+│   │   └── Betting glossary hub
+│   ├── X.2.2 Content Calendar Strategy
+│   │   ├── Monday – Trends
+│   │   ├── Tuesday – Player deep dive
+│   │   ├── Wednesday – Preview
+│   │   ├── Thursday – Betting card
+│   │   └── Sunday – Recap
+│   ├── X.2.3 Social Distribution Plan
+│   │   ├── X/Twitter threads
+│   │   ├── LinkedIn analytics posts
+│   │   ├── Reddit participation
+│   │   └── Discord community (future)
+│   ├── X.2.4 Newsletter Growth Funnel
+│   │   ├── Homepage signup CTA
+│   │   ├── Exit-intent modal (optional)
+│   │   ├── Lead magnet (free model sample)
+│   │   └── Weekly curated recap
+│   └── X.2.5 Cross-Promo Strategy
+│       ├── Link from Strik3Zone
+│       ├── Partner blogs
+│       ├── API collaborations
+│       └── Podcast guest appearances
+│
+├── X.3 Financial Planning
+│   ├── X.3.1 Define Fixed Costs
+│   │   ├── Hosting
+│   │   ├── Data provider APIs
+│   │   ├── Email provider
+│   │   ├── Stripe fees
+│   │   └── Monitoring/logging tools
+│   ├── X.3.2 Define Variable Costs
+│   │   ├── AI API usage
+│   │   ├── Ads
+│   │   └── Affiliate share costs
+│   ├── X.3.3 Revenue Projection Model
+│   │   ├── Subscriber growth targets
+│   │   ├── Conversion rate assumptions
+│   │   └── ARPU estimates
+│   ├── X.3.4 Break-even Analysis
+│   └── X.3.5 Cash Flow Forecast (12-month)
+│
+├── X.4 Operational Systems
+│   ├── X.4.1 Editorial Workflow
+│   │   ├── Topic planning
+│   │   ├── Draft generation (AI-assisted)
+│   │   ├── Review + edit
+│   │   ├── SEO check
+│   │   └── Publish + distribute
+│   ├── X.4.2 Tournament Week Workflow
+│   │   ├── Pull projections
+│   │   ├── Analyze edge
+│   │   ├── Draft preview
+│   │   ├── Publish
+│   │   └── Track performance
+│   ├── X.4.3 Customer Support Process
+│   │   ├── Email support
+│   │   ├── Refund handling
+│   │   └── Bug reports
+│   ├── X.4.4 Subscriber Lifecycle Management
+│   │   ├── Onboarding email series
+│   │   ├── Retention emails
+│   │   ├── Renewal reminders
+│   │   └── Churn winback emails
+│   └── X.4.5 Compliance & Risk Controls
+│       ├── Responsible gambling messaging
+│       ├── Affiliate disclosures
+│       ├── Data privacy compliance
+│       └── Audit log retention
+│
+├── X.5 KPI & Business Metrics Dashboard
+│   ├── X.5.1 Traffic KPIs
+│   │   ├── Unique visitors
+│   │   ├── Organic traffic %
+│   │   └── Newsletter growth
+│   ├── X.5.2 Monetization KPIs
+│   │   ├── MRR (Monthly Recurring Revenue)
+│   │   ├── Conversion rate
+│   │   ├── Affiliate revenue
+│   │   └── ARPU
+│   ├── X.5.3 Betting Performance KPIs
+│   │   ├── ROI
+│   │   ├── Edge accuracy
+│   │   └── CLV proxy
+│   ├── X.5.4 Retention Metrics
+│   │   ├── Churn rate
+│   │   ├── Lifetime value
+│   │   └── Engagement score
+│   └── X.5.5 Content KPIs
+│       ├── Template performance
+│       ├── Time on page
+│       └── Affiliate click-through rate
+│
+└── X.6 Phase X Validation Gate
+    ├── X.6.1 Revenue model defined and documented
+    ├── X.6.2 Pricing tiers live in Stripe
+    ├── X.6.3 Affiliate tracking operational
+    ├── X.6.4 Editorial calendar active
+    ├── X.6.5 KPI dashboard populated
+    ├── X.6.6 Break-even model calculated
+    ├── X.6.7 Legal pages published
+    ├── X.6.8 Subscriber funnel tested
+    └── X.6.9 Commit stable “Phase X – Business Live” milestone
