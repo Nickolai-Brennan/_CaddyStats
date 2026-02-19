@@ -1,0 +1,175 @@
+PHASE 4 – FRONTEND UI BASE SYSTEM (React + Vite + TanStack)
+│
+├── 4.0 Frontend Foundations
+│   ├── 4.0.1 Confirm core libs wired
+│   │   ├── React + Vite + TypeScript
+│   │   ├── TanStack Query (data fetching)
+│   │   ├── Router (routes/views)
+│   │   └── GraphQL client + REST client wrappers
+│   ├── 4.0.2 Create global app shell
+│   │   ├── AppLayout (Header + Footer + main wrapper)
+│   │   ├── RouteLayout (per-view layout switching)
+│   │   └── ErrorBoundary + NotFound page
+│   ├── 4.0.3 Configure environment + endpoints
+│   │   ├── VITE_API_BASE_URL (REST)
+│   │   ├── VITE_GQL_ENDPOINT (GraphQL)
+│   │   └── build-time env validation
+│   ├── 4.0.4 Create shared types layer
+│   │   ├── Post, Author, Template, Tag, Category, SeoMeta
+│   │   └── Stats DTOs for REST responses
+│   └── 4.0.5 Establish routing map
+│       ├── /
+│       ├── /archive
+│       ├── /post/:slug
+│       ├── /about
+│       ├── /contact
+│       └── /directory (Strik3Zone)
+│
+├── 4.1 Design System Implementation
+│   ├── 4.1.1 Implement token system
+│   │   ├── colors (brand + neutrals + semantic)
+│   │   ├── typography scale (h1–h6 + body + micro)
+│   │   ├── spacing scale (4/8/12/16/24/32...)
+│   │   ├── radii + shadows
+│   │   └── z-index layers
+│   ├── 4.1.2 Create theme engine
+│   │   ├── Light theme
+│   │   ├── Dark theme
+│   │   └── Persist preference (localStorage)
+│   ├── 4.1.3 Build base UI primitives
+│   │   ├── Button variants (primary/ghost/outline)
+│   │   ├── Badge variants (tag/category/status)
+│   │   ├── Input + Textarea
+│   │   ├── Select/Dropdown
+│   │   ├── Modal/Dialog
+│   │   └── Tooltip
+│   ├── 4.1.4 Build layout primitives
+│   │   ├── Container
+│   │   ├── Grid
+│   │   ├── Stack
+│   │   └── Divider
+│   └── 4.1.5 Build data display primitives
+│       ├── Card (base + elevated)
+│       ├── Table (TanStack base wrapper)
+│       ├── Pagination control
+│       └── Skeleton loaders
+│
+├── 4.2 Universal Layout Components
+│   ├── 4.2.1 Header (global)
+│   │   ├── Logo + brand link
+│   │   ├── Primary nav (Home/Archive/About/Contact)
+│   │   ├── Search trigger (later)
+│   │   └── Theme toggle
+│   ├── 4.2.2 Footer (global)
+│   │   ├── Category links
+│   │   ├── Social links
+│   │   ├── Legal/disclaimer
+│   │   └── “Powered by Strik3Zone” backlink
+│   ├── 4.2.3 SidebarLeft (ads)
+│   │   ├── AdContainer slots (1–3)
+│   │   └── Placeholder + layout safe zones
+│   ├── 4.2.4 SidebarRight (social + trending)
+│   │   ├── TrendingList component
+│   │   ├── SocialEmbeds placeholder area
+│   │   └── NewsletterCTA card
+│   └── 4.2.5 20/50/30 layout system
+│       ├── Desktop grid: 20/50/30
+│       ├── Tablet: 0/70/30 (ads collapse)
+│       └── Mobile: stacked sections
+│
+├── 4.3 Content Components (Posts)
+│   ├── 4.3.1 ArticleCard (list tile)
+│   │   ├── title + excerpt
+│   │   ├── tags/categories
+│   │   ├── author + date
+│   │   └── featured image (optional)
+│   ├── 4.3.2 HeroStoryBlock (featured)
+│   │   ├── large hero card
+│   │   └── secondary items strip
+│   ├── 4.3.3 AuthorCard (article page)
+│   │   ├── avatar + bio
+│   │   ├── socials
+│   │   └── author page link (later)
+│   ├── 4.3.4 BreakingTicker (marquee)
+│   │   ├── placeholder headlines feed
+│   │   └── later: live tournaments/scores
+│   ├── 4.3.5 TagList + CategoryPills
+│   └── 4.3.6 PostMetaBar
+│       ├── read time estimate
+│       ├── publish date
+│       └── share buttons placeholder
+│
+├── 4.4 Data Components (Stats UI)
+│   ├── 4.4.1 TableComponent (universal)
+│   │   ├── TanStack wrapper
+│   │   ├── sortable headers
+│   │   ├── column visibility toggles (later)
+│   │   └── sticky header option
+│   ├── 4.4.2 ChartComponent (universal)
+│   │   ├── line chart (trends)
+│   │   ├── bar chart (comparisons)
+│   │   └── scatter (optional)
+│   ├── 4.4.3 StatsCard (compact metric)
+│   │   ├── label/value
+│   │   └── delta indicator
+│   └── 4.4.4 Loading + Empty States
+│       ├── skeleton blocks
+│       └── “no data” messaging
+│
+├── 4.5 Views (Pages)
+│   ├── 4.5.1 Magazine Home View ( / )
+│   │   ├── BreakingTicker (top)
+│   │   ├── HeroStoryBlock
+│   │   ├── Recent posts grid
+│   │   ├── SidebarLeft ads
+│   │   └── SidebarRight trending/social
+│   ├── 4.5.2 Archive Table View ( /archive )
+│   │   ├── TanStack table of posts
+│   │   ├── Search input (client-side first)
+│   │   ├── Filters (category/tag/status)
+│   │   └── Pagination
+│   ├── 4.5.3 Article View ( /post/:slug )
+│   │   ├── Title + featured image
+│   │   ├── PostMetaBar
+│   │   ├── Render blocks (basic renderer placeholder)
+│   │   ├── AuthorCard
+│   │   └── Sidebar (top posts / related)
+│   ├── 4.5.4 About Page ( /about )
+│   │   ├── Brand story
+│   │   ├── What Caddy Stats does
+│   │   └── Strik3Zone tie-in
+│   ├── 4.5.5 Contact Page ( /contact )
+│   │   ├── Contact form UI
+│   │   ├── Social links
+│   │   └── Newsletter signup block
+│   └── 4.5.6 Directory Page ( /directory )
+│       ├── Strik3Zone directory links
+│       ├── Caddy Stats placement
+│       └── “Other products” cards
+│
+├── 4.6 Data Fetching Layer (GraphQL + REST)
+│   ├── 4.6.1 GraphQL hooks
+│   │   ├── usePosts (filters + paging)
+│   │   ├── usePostBySlug
+│   │   ├── useTemplates
+│   │   └── useTags/useCategories
+│   ├── 4.6.2 REST hooks
+│   │   ├── useLeaderboard
+│   │   ├── usePlayerTrends
+│   │   ├── useCourseHistory
+│   │   ├── useProjections
+│   │   └── useBettingEdges
+│   ├── 4.6.3 Query key standards
+│   ├── 4.6.4 Error handling + toast notifications
+│   └── 4.6.5 Cache + stale time policy
+│
+└── 4.7 Phase 4 Validation Gate
+    ├── 4.7.1 App shell renders with Header/Footer
+    ├── 4.7.2 Home view displays posts from GraphQL
+    ├── 4.7.3 Archive table view sorts/filters
+    ├── 4.7.4 Article view loads by slug
+    ├── 4.7.5 20/50/30 layout responsive across breakpoints
+    ├── 4.7.6 Dark mode persists across refresh
+    ├── 4.7.7 REST stats component renders sample table/chart
+    ├── 4.7.8 Error states and loading states present
+    └── 4.7.9 Commit stable “Phase 4 – Frontend Base Ready” checkpoint
