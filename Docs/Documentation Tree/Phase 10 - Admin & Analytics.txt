@@ -1,0 +1,163 @@
+PHASE 10 – ADMIN & ANALYTICS (Operational Control Panel + KPIs)
+│
+├── 10.0 Admin Architecture & Access
+│   ├── 10.0.1 Define admin scope (what lives in admin)
+│   │   ├── Content ops (posts, templates, media)
+│   │   ├── SEO ops (meta, sitemap status)
+│   │   ├── User ops (roles, permissions)
+│   │   ├── Analytics (traffic, CTR, engagement)
+│   │   ├── Betting ROI (edge vs results)
+│   │   └── Model accuracy (projections vs outcomes)
+│   ├── 10.0.2 Define admin routes (private)
+│   │   ├── /admin
+│   │   ├── /admin/posts
+│   │   ├── /admin/templates
+│   │   ├── /admin/media
+│   │   ├── /admin/users
+│   │   ├── /admin/seo
+│   │   ├── /admin/analytics
+│   │   ├── /admin/betting
+│   │   └── /admin/models
+│   ├── 10.0.3 Enforce RBAC access
+│   │   ├── admin: full
+│   │   ├── editor: content + seo + limited analytics
+│   │   └── contributor: limited content (draft only)
+│   └── 10.0.4 Add audit logging for admin actions
+│       ├── create/update/delete/publish
+│       ├── role changes
+│       └── template changes
+│
+├── 10.1 Admin UI Shell (Frontend)
+│   ├── 10.1.1 Build AdminLayout
+│   │   ├── left nav
+│   │   ├── top bar (user + env + quick actions)
+│   │   └── content panel
+│   ├── 10.1.2 Build admin navigation tree
+│   ├── 10.1.3 Add protected route wrapper
+│   ├── 10.1.4 Add admin table primitives (TanStack)
+│   ├── 10.1.5 Add admin filters + bulk actions UI
+│   └── 10.1.6 Add admin notifications + status banners
+│
+├── 10.2 Content Ops (Posts)
+│   ├── 10.2.1 Admin post list (table)
+│   │   ├── title, author, status, updated_at
+│   │   ├── filters: status/category/tag/author
+│   │   └── search: title + slug
+│   ├── 10.2.2 Post actions
+│   │   ├── edit (deep link to editor)
+│   │   ├── publish/unpublish
+│   │   ├── duplicate
+│   │   └── soft delete / restore
+│   ├── 10.2.3 Bulk actions
+│   │   ├── bulk publish
+│   │   ├── bulk tag/category apply
+│   │   └── bulk delete
+│   ├── 10.2.4 Post revision viewer
+│   │   ├── list revisions
+│   │   ├── diff summary (v1: metadata + timestamp)
+│   │   └── restore revision
+│   └── 10.2.5 Post performance quick panel
+│       ├── views
+│       ├── avg time on page
+│       └── outbound clicks (affiliate)
+│
+├── 10.3 Template Ops
+│   ├── 10.3.1 Template list (table)
+│   ├── 10.3.2 Template preview viewer
+│   ├── 10.3.3 Template create/update (admin/editor)
+│   ├── 10.3.4 Template version history (simple)
+│   ├── 10.3.5 Template usage report
+│   │   ├── posts using template
+│   │   └── performance by template type
+│   └── 10.3.6 Disable/archive template
+│
+├── 10.4 Media Ops
+│   ├── 10.4.1 Media library admin view
+│   │   ├── list thumbnails
+│   │   ├── filters: type/uploader/date
+│   │   └── search: filename/alt/caption
+│   ├── 10.4.2 Media detail panel
+│   │   ├── edit alt/caption
+│   │   ├── copy URL
+│   │   └── usage references (optional v1)
+│   ├── 10.4.3 Media cleanup tools
+│   │   ├── delete unused media (optional)
+│   │   └── size audit
+│   └── 10.4.4 Storage usage dashboard
+│
+├── 10.5 User Management
+│   ├── 10.5.1 User list + filters
+│   ├── 10.5.2 Create/invite user (optional)
+│   ├── 10.5.3 Assign roles
+│   ├── 10.5.4 Disable/suspend user
+│   ├── 10.5.5 Reset password (admin)
+│   └── 10.5.6 Permissions matrix view (read-only)
+│
+├── 10.6 Traffic & Engagement Analytics
+│   ├── 10.6.1 Page views dashboard
+│   │   ├── daily/weekly/monthly trends
+│   │   └── top pages
+│   ├── 10.6.2 Referrer breakdown
+│   │   ├── organic
+│   │   ├── social
+│   │   ├── direct
+│   │   └── referral
+│   ├── 10.6.3 Engagement metrics
+│   │   ├── avg time on page
+│   │   ├── scroll depth (optional)
+│   │   └── bounce proxy (optional)
+│   ├── 10.6.4 Newsletter analytics (basic)
+│   │   ├── subscribers over time
+│   │   ├── source breakdown
+│   │   └── unsubscribe rate
+│   ├── 10.6.5 Content heatmap (v1)
+│   │   ├── category performance
+│   │   └── template performance
+│   └── 10.6.6 Export reports (CSV)
+│
+├── 10.7 Betting ROI Tracker (Admin)
+│   ├── 10.7.1 Define betting outcomes dataset
+│   │   ├── market type (outright/top10/etc.)
+│   │   ├── odds at capture time
+│   │   ├── result outcome
+│   │   └── implied probability
+│   ├── 10.7.2 Compute ROI metrics
+│   │   ├── units won/lost
+│   │   ├── win rate
+│   │   ├── CLV proxy (optional)
+│   │   └── edge buckets performance
+│   ├── 10.7.3 ROI dashboard view
+│   │   ├── by tournament
+│   │   ├── by market
+│   │   ├── by edge level
+│   │   └── by author (optional)
+│   └── 10.7.4 Export ROI reports
+│
+├── 10.8 Model Accuracy Tracker (Admin)
+│   ├── 10.8.1 Define accuracy metrics
+│   │   ├── calibration (prob vs actual)
+│   │   ├── ranking correlation
+│   │   ├── top-N hit rate
+│   │   └── error distribution
+│   ├── 10.8.2 Compute model performance dataset
+│   │   ├── predictions vs outcomes
+│   │   ├── by tournament
+│   │   └── by model_version
+│   ├── 10.8.3 Accuracy dashboard
+│   │   ├── charts over time
+│   │   ├── model version compare
+│   │   └── “best weeks / worst weeks”
+│   └── 10.8.4 Publishable “Model Report” export
+│       ├── auto-generate markdown summary (optional)
+│       └── attach to blog post template (optional)
+│
+└── 10.9 Phase 10 Validation Gate
+    ├── 10.9.1 Admin routes protected and role-restricted
+    ├── 10.9.2 Posts list + filters + bulk actions work
+    ├── 10.9.3 Templates manageable + version tracked
+    ├── 10.9.4 Media library usable + metadata editable
+    ├── 10.9.5 User role changes audited
+    ├── 10.9.6 Traffic dashboard displays page_views correctly
+    ├── 10.9.7 ROI tracker computes correct units/returns
+    ├── 10.9.8 Model accuracy dashboard produces correct metrics
+    └── 10.9.9 Commit stable “Phase 10 – Admin & Analytics Ready” checkpoint

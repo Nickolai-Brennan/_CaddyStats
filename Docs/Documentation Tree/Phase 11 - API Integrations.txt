@@ -1,0 +1,129 @@
+PHASE 11 – API INTEGRATIONS (External Data, Payments, Email, Social, Analytics)
+│
+├── 11.0 Integration Architecture Planning
+│   ├── 11.0.1 Define integration categories
+│   │   ├── Data providers (golf stats)
+│   │   ├── Live odds feeds
+│   │   ├── Email provider
+│   │   ├── Payments (Stripe)
+│   │   ├── Social embeds
+│   │   └── Analytics provider
+│   ├── 11.0.2 Define integration abstraction layer
+│   │   ├── /backend/app/integrations/
+│   │   ├── provider adapters
+│   │   ├── response normalizers
+│   │   └── error handling wrappers
+│   ├── 11.0.3 Define API key management policy
+│   │   ├── store in environment variables
+│   │   ├── never log secrets
+│   │   └── rotate periodically
+│   └── 11.0.4 Define rate limit handling strategy
+│       ├── exponential backoff
+│       ├── caching layer (future Redis)
+│       └── request throttling
+│
+├── 11.1 DataGolf Integration (Primary Stats Source)
+│   ├── 11.1.1 Store DataGolf API credentials
+│   ├── 11.1.2 Create DataGolf service adapter
+│   │   ├── fetch rankings
+│   │   ├── fetch event field
+│   │   ├── fetch course stats
+│   │   └── fetch projections (if licensed)
+│   ├── 11.1.3 Normalize API responses to internal schema
+│   │   ├── map player IDs
+│   │   ├── map tournaments
+│   │   └── map stat fields
+│   ├── 11.1.4 Build ingestion pipeline
+│   │   ├── scheduled pull (cron job)
+│   │   ├── upsert golfers
+│   │   ├── upsert tournaments
+│   │   └── upsert event stats
+│   ├── 11.1.5 Store raw JSON snapshot (optional)
+│   ├── 11.1.6 Log ingestion success/failure
+│   └── 11.1.7 Validate stats appear in leaderboard_view
+│
+├── 11.2 Live Odds Feed Integration
+│   ├── 11.2.1 Choose odds provider
+│   ├── 11.2.2 Create Odds service adapter
+│   │   ├── fetch outright odds
+│   │   ├── fetch top10/top20 markets
+│   │   └── fetch matchups (optional)
+│   ├── 11.2.3 Normalize odds format
+│   │   ├── decimal/american conversion
+│   │   ├── implied probability calculation
+│   │   └── timestamp capture
+│   ├── 11.2.4 Upsert into stats.betting_odds
+│   ├── 11.2.5 Schedule periodic odds refresh
+│   ├── 11.2.6 Trigger betting_edge_view refresh
+│   └── 11.2.7 Validate edge calculations in admin
+│
+├── 11.3 Email Provider Integration
+│   ├── 11.3.1 Choose email service (e.g., SendGrid/Mailgun)
+│   ├── 11.3.2 Store API credentials securely
+│   ├── 11.3.3 Implement newsletter signup endpoint
+│   │   ├── validate email
+│   │   ├── write to content.newsletters
+│   │   └── sync with email provider list
+│   ├── 11.3.4 Implement double opt-in (optional)
+│   ├── 11.3.5 Build “Send Newsletter” admin action
+│   ├── 11.3.6 Track send metrics
+│   │   ├── opens
+│   │   ├── clicks
+│   │   └── unsubscribes
+│   └── 11.3.7 Validate newsletter analytics dashboard
+│
+├── 11.4 Stripe Subscription Integration
+│   ├── 11.4.1 Create Stripe account + products
+│   │   ├── Free tier
+│   │   ├── Pro tier
+│   │   └── Elite tier
+│   ├── 11.4.2 Store Stripe API keys
+│   ├── 11.4.3 Implement checkout session endpoint
+│   ├── 11.4.4 Implement webhook handler
+│   │   ├── subscription created
+│   │   ├── subscription updated
+│   │   ├── payment failed
+│   │   └── subscription canceled
+│   ├── 11.4.5 Sync Stripe status → users table
+│   ├── 11.4.6 Gate premium routes based on subscription
+│   ├── 11.4.7 Add billing portal access link
+│   └── 11.4.8 Validate premium dashboard access control
+│
+├── 11.5 Social Media Embeds & Auto-Posting
+│   ├── 11.5.1 Implement X/Twitter embed support
+│   ├── 11.5.2 Implement Instagram embed support
+│   ├── 11.5.3 Add LinkedIn share metadata
+│   ├── 11.5.4 Add “Share Post” UI in Article View
+│   ├── 11.5.5 Integrate AI auto-post generator (Phase 8)
+│   ├── 11.5.6 Optional: Auto-post to X via API
+│   └── 11.5.7 Track social referral traffic
+│
+├── 11.6 Analytics Provider Integration
+│   ├── 11.6.1 Choose analytics tool (GA4 / Plausible / etc.)
+│   ├── 11.6.2 Add tracking script to frontend
+│   ├── 11.6.3 Configure custom events
+│   │   ├── newsletter signup
+│   │   ├── affiliate click
+│   │   ├── subscription purchase
+│   │   └── editor publish
+│   ├── 11.6.4 Configure conversion goals
+│   ├── 11.6.5 Validate traffic source tracking
+│   └── 11.6.6 Align admin analytics with provider metrics
+│
+├── 11.7 Data Integrity & Sync Validation
+│   ├── 11.7.1 Add integration health endpoint
+│   ├── 11.7.2 Log API call failures
+│   ├── 11.7.3 Add retry logic for transient failures
+│   ├── 11.7.4 Create integration status dashboard (admin)
+│   └── 11.7.5 Document integration recovery process
+│
+└── 11.8 Phase 11 Validation Gate
+    ├── 11.8.1 DataGolf data ingested and visible
+    ├── 11.8.2 Live odds update and edge recalculates
+    ├── 11.8.3 Newsletter signup syncs with provider
+    ├── 11.8.4 Stripe subscriptions update user role
+    ├── 11.8.5 Premium content properly gated
+    ├── 11.8.6 Social share previews render correctly
+    ├── 11.8.7 Analytics events firing in dashboard
+    ├── 11.8.8 Integration health checks green
+    └── 11.8.9 Commit stable “Phase 11 – Integrations Complete” checkpoint

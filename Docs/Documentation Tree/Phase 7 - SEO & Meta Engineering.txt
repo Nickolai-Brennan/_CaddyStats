@@ -1,0 +1,150 @@
+PHASE 7 – SEO & META ENGINEERING (Technical + Content SEO System)
+│
+├── 7.0 SEO Architecture Foundations
+│   ├── 7.0.1 Define SEO objectives
+│   │   ├── Rank for tournament preview keywords
+│   │   ├── Rank for player trend searches
+│   │   ├── Rank for betting market queries
+│   │   └── Capture evergreen course/player traffic
+│   ├── 7.0.2 Define content cluster model
+│   │   ├── Tournament hub pages
+│   │   ├── Player hub pages
+│   │   ├── Betting strategy hub
+│   │   └── Data analysis hub
+│   ├── 7.0.3 Define URL structure rules
+│   │   ├── /post/:slug
+│   │   ├── /category/:slug
+│   │   ├── /tag/:slug
+│   │   ├── /author/:slug
+│   │   └── canonical format (lowercase, hyphen)
+│   ├── 7.0.4 Define canonical URL policy
+│   │   ├── Self-referencing canonical
+│   │   ├── Prevent duplicate category paths
+│   │   └── No index draft/private posts
+│   └── 7.0.5 Define crawl performance targets
+│       ├── Page load <2.5s LCP
+│       ├── Lighthouse 90+
+│       └── Clean HTML semantic structure
+│
+├── 7.1 Technical SEO Implementation (Frontend)
+│   ├── 7.1.1 Dynamic <title> injection per page
+│   ├── 7.1.2 Dynamic meta description injection
+│   ├── 7.1.3 OpenGraph meta generation
+│   │   ├── og:title
+│   │   ├── og:description
+│   │   ├── og:image
+│   │   └── og:type
+│   ├── 7.1.4 Twitter Card meta tags
+│   │   ├── twitter:card
+│   │   ├── twitter:title
+│   │   └── twitter:description
+│   ├── 7.1.5 Canonical link tag injection
+│   ├── 7.1.6 Robots meta logic
+│   │   ├── noindex for drafts
+│   │   ├── noindex for admin/editor routes
+│   │   └── index for public pages
+│   ├── 7.1.7 Structured semantic HTML
+│   │   ├── <article>
+│   │   ├── <header>
+│   │   ├── <nav>
+│   │   ├── <section>
+│   │   └── heading hierarchy H1→H2→H3
+│   └── 7.1.8 Pre-render / SSR strategy (future)
+│       ├── Evaluate SSR need
+│       └── Ensure crawlable content without JS blocking
+│
+├── 7.2 Structured Data (Schema Markup)
+│   ├── 7.2.1 Implement JSON-LD Article schema
+│   │   ├── headline
+│   │   ├── description
+│   │   ├── image
+│   │   ├── author
+│   │   ├── datePublished
+│   │   └── publisher
+│   ├── 7.2.2 Implement Breadcrumb schema
+│   ├── 7.2.3 Implement Organization schema
+│   │   ├── name
+│   │   ├── logo
+│   │   └── sameAs social links
+│   ├── 7.2.4 Implement Author schema
+│   ├── 7.2.5 Implement FAQ schema (for betting/data posts)
+│   └── 7.2.6 Validate via Google Rich Results Test
+│
+├── 7.3 Sitemap & Robots System
+│   ├── 7.3.1 Generate dynamic XML sitemap
+│   │   ├── posts
+│   │   ├── categories
+│   │   ├── tags
+│   │   └── authors
+│   ├── 7.3.2 Add lastmod based on updated_at
+│   ├── 7.3.3 Add sitemap index (if large)
+│   ├── 7.3.4 Create robots.txt
+│   │   ├── Allow public
+│   │   ├── Disallow /editor
+│   │   ├── Disallow /admin
+│   │   └── Link sitemap URL
+│   └── 7.3.5 Validate sitemap format
+│
+├── 7.4 SEO-Optimized Dynamic Pages
+│   ├── 7.4.1 Category Landing Pages
+│   │   ├── Intro copy block
+│   │   ├── Dynamic post list
+│   │   ├── Meta auto-generation
+│   │   └── Internal linking to top posts
+│   ├── 7.4.2 Tag Pages
+│   │   ├── Dynamic filtering
+│   │   ├── SEO meta defaults
+│   │   └── Canonical rules
+│   ├── 7.4.3 Author Pages
+│   │   ├── Author bio
+│   │   ├── Author schema
+│   │   ├── All posts by author
+│   │   └── Social proof elements
+│   ├── 7.4.4 Tournament Hub Pages (future)
+│   │   ├── Aggregate previews
+│   │   ├── Course data blocks
+│   │   └── Evergreen traffic target
+│   └── 7.4.5 Player Hub Pages (future)
+│       ├── Career stats summary
+│       ├── Recent articles
+│       └── Trend charts
+│
+├── 7.5 Internal Linking Engine
+│   ├── 7.5.1 Related posts logic
+│   │   ├── Shared tags
+│   │   ├── Shared category
+│   │   └── Template type match
+│   ├── 7.5.2 Auto-insert “Related Posts” section
+│   ├── 7.5.3 Contextual link suggestions in editor
+│   ├── 7.5.4 Breadcrumb navigation UI
+│   ├── 7.5.5 Footer category links
+│   └── 7.5.6 Cross-link to Strik3Zone directory
+│
+├── 7.6 Performance SEO
+│   ├── 7.6.1 Image optimization rules
+│   │   ├── compress on upload
+│   │   ├── serve responsive sizes
+│   │   └── lazy loading
+│   ├── 7.6.2 Code splitting + lazy routes
+│   ├── 7.6.3 Minify CSS/JS
+│   ├── 7.6.4 Enable HTTP compression (gzip/brotli)
+│   ├── 7.6.5 CDN caching rules
+│   └── 7.6.6 Preload critical fonts
+│
+├── 7.7 SEO Content Quality Controls
+│   ├── 7.7.1 Enforce single H1 per article
+│   ├── 7.7.2 Enforce meta description length check
+│   ├── 7.7.3 Warn if no internal links
+│   ├── 7.7.4 Warn if no outbound authoritative link
+│   ├── 7.7.5 Check image alt text presence
+│   └── 7.7.6 Add SEO score indicator (editor panel)
+│
+└── 7.8 Phase 7 Validation Gate
+    ├── 7.8.1 All posts inject dynamic meta correctly
+    ├── 7.8.2 JSON-LD validates in Rich Results Test
+    ├── 7.8.3 Sitemap loads and indexes URLs
+    ├── 7.8.4 Robots.txt blocks admin/editor
+    ├── 7.8.5 Category/Tag/Author pages indexable
+    ├── 7.8.6 Lighthouse 90+ on Article page
+    ├── 7.8.7 Core Web Vitals within target
+    └── 7.8.8 Commit stable “Phase 7 – SEO Layer Complete” checkpoint

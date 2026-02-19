@@ -1,0 +1,312 @@
+# Folder Structure – Caddy Stats
+
+Repository Root:
+caddystats/
+
+Purpose:
+Define exact project structure and architectural boundaries.
+If a feature does not map to a folder below, it does not exist.
+
+---
+
+# 1️⃣ Root Directory
+
+caddystats/
+│
+├── frontend/              # React + Vite app
+├── backend/               # FastAPI + GraphQL + REST
+├── database/              # SQL schemas, views, migrations
+├── docs/                  # All documentation (Phase 0+)
+├── scripts/               # Automation scripts (migrations, tasks)
+├── docker/                # Dockerfiles + nginx config
+│
+├── docker-compose.yml
+├── .env.example
+├── .gitignore
+└── README.md
+
+Rule:
+No business logic at root level.
+
+---
+
+# 2️⃣ Frontend Structure
+
+frontend/
+
+├── public/
+│   ├── favicon.ico
+│   ├── og-image.png
+│   └── robots.txt
+│
+├── src/
+│
+│   ├── app/
+│   │   ├── App.tsx
+│   │   ├── routes.tsx
+│   │   └── providers.tsx
+│   │
+│   ├── layouts/
+│   │   ├── MainLayout.tsx
+│   │   ├── MagazineLayout.tsx
+│   │   ├── ArticleLayout.tsx
+│   │   └── AdminLayout.tsx
+│   │
+│   ├── views/
+│   │   ├── home/
+│   │   ├── archive/
+│   │   ├── article/
+│   │   ├── admin/
+│   │   ├── about/
+│   │   └── contact/
+│   │
+│   ├── components/
+│   │   ├── ui/
+│   │   ├── layout/
+│   │   ├── article/
+│   │   ├── stats/
+│   │   └── charts/
+│   │
+│   ├── editor/
+│   │   ├── EditorRoot.tsx
+│   │   ├── BlockRenderer.tsx
+│   │   ├── blocks/
+│   │   └── templates/
+│   │
+│   ├── graphql/
+│   │   ├── client.ts
+│   │   ├── queries.ts
+│   │   ├── mutations.ts
+│   │   └── fragments.ts
+│   │
+│   ├── api/
+│   │   ├── stats.ts
+│   │   └── auth.ts
+│   │
+│   ├── hooks/
+│   │   ├── useAuth.ts
+│   │   ├── usePosts.ts
+│   │   ├── useLeaderboard.ts
+│   │   └── useProjections.ts
+│   │
+│   ├── styles/
+│   │   ├── globals.css
+│   │   └── tailwind.css
+│   │
+│   ├── utils/
+│   │   ├── formatters.ts
+│   │   ├── constants.ts
+│   │   └── seo.ts
+│   │
+│   └── types/
+│       ├── post.ts
+│       ├── user.ts
+│       └── stats.ts
+│
+├── tailwind.config.js
+├── vite.config.ts
+└── tsconfig.json
+
+Boundary Rules:
+- No API logic inside components
+- No raw fetch calls outside api/ or graphql/
+- Editor isolated under src/editor/
+
+---
+
+# 3️⃣ Backend Structure
+
+backend/
+
+├── app/
+│   ├── main.py
+│   │
+│   ├── config/
+│   │   ├── settings.py
+│   │   └── database.py
+│   │
+│   ├── graphql/
+│   │   ├── schema.py
+│   │   ├── types/
+│   │   ├── queries/
+│   │   └── mutations/
+│   │
+│   ├── api/
+│   │   ├── leaderboard.py
+│   │   ├── projections.py
+│   │   ├── course_history.py
+│   │   └── betting_edges.py
+│   │
+│   ├── services/
+│   │   ├── post_service.py
+│   │   ├── stat_service.py
+│   │   ├── embed_service.py
+│   │   └── ai_explanation_service.py (future)
+│   │
+│   ├── models/
+│   │   ├── app_models.py
+│   │   └── golf_models.py
+│   │
+│   ├── auth/
+│   │   ├── jwt_handler.py
+│   │   └── permissions.py
+│   │
+│   ├── middleware/
+│   │   ├── logging.py
+│   │   └── rate_limit.py
+│   │
+│   └── utils/
+│       ├── slugify.py
+│       └── helpers.py
+│
+├── requirements.txt
+└── alembic/
+
+Boundary Rules:
+- GraphQL only in graphql/
+- REST only in api/
+- DB logic only in models/
+- Business logic only in services/
+- Auth only in auth/
+
+---
+
+# 4️⃣ Database Structure
+
+database/
+
+├── schemas/
+│   ├── app_schema.sql
+│   └── golf_schema.sql
+│
+├── views/
+│   ├── leaderboard_view.sql
+│   ├── rolling_form_view.sql
+│   ├── betting_edge_view.sql
+│   └── course_history_view.sql
+│
+├── materialized_views/
+│   ├── leaderboard_mv.sql
+│   ├── projections_summary_mv.sql
+│   └── rolling_form_mv.sql
+│
+└── migrations/
+
+Rules:
+- All schema changes versioned
+- No manual DB edits in production
+- Views separated from base schema
+
+---
+
+# 5️⃣ Docker Structure
+
+docker/
+
+├── frontend.Dockerfile
+├── backend.Dockerfile
+└── nginx.conf
+
+docker-compose.yml at root.
+
+Rule:
+No Dockerfile inside frontend/backend folders.
+
+---
+
+# 6️⃣ Scripts Directory
+
+scripts/
+
+Purpose:
+Automation + utility tasks
+
+Examples:
+- refresh_materialized.py
+- generate_sitemap.py
+- seed_database.py
+- projection_upload.py
+
+Rule:
+Scripts must not contain production API logic.
+
+---
+
+# 7️⃣ Docs Directory
+
+docs/
+
+Contains:
+P0-01 README.md
+P0-02 PROJECT_OVERVIEW.md
+P0-03 PRODUCT_VISION.md
+P0-04 USER_PERSONAS.md
+P0-05 SYSTEM_ARCHITECTURE.md
+P0-06 DATABASE_SCHEMA.md
+P0-07 API_SPECIFICATION.md
+P0-08 UI_UX_DESIGN_SYSTEM.md
+P0-09 SEO_STRATEGY.md
+P0-10 AI_PROMPT_LIBRARY.md
+P0-11 DEPLOYMENT_GUIDE.md
+P0-12 ADMIN_WORKFLOW.md
+P0-13 FOLDER_STRUCTURE.md
+P0-14 TECH_STACK.md
+
+Rule:
+All architectural decisions documented here.
+
+---
+
+# 8️⃣ Naming Conventions
+
+Frontend:
+PascalCase for components
+camelCase for hooks/util functions
+
+Backend:
+snake_case for files
+snake_case for DB fields
+PascalCase for Pydantic models
+
+Database:
+snake_case tables
+snake_case columns
+Explicit foreign keys
+
+Routes:
+kebab-case in URLs
+
+---
+
+# 9️⃣ Architectural Enforcement Rules
+
+1. GraphQL never queries golf_schema directly without service layer.
+2. REST endpoints never modify app_schema.
+3. Editor blocks stored only in posts.blocks.
+4. All heavy stat aggregation in views or materialized views.
+5. No circular imports across backend layers.
+6. No UI component imports backend types directly.
+7. No stat calculation in frontend.
+
+---
+
+# 🔟 Future Expansion Slots
+
+Reserved folders:
+
+frontend/src/views/dashboard/
+backend/app/api/premium/
+database/schemas/premium_schema.sql (if required)
+
+---
+
+# Phase 0 Closure Condition
+
+Phase 0 is complete when:
+
+- All docs exist in /docs
+- Folder structure matches this blueprint
+- Database schema files created
+- No undefined directories
+
+No Phase 1 work begins until structure is verified.

@@ -1,0 +1,211 @@
+PHASE 2 – DATABASE DEVELOPMENT (PostgreSQL)
+│
+├── 2.0 Database Architecture & Conventions
+│   ├── 2.0.1 Choose DB layout (single cluster, two schemas)
+│   │   ├── schema: content   (website + auth + CMS)
+│   │   └── schema: stats     (golf data + models + views)
+│   ├── 2.0.2 Define naming conventions
+│   │   ├── tables: snake_case plural (posts, golfers)
+│   │   ├── columns: snake_case (created_at, slug)
+│   │   ├── PK: id UUID (gen_random_uuid())
+│   │   └── FK: <table>_id pattern
+│   ├── 2.0.3 Define standard columns
+│   │   ├── created_at (timestamptz, default now())
+│   │   ├── updated_at (timestamptz, trigger maintained)
+│   │   ├── deleted_at (timestamptz nullable)  [soft delete]
+│   │   └── is_deleted (bool default false)     [optional]
+│   ├── 2.0.4 Define JSONB policy
+│   │   ├── content.posts.content_jsonb = editor blocks
+│   │   ├── stats tables allow JSONB for flexible metrics
+│   │   └── GIN indexes required where queried
+│   ├── 2.0.5 Decide migration strategy
+│   │   ├── SQL files in /database/migrations
+│   │   ├── incremental numbering 0001_, 0002_...
+│   │   └── rollback scripts (optional but recommended)
+│   └── 2.0.6 Create database bootstrap scripts
+│       ├── 2.0.6.1 0000_create_schemas.sql
+│       ├── 2.0.6.2 0000_extensions.sql (pgcrypto, uuid-ossp)
+│       └── 2.0.6.3 0000_triggers.sql (updated_at)
+│
+├── 2.1 Content Schema (CMS + Auth + Publishing)
+│   ├── 2.1.1 roles
+│   │   ├── fields: id, name (admin/editor/contributor), description
+│   │   ├── constraints: unique(name)
+│   │   └── seed: admin, editor, contributor
+│   ├── 2.1.2 users
+│   │   ├── fields: id, email, password_hash, role_id, status
+│   │   ├── fields: last_login_at, created_at, updated_at
+│   │   ├── constraints: unique(email)
+│   │   └── indexes: email, role_id
+│   ├── 2.1.3 authors
+│   │   ├── fields: id, user_id (nullable), display_name
+│   │   ├── fields: bio, avatar_url, social_jsonb, slug
+│   │   ├── constraints: unique(slug)
+│   │   └── indexes: slug
+│   ├── 2.1.4 categories
+│   │   ├── fields: id, name, slug, description, sort_order
+│   │   ├── constraints: unique(slug), unique(name)
+│   │   └── indexes: slug
+│   ├── 2.1.5 tags
+│   │   ├── fields: id, name, slug
+│   │   ├── constraints: unique(slug), unique(name)
+│   │   └── indexes: slug
+│   ├── 2.1.6 seo_meta
+│   │   ├── fields: id, title_tag, meta_description
+│   │   ├── fields: og_title, og_description, og_image_url
+│   │   ├── fields: twitter_card, canonical_url
+│   │   └── indexes: canonical_url (optional)
+│   ├── 2.1.7 post_templates
+│   │   ├── fields: id, name, slug, description
+│   │   ├── fields: schema_jsonb (template block blueprint)
+│   │   ├── constraints: unique(slug)
+│   │   └── indexes: slug
+│   ├── 2.1.8 posts
+│   │   ├── fields: id, author_id, template_id, seo_meta_id
+│   │   ├── fields: title, slug, excerpt, status (draft/published)
+│   │   ├── fields: published_at, featured_image_url
+│   │   ├── fields: content_jsonb (editor blocks)
+│   │   ├── fields: content_text (generated for FTS)
+│   │   ├── constraints: unique(slug)
+│   │   ├── indexes:
+│   │   │   ├── btree(slug)
+│   │   │   ├── btree(status, published_at)
+│   │   │   ├── btree(author_id)
+│   │   │   └── gin(to_tsvector(content_text))  [FTS]
+│   │   └── triggers:
+│   │       ├── updated_at trigger
+│   │       └── content_text refresh trigger (optional)
+│   ├── 2.1.9 post_tags (join)
+│   │   ├── fields: post_id, tag_id
+│   │   ├── constraints: unique(post_id, tag_id)
+│   │   └── indexes: tag_id, post_id
+│   ├── 2.1.10 post_categories (join)
+│   │   ├── fields: post_id, category_id
+│   │   ├── constraints: unique(post_id, category_id)
+│   │   └── indexes: category_id, post_id
+│   ├── 2.1.11 comments
+│   │   ├── fields: id, post_id, user_id (nullable), author_name
+│   │   ├── fields: body, status (pending/approved/spam)
+│   │   ├── fields: created_at
+│   │   └── indexes: post_id, status
+│   ├── 2.1.12 media_library
+│   │   ├── fields: id, uploader_user_id, file_url
+│   │   ├── fields: file_type, file_size, width, height
+│   │   ├── fields: alt_text, caption, created_at
+│   │   └── indexes: uploader_user_id, file_type
+│   ├── 2.1.13 newsletters
+│   │   ├── fields: id, email, status (subscribed/unsubscribed)
+│   │   ├── fields: source, preferences_jsonb, created_at
+│   │   ├── constraints: unique(email)
+│   │   └── indexes: status
+│   ├── 2.1.14 page_views
+│   │   ├── fields: id, post_id (nullable), path, referrer
+│   │   ├── fields: user_agent, ip_hash, created_at
+│   │   └── indexes: post_id, path, created_at
+│   └── 2.1.15 revisions
+│       ├── fields: id, post_id, version
+│       ├── fields: snapshot_jsonb, created_at, created_by_user_id
+│       ├── constraints: unique(post_id, version)
+│       └── indexes: post_id, created_at
+│
+├── 2.2 Stats Schema (Golf Data + Models)
+│   ├── 2.2.1 golfers
+│   │   ├── fields: id, datagolf_id (nullable), name
+│   │   ├── fields: country, handedness, birthdate (optional)
+│   │   ├── fields: owgr_rank (optional), created_at
+│   │   └── indexes: name, datagolf_id
+│   ├── 2.2.2 courses
+│   │   ├── fields: id, name, location, par, yardage
+│   │   ├── fields: course_key (unique), created_at
+│   │   └── indexes: course_key, name
+│   ├── 2.2.3 tournaments
+│   │   ├── fields: id, name, season_year, start_date, end_date
+│   │   ├── fields: course_id, tour (pga/liv/etc), created_at
+│   │   └── indexes: season_year, start_date, course_id
+│   ├── 2.2.4 historical_results
+│   │   ├── fields: id, tournament_id, golfer_id
+│   │   ├── fields: finish_pos, score_to_par, earnings (optional)
+│   │   ├── fields: rounds_jsonb (scores per round)
+│   │   └── indexes: tournament_id, golfer_id
+│   ├── 2.2.5 player_round_stats
+│   │   ├── fields: id, tournament_id, golfer_id, round_num
+│   │   ├── fields: sg_total, sg_off_tee, sg_app, sg_arg, sg_putt
+│   │   ├── fields: driving_dist, driving_acc, gir, scrambling
+│   │   ├── fields: stats_jsonb (future metrics)
+│   │   └── indexes: tournament_id, golfer_id, round_num
+│   ├── 2.2.6 event_stats
+│   │   ├── fields: id, tournament_id, golfer_id
+│   │   ├── fields: sg_total, sg_components_jsonb
+│   │   ├── fields: scoring_avg, birdie_rate, bogey_rate
+│   │   ├── fields: stats_jsonb (flex)
+│   │   └── indexes: tournament_id, golfer_id
+│   ├── 2.2.7 betting_odds
+│   │   ├── fields: id, tournament_id, golfer_id
+│   │   ├── fields: book, market, odds, implied_prob
+│   │   ├── fields: captured_at, odds_jsonb (alt markets)
+│   │   └── indexes: tournament_id, golfer_id, captured_at
+│   ├── 2.2.8 projections
+│   │   ├── fields: id, tournament_id, golfer_id, model_version
+│   │   ├── fields: proj_score, win_prob, top10_prob, make_cut_prob
+│   │   ├── fields: edge_score, components_jsonb
+│   │   └── indexes: tournament_id, golfer_id, model_version
+│   ├── 2.2.9 salary_cap_values
+│   │   ├── fields: id, tournament_id, golfer_id
+│   │   ├── fields: platform (dk/fd/other), salary
+│   │   ├── fields: value_score, captured_at
+│   │   └── indexes: tournament_id, platform, salary
+│   └── 2.2.10 fantasy_scoring
+│       ├── fields: id, tournament_id, platform
+│       ├── fields: rules_jsonb (scoring rules)
+│       ├── fields: computed_at
+│       └── indexes: tournament_id, platform
+│
+├── 2.3 Views, Materialized Views & Performance
+│   ├── 2.3.1 leaderboard_view
+│   │   ├── joins: tournaments + historical_results + golfers
+│   │   └── outputs: rank, finish_pos, score_to_par, sg_total
+│   ├── 2.3.2 player_trend_view
+│   │   ├── rolling windows (last N rounds/events)
+│   │   └── outputs: rolling_sg, rolling_rank, volatility
+│   ├── 2.3.3 course_history_view
+│   │   ├── course ↔ tournament ↔ golfer history
+│   │   └── outputs: course fit metrics, past finishes
+│   ├── 2.3.4 betting_edge_view
+│   │   ├── join: projections + betting_odds
+│   │   └── outputs: model_prob, implied_prob, edge
+│   ├── 2.3.5 rolling_form_view
+│   │   ├── rolling aggregates from player_round_stats
+│   │   └── outputs: sg_last_8, sg_last_16, form_grade
+│   ├── 2.3.6 materialized_projections_view
+│   │   ├── precomputed projections by tournament/model_version
+│   │   ├── refresh strategy (on ingest / scheduled)
+│   │   └── indexes for fast API reads
+│   ├── 2.3.7 Create indexing strategy document
+│   │   ├── btree: slug, ids, tournament_id, golfer_id, dates
+│   │   ├── gin: JSONB columns used for filtering
+│   │   └── tsvector: content full-text search
+│   └── 2.3.8 Run performance validation
+│       ├── EXPLAIN ANALYZE on each view query
+│       ├── confirm <150ms local read targets
+│       └── add missing indexes based on query plans
+│
+├── 2.4 Seed Data & Test Fixtures
+│   ├── 2.4.1 Seed roles (admin/editor/contributor)
+│   ├── 2.4.2 Seed one admin user (dev only)
+│   ├── 2.4.3 Seed 3 authors (dev)
+│   ├── 2.4.4 Seed 10 tags + 5 categories
+│   ├── 2.4.5 Seed 3 post_templates (Preview/DeepDive/Betting)
+│   ├── 2.4.6 Seed 10 posts (draft/published mix)
+│   ├── 2.4.7 Seed 30 golfers
+│   ├── 2.4.8 Seed 5 courses
+│   ├── 2.4.9 Seed 3 tournaments
+│   ├── 2.4.10 Seed sample stats (round + event)
+│   └── 2.4.11 Seed sample projections + odds
+│
+└── 2.5 Phase 2 Validation Gate
+    ├── 2.5.1 `docker compose up` builds DB cleanly
+    ├── 2.5.2 All tables created in content + stats schemas
+    ├── 2.5.3 Views return data with seeded fixtures
+    ├── 2.5.4 Indexes confirmed for key queries
+    ├── 2.5.5 Sample API read queries <150ms locally
+    └── 2.5.6 Commit stable “Phase 2 – DB Ready” checkpoint
