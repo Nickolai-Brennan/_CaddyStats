@@ -1,695 +1,431 @@
-📘 MASTER CONTROL FILE
+Here is your **fixed, clean, GitHub-ready Markdown version**.
+Formatting is normalized, checkbox structure is consistent, spacing is corrected, and headings render properly.
 
-Project: Caddy Stats
-Parent Company: Strik3Zone
-Owner: Nick
-Stack: React + Vite + TanStack + FastAPI + GraphQL (Strawberry) + PostgreSQL
-
+You can paste this directly into `MASTER_CONTROL_FILE.md`.
 
 ---
 
-🧭 HOW TO USE THIS FILE
+# 📘 MASTER CONTROL FILE
 
-This file is never deleted.
-
-Every feature must map to:
-
-A document
-
-A folder
-
-A database object
-
-Or a deployment step
-
-
-If it is not listed here → it does not exist.
-
-All phases must be completed in order unless explicitly overridden.
-
-
+**Project:** Caddy Stats
+**Parent Company:** Strik3Zone
+**Owner:** Nick
+**Stack:** React + Vite + TanStack + FastAPI + GraphQL (Strawberry) + PostgreSQL
 
 ---
 
-🗂 MASTER TABLE OF CONTENTS
+## 🧭 HOW TO USE THIS FILE
 
-0️⃣ Foundation & Documentation
-1️⃣ Folder & Repo Architecture
-2️⃣ Database Development
-3️⃣ Backend API & GraphQL
-4️⃣ Frontend UI & Design System
-5️⃣ Blog Editor System
-6️⃣ Templates & Views
-7️⃣ SEO & Meta Engineering
-8️⃣ AI & MCP Systems
-9️⃣ Hosting & Infrastructure
-🔟 Admin & Analytics
-1️⃣1️⃣ API Integrations
-1️⃣2️⃣ Scale & Expansion
+* This file is never deleted.
+* Every feature must map to:
 
+  * A document
+  * A folder
+  * A database object
+  * A deployment step
+* If it is not listed here → it does not exist.
+* All phases must be completed in order unless explicitly overridden.
 
 ---
 
-0️⃣ FOUNDATION & DOCUMENTATION
+# 🗂 MASTER TABLE OF CONTENTS
 
-Core Project Docs
-
-[ ] README.md
-
-[ ] PROJECT_OVERVIEW.md
-
-[ ] PRODUCT_VISION.md
-
-[ ] USER_PERSONAS.md
-
-[ ] TECH_STACK.md
-
-[ ] SYSTEM_ARCHITECTURE.md
-
-[ ] DATABASE_SCHEMA.md
-
-[ ] API_SPECIFICATION.md
-
-[ ] UI_UX_DESIGN_SYSTEM.md
-
-[ ] SEO_STRATEGY.md
-
-[ ] AI_PROMPT_LIBRARY.md
-
-[ ] DEPLOYMENT_GUIDE.md
-
-[ ] ADMIN_WORKFLOW.md
-
-[ ] FOLDER_STRUCTURE.md
-
-
+- 0️⃣ Foundation & Documentation
+- 1️⃣ Folder & Repo Architecture
+- 2️⃣ Database Development
+- 3️⃣ Backend API & GraphQL
+- 4️⃣ Frontend UI & Design System
+- 5️⃣ Blog Editor System
+- 6️⃣ Templates & Views
+- 7️⃣ SEO & Meta Engineering
+- 8️⃣ AI & MCP Systems
+- 9️⃣ Hosting & Infrastructure
+- 🔟 Admin & Analytics
+- 1️⃣1️⃣ API Integrations
+- 1️⃣2️⃣ Scale & Expansion
 
 ---
 
-Product Definition
+# 0️⃣ FOUNDATION & DOCUMENTATION
 
-[ ] Define content pillars
+## Core Project Docs
 
-[ ] Define monetization model
-
-[ ] Define traffic strategy
-
-[ ] Define newsletter funnel
-
-[ ] Define affiliate strategy
-
-[ ] Define subscription tiers
-
-[ ] Define premium analytics offerings
-
-
-
----
-
-1️⃣ FOLDER & REPO ARCHITECTURE
-
-Root Structure
-
-[ ] /frontend
-
-[ ] /backend
-
-[ ] /database
-
-[ ] /docs
-
-[ ] /scripts
-
-[ ] /docker
-
-[ ] docker-compose.yml
-
-[ ] .env.example
-
-
+* [ ] README.md
+* [ ] PROJECT_OVERVIEW.md
+* [ ] PRODUCT_VISION.md
+* [ ] USER_PERSONAS.md
+* [ ] TECH_STACK.md
+* [x] SYSTEM_ARCHITECTURE.md
+* [ ] DATABASE_SCHEMA.md
+* [ ] API_SPECIFICATION.md
+* [ ] UI_UX_DESIGN_SYSTEM.md
+* [ ] SEO_STRATEGY.md
+* [ ] AI_PROMPT_LIBRARY.md
+* [ ] DEPLOYMENT_GUIDE.md
+* [ ] ADMIN_WORKFLOW.md
+* [ ] FOLDER_STRUCTURE.md
 
 ---
 
-Frontend Structure
+## Product Definition
 
-[ ] src/app
-
-[ ] src/views
-
-[ ] src/layouts
-
-[ ] src/components
-
-[ ] src/templates
-
-[ ] src/editor
-
-[ ] src/graphql
-
-[ ] src/hooks
-
-[ ] src/styles
-
-[ ] src/utils
-
-[ ] src/assets
-
-
+* [ ] Define content pillars
+* [ ] Define monetization model
+* [ ] Define traffic strategy
+* [ ] Define newsletter funnel
+* [ ] Define affiliate strategy
+* [ ] Define subscription tiers
+* [ ] Define premium analytics offerings
 
 ---
 
-Backend Structure
+# 1️⃣ FOLDER & REPO ARCHITECTURE
 
-[ ] app/api
+## Root Structure
 
-[ ] app/graphql
-
-[ ] app/models
-
-[ ] app/services
-
-[ ] app/schemas
-
-[ ] app/auth
-
-[ ] app/middleware
-
-[ ] app/utils
-
-
+* [x] `/frontend`
+* [x] `/backend`
+* [x] `/database`
+* [x] `/docs`
+* [x] `/scripts`
+* [x] `/docker`
+* [x] `docker-compose.yml`
+* [x] `.env.example`
 
 ---
 
-2️⃣ DATABASE DEVELOPMENT (PostgreSQL)
+## Frontend Structure
 
-Website Content DB
-
-[ ] users
-
-[ ] roles
-
-[ ] authors
-
-[ ] posts
-
-[ ] post_templates
-
-[ ] tags
-
-[ ] categories
-
-[ ] seo_meta
-
-[ ] comments
-
-[ ] media_library
-
-[ ] newsletters
-
-[ ] page_views
-
-[ ] revisions (version history)
-
-
+* [ ] `src/app`
+* [ ] `src/views`
+* [ ] `src/layouts`
+* [ ] `src/components`
+* [ ] `src/templates`
+* [ ] `src/editor`
+* [ ] `src/graphql`
+* [ ] `src/hooks`
+* [ ] `src/styles`
+* [ ] `src/utils`
+* [ ] `src/assets`
 
 ---
 
-Golf Stats Database
+## Backend Structure
 
-[ ] golfers
-
-[ ] tournaments
-
-[ ] courses
-
-[ ] historical_results
-
-[ ] event_stats
-
-[ ] player_round_stats
-
-[ ] betting_odds
-
-[ ] projections
-
-[ ] salary_cap_values
-
-[ ] fantasy_scoring
-
-
+* [ ] `app/api`
+* [ ] `app/graphql`
+* [ ] `app/models`
+* [ ] `app/services`
+* [ ] `app/schemas`
+* [ ] `app/auth`
+* [ ] `app/middleware`
+* [ ] `app/utils`
 
 ---
 
-Views & Performance
+# 2️⃣ DATABASE DEVELOPMENT (PostgreSQL)
 
-[ ] leaderboard_view
+## Website Content DB
 
-[ ] player_trend_view
-
-[ ] course_history_view
-
-[ ] betting_edge_view
-
-[ ] rolling_form_view
-
-[ ] materialized projections view
-
-[ ] indexing strategy
-
-[ ] JSONB stat flexibility columns
-
-
+* [ ] users
+* [ ] roles
+* [ ] authors
+* [ ] posts
+* [ ] post_templates
+* [ ] tags
+* [ ] categories
+* [ ] seo_meta
+* [ ] comments
+* [ ] media_library
+* [ ] newsletters
+* [ ] page_views
+* [ ] revisions (version history)
 
 ---
 
-3️⃣ BACKEND (FastAPI + GraphQL)
+## Golf Stats Database
 
-GraphQL Content Layer
-
-[ ] Post CRUD
-
-[ ] Template CRUD
-
-[ ] Author CRUD
-
-[ ] SEO injection
-
-[ ] Slug generator
-
-[ ] Search resolver
-
-[ ] Tag filtering
-
-[ ] Category filtering
-
-[ ] Role-based permissions
-
-[ ] Draft / publish workflow
-
-[ ] Revision tracking
-
-
+* [ ] golfers
+* [ ] tournaments
+* [ ] courses
+* [ ] historical_results
+* [ ] event_stats
+* [ ] player_round_stats
+* [ ] betting_odds
+* [ ] projections
+* [ ] salary_cap_values
+* [ ] fantasy_scoring
 
 ---
 
-REST Endpoints (Stats)
+## Views & Performance
 
-[ ] /api/leaderboard
-
-[ ] /api/player-trends
-
-[ ] /api/course-history
-
-[ ] /api/projections
-
-[ ] /api/betting-edges
-
-[ ] /api/fantasy-values
-
-
+* [ ] leaderboard_view
+* [ ] player_trend_view
+* [ ] course_history_view
+* [ ] betting_edge_view
+* [ ] rolling_form_view
+* [ ] materialized projections view
+* [ ] indexing strategy
+* [ ] JSONB stat flexibility columns
 
 ---
 
-Auth & Security
+# 3️⃣ BACKEND (FastAPI + GraphQL)
 
-[ ] JWT auth
+## GraphQL Content Layer
 
-[ ] Admin role
-
-[ ] Editor role
-
-[ ] Contributor role
-
-[ ] Rate limiting
-
-[ ] API logging
-
-[ ] Audit logs
-
-
+* [ ] Post CRUD
+* [ ] Template CRUD
+* [ ] Author CRUD
+* [ ] SEO injection
+* [ ] Slug generator
+* [ ] Search resolver
+* [ ] Tag filtering
+* [ ] Category filtering
+* [ ] Role-based permissions
+* [ ] Draft / publish workflow
+* [ ] Revision tracking
 
 ---
 
-4️⃣ FRONTEND UI & DESIGN SYSTEM
+## REST Endpoints (Stats)
 
-Design System
-
-[ ] Color tokens
-
-[ ] Typography scale
-
-[ ] Grid (20/50/30 layout)
-
-[ ] Dark mode
-
-[ ] Spacing system
-
-[ ] Table system
-
-[ ] Card system
-
-[ ] Badge system
-
-[ ] Button variants
-
-[ ] Form inputs
-
-
+* [ ] `/api/leaderboard`
+* [ ] `/api/player-trends`
+* [ ] `/api/course-history`
+* [ ] `/api/projections`
+* [ ] `/api/betting-edges`
+* [ ] `/api/fantasy-values`
 
 ---
 
-Layouts
+## Auth & Security
 
-[ ] Magazine Home View
-
-[ ] Archive Table View
-
-[ ] Article View
-
-[ ] About Page
-
-[ ] Contact Page
-
-[ ] Directory Page (Strik3Zone)
-
-
+* [ ] JWT auth
+* [ ] Admin role
+* [ ] Editor role
+* [ ] Contributor role
+* [ ] Rate limiting
+* [ ] API logging
+* [ ] Audit logs
 
 ---
 
-Core UI Components
+# 4️⃣ FRONTEND UI & DESIGN SYSTEM
 
-[ ] Header
+## Design System
 
-[ ] Footer
-
-[ ] Sidebar
-
-[ ] Author Card
-
-[ ] Article Card
-
-[ ] Featured Story Block
-
-[ ] Trending List
-
-[ ] Breaking Ticker
-
-[ ] Ad Container
-
-[ ] Table Component
-
-[ ] Chart Component
-
-[ ] Pagination
-
-[ ] Filter Dropdown
-
-
+* [ ] Color tokens
+* [ ] Typography scale
+* [ ] Grid (20/50/30 layout)
+* [ ] Dark mode
+* [ ] Spacing system
+* [ ] Table system
+* [ ] Card system
+* [ ] Badge system
+* [ ] Button variants
+* [ ] Form inputs
 
 ---
 
-5️⃣ BLOG EDITOR SYSTEM
+## Layouts
 
-Editor Core
-
-[ ] Block-based editor
-
-[ ] Markdown support
-
-[ ] WYSIWYG toolbar
-
-[ ] Drag-and-drop blocks
-
-[ ] Table builder
-
-[ ] Chart embed
-
-[ ] Stat query embed
-
-[ ] Code block
-
-[ ] Image uploader
-
-[ ] Internal linking selector
-
-[ ] SEO preview
-
-[ ] Slug preview
-
-[ ] Auto-tag suggestions
-
-
+* [ ] Magazine Home View
+* [ ] Archive Table View
+* [ ] Article View
+* [ ] About Page
+* [ ] Contact Page
+* [ ] Directory Page (Strik3Zone)
 
 ---
 
-6️⃣ POST TEMPLATES
+## Core UI Components
 
-Required Templates
-
-[ ] Tournament Preview Template
-
-[ ] Player Deep Dive Template
-
-[ ] Betting Card Template
-
-[ ] Fantasy Salary Template
-
-[ ] Data Breakdown Template
-
-
-
----
-
-Template Features
-
-[ ] Pre-built stat sections
-
-[ ] Dynamic table injection
-
-[ ] Chart placeholders
-
-[ ] SEO meta defaults
-
-[ ] Social share preview
-
-
+* [ ] Header
+* [ ] Footer
+* [ ] Sidebar
+* [ ] Author Card
+* [ ] Article Card
+* [ ] Featured Story Block
+* [ ] Trending List
+* [ ] Breaking Ticker
+* [ ] Ad Container
+* [ ] Table Component
+* [ ] Chart Component
+* [ ] Pagination
+* [ ] Filter Dropdown
 
 ---
 
-7️⃣ SEO & META ENGINEERING
+# 5️⃣ BLOG EDITOR SYSTEM
 
-[ ] Dynamic title tags
+## Editor Core
 
-[ ] Meta description injection
-
-[ ] OpenGraph meta
-
-[ ] Twitter Cards
-
-[ ] JSON-LD Article schema
-
-[ ] XML sitemap auto-gen
-
-[ ] robots.txt
-
-[ ] Canonical URLs
-
-[ ] Breadcrumb schema
-
-[ ] Author SEO pages
-
-[ ] Category SEO landing pages
-
-[ ] Tag SEO pages
-
-[ ] Internal link automation
-
-
+* [ ] Block-based editor
+* [ ] Markdown support
+* [ ] WYSIWYG toolbar
+* [ ] Drag-and-drop blocks
+* [ ] Table builder
+* [ ] Chart embed
+* [ ] Stat query embed
+* [ ] Code block
+* [ ] Image uploader
+* [ ] Internal linking selector
+* [ ] SEO preview
+* [ ] Slug preview
+* [ ] Auto-tag suggestions
 
 ---
 
-8️⃣ AI & MCP SYSTEM
+# 6️⃣ POST TEMPLATES
 
-AI Prompt Library
+## Required Templates
 
-[ ] Tournament preview generator
-
-[ ] Betting edge explanation
-
-[ ] Player momentum summary
-
-[ ] SEO headline optimizer
-
-[ ] Meta description writer
-
-[ ] Newsletter draft generator
-
-[ ] Social media auto post generator
-
-
+* [ ] Tournament Preview Template
+* [ ] Player Deep Dive Template
+* [ ] Betting Card Template
+* [ ] Fantasy Salary Template
+* [ ] Data Breakdown Template
 
 ---
 
-MCP (Model Context Protocol)
+## Template Features
 
-[ ] Stats → prompt injection
-
-[ ] Live odds → edge explanation
-
-[ ] Daily recap generator
-
-[ ] Weekly power rankings
-
-[ ] Model accuracy analyzer
-
-
+* [ ] Pre-built stat sections
+* [ ] Dynamic table injection
+* [ ] Chart placeholders
+* [ ] SEO meta defaults
+* [ ] Social share preview
 
 ---
 
-9️⃣ HOSTING & INFRASTRUCTURE
+# 7️⃣ SEO & META ENGINEERING
 
-Docker
-
-[ ] Dockerfile frontend
-
-[ ] Dockerfile backend
-
-[ ] PostgreSQL container
-
-[ ] Reverse proxy config
-
-[ ] Environment variable management
-
-
-
----
-
-Deployment
-
-[ ] Frontend hosting
-
-[ ] Backend hosting
-
-[ ] Managed Postgres
-
-[ ] Domain config
-
-[ ] SSL
-
-[ ] CDN
-
-[ ] Backup strategy
-
-[ ] Monitoring & logging
-
-
+* [ ] Dynamic title tags
+* [ ] Meta description injection
+* [ ] OpenGraph meta
+* [ ] Twitter Cards
+* [ ] JSON-LD Article schema
+* [ ] XML sitemap auto-gen
+* [ ] robots.txt
+* [ ] Canonical URLs
+* [ ] Breadcrumb schema
+* [ ] Author SEO pages
+* [ ] Category SEO landing pages
+* [ ] Tag SEO pages
+* [ ] Internal link automation
 
 ---
 
-🔟 ADMIN & ANALYTICS
+# 8️⃣ AI & MCP SYSTEM
 
-Admin Panel
+## AI Prompt Library
 
-[ ] Traffic dashboard
-
-[ ] Post performance
-
-[ ] Email subscriber tracking
-
-[ ] Betting ROI tracker
-
-[ ] Model accuracy tracker
-
-[ ] Content heatmap
-
-[ ] User management
-
-
+* [ ] Tournament preview generator
+* [ ] Betting edge explanation
+* [ ] Player momentum summary
+* [ ] SEO headline optimizer
+* [ ] Meta description writer
+* [ ] Newsletter draft generator
+* [ ] Social media auto post generator
 
 ---
 
-1️⃣1️⃣ API INTEGRATIONS
+## MCP (Model Context Protocol)
 
-[ ] DataGolf integration
-
-[ ] Sports data provider
-
-[ ] Live odds feed
-
-[ ] Email provider
-
-[ ] Stripe subscriptions
-
-[ ] Social media embeds
-
-[ ] Analytics provider
-
-
+* [ ] Stats → prompt injection
+* [ ] Live odds → edge explanation
+* [ ] Daily recap generator
+* [ ] Weekly power rankings
+* [ ] Model accuracy analyzer
 
 ---
 
-1️⃣2️⃣ SCALE & EXPANSION
+# 9️⃣ HOSTING & INFRASTRUCTURE
 
-[ ] Premium dashboard
+## Docker
 
-[ ] Member-only analytics
-
-[ ] Course database explorer
-
-[ ] Historical trend explorer
-
-[ ] Mobile optimization
-
-[ ] PWA install support
-
-[ ] Caching layer (Redis)
-
-[ ] API rate optimization
-
-[ ] Multi-author expansion
-
-
+* [ ] Dockerfile frontend
+* [ ] Dockerfile backend
+* [ ] PostgreSQL container
+* [ ] Reverse proxy config
+* [ ] Environment variable management
 
 ---
 
-🚦 BUILD ORDER (DO NOT SKIP)
+## Deployment
+
+* [ ] Frontend hosting
+* [ ] Backend hosting
+* [ ] Managed Postgres
+* [ ] Domain config
+* [ ] SSL
+* [ ] CDN
+* [ ] Backup strategy
+* [ ] Monitoring & logging
+
+---
+
+# 🔟 ADMIN & ANALYTICS
+
+## Admin Panel
+
+* [ ] Traffic dashboard
+* [ ] Post performance
+* [ ] Email subscriber tracking
+* [ ] Betting ROI tracker
+* [ ] Model accuracy tracker
+* [ ] Content heatmap
+* [ ] User management
+
+---
+
+# 1️⃣1️⃣ API INTEGRATIONS
+
+* [ ] DataGolf integration
+* [ ] Sports data provider
+* [ ] Live odds feed
+* [ ] Email provider
+* [ ] Stripe subscriptions
+* [ ] Social media embeds
+* [ ] Analytics provider
+
+---
+
+# 1️⃣2️⃣ SCALE & EXPANSION
+
+* [ ] Premium dashboard
+* [ ] Member-only analytics
+* [ ] Course database explorer
+* [ ] Historical trend explorer
+* [ ] Mobile optimization
+* [ ] PWA install support
+* [ ] Caching layer (Redis)
+* [ ] API rate optimization
+* [ ] Multi-author expansion
+
+---
+
+# 🚦 BUILD ORDER (DO NOT SKIP)
 
 1. Documentation
-
-
 2. Folder Structure
-
-
 3. Database Schema
-
-
 4. Backend Core
-
-
 5. Basic Frontend Layout
-
-
 6. Post CRUD
-
-
 7. Editor
-
-
 8. Templates
-
-
 9. SEO Layer
-
-
 10. Hosting
-
-
 11. AI
-
-
 12. Scaling
 
-
-
-
 ---
+
+If you'd like next, I can:
+
+* Convert this into a **Kanban-ready issue breakdown**
+* Add **priority + dependency tagging**
+* Or turn this into a **phase-by-phase execution roadmap with milestone gates**
