@@ -15,6 +15,15 @@ React + Vite + TypeScript
 Backend:
 FastAPI + Strawberry GraphQL
 
+Package	Purpose
+fastapi	API framework
+strawberry-graphql	GraphQL layer
+uvicorn	ASGI server
+sqlalchemy	ORM + DB layer
+psycopg2-binary	Postgres driver
+pydantic	Data validation
+python-jose	JWT handling
+
 Analytics API:
 FastAPI REST Endpoints
 
