@@ -43,24 +43,22 @@
 
 ## Core Project Docs
 
-* [ ] README.md
-* [ ] PROJECT_OVERVIEW.md
-* [ ] PRODUCT_VISION.md
-* [ ] USER_PERSONAS.md
-* [ ] TECH_STACK.md
-* [x] SYSTEM_ARCHITECTURE.md
-* [ ] DATABASE_SCHEMA.md
-* [ ] API_SPECIFICATION.md
-* [ ] UI_UX_DESIGN_SYSTEM.md
-* [ ] SEO_STRATEGY.md
-* [ ] AI_PROMPT_LIBRARY.md
-* [ ] DEPLOYMENT_GUIDE.md
-* [ ] ADMIN_WORKFLOW.md
-* [ ] FOLDER_STRUCTURE.md
+* [x] P0-01 README.md
+* [x] P0-02 PROJECT_OVERVIEW.md
+* [x] P0-03 PRODUCT_VISION.md
+* [x] P0-04 USER_PERSONAS.md
+* [x] P0-05 SYSTEM_ARCHITECTURE.md
+* [x] P0-06 DATABASE_SCHEMA.md
+* [x] P0-07 API_SPECIFICATION.md
+* [x] P0-08 UI_UX_DESIGN_SYSTEM.md
+* [x] P0-09 SEO_STRATEGY.md
+* [x] P0-10 AI_PROMPT_LIBRARY.md
+* [x] P0-11 DEPLOYMENT_GUIDE.md
+* [x] P0-12 ADMIN_WORKFLOW.md
+* [x] P0-13 FOLDER_STRUCTURE.md
+* [x] P0-14 TECH_STACK.md
 
 ---
-
-## Product Definition
 
 * [ ] Define content pillars
 * [ ] Define monetization model
@@ -72,9 +70,7 @@
 
 ---
 
-# 1️⃣ FOLDER & REPO ARCHITECTURE
-
-## Root Structure
+# 1️⃣ FOLDER & REPO ARCHITECTURARCHITECTUREtructure
 
 * [x] `/frontend`
 * [x] `/backend`
