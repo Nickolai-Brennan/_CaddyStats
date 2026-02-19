@@ -1,0 +1,293 @@
+Frontend: React + Tailwind + TanStack
+Backend: FastAPI
+App Data: GraphQL
+Golf Data: PostgreSQL
+
+
+This is structured like a scalable SaaS/media platform, not a basic blog.
+
+
+---
+
+📁 ROOT DIRECTORY
+
+caddystats/
+│
+├── frontend/
+├── backend/
+├── database/
+├── docs/
+├── scripts/
+├── docker/
+│
+├── .env
+├── .env.example
+├── docker-compose.yml
+├── README.md
+└── package.json (if monorepo tooling used)
+
+
+---
+
+📁 FRONTEND (React + Tailwind + TanStack)
+
+frontend/
+│
+├── public/
+│   ├── favicon.ico
+│   ├── og-image.png
+│   └── robots.txt
+│
+├── src/
+│
+│   ├── app/
+│   │   ├── App.tsx
+│   │   ├── providers.tsx
+│   │   └── routes.tsx
+│   │
+│   ├── layouts/
+│   │   ├── MainLayout.tsx
+│   │   ├── ArticleLayout.tsx
+│   │   ├── AdminLayout.tsx
+│   │   └── MagazineLayout.tsx
+│   │
+│   ├── views/
+│   │   ├── home/
+│   │   │   └── HomePage.tsx
+│   │   │
+│   │   ├── archive/
+│   │   │   └── ArchivePage.tsx
+│   │   │
+│   │   ├── article/
+│   │   │   └── ArticlePage.tsx
+│   │   │
+│   │   ├── admin/
+│   │   │   ├── Dashboard.tsx
+│   │   │   ├── Posts.tsx
+│   │   │   └── Editor.tsx
+│   │   │
+│   │   ├── about/
+│   │   │   └── AboutPage.tsx
+│   │   │
+│   │   └── contact/
+│   │       └── ContactPage.tsx
+│   │
+│   ├── components/
+│   │   ├── ui/
+│   │   │   ├── Button.tsx
+│   │   │   ├── Card.tsx
+│   │   │   ├── Badge.tsx
+│   │   │   └── Input.tsx
+│   │   │
+│   │   ├── layout/
+│   │   │   ├── Header.tsx
+│   │   │   ├── Footer.tsx
+│   │   │   ├── Sidebar.tsx
+│   │   │   └── Ticker.tsx
+│   │   │
+│   │   ├── article/
+│   │   │   ├── ArticleCard.tsx
+│   │   │   ├── AuthorCard.tsx
+│   │   │   └── RelatedPosts.tsx
+│   │   │
+│   │   ├── stats/
+│   │   │   ├── LeaderboardTable.tsx
+│   │   │   ├── PlayerTrendTable.tsx
+│   │   │   └── ProjectionTable.tsx
+│   │   │
+│   │   └── charts/
+│   │       ├── LineChart.tsx
+│   │       ├── BarChart.tsx
+│   │       └── Heatmap.tsx
+│   │
+│   ├── editor/
+│   │   ├── EditorRoot.tsx
+│   │   ├── BlockRenderer.tsx
+│   │   ├── blocks/
+│   │   │   ├── ParagraphBlock.tsx
+│   │   │   ├── HeadingBlock.tsx
+│   │   │   ├── ImageBlock.tsx
+│   │   │   ├── TableBlock.tsx
+│   │   │   ├── ChartBlock.tsx
+│   │   │   └── StatEmbedBlock.tsx
+│   │   │
+│   │   └── templates/
+│   │       ├── TournamentTemplate.tsx
+│   │       ├── PlayerDeepDiveTemplate.tsx
+│   │       ├── BettingCardTemplate.tsx
+│   │       ├── FantasyTemplate.tsx
+│   │       └── DataBreakdownTemplate.tsx
+│   │
+│   ├── graphql/
+│   │   ├── client.ts
+│   │   ├── queries.ts
+│   │   ├── mutations.ts
+│   │   └── fragments.ts
+│   │
+│   ├── api/
+│   │   ├── stats.ts
+│   │   └── auth.ts
+│   │
+│   ├── hooks/
+│   │   ├── useAuth.ts
+│   │   ├── usePosts.ts
+│   │   ├── useLeaderboard.ts
+│   │   └── useProjections.ts
+│   │
+│   ├── styles/
+│   │   ├── globals.css
+│   │   └── tailwind.css
+│   │
+│   ├── utils/
+│   │   ├── formatters.ts
+│   │   ├── constants.ts
+│   │   └── seo.ts
+│   │
+│   └── types/
+│       ├── post.ts
+│       ├── user.ts
+│       └── stats.ts
+│
+├── tailwind.config.js
+├── vite.config.ts
+└── tsconfig.json
+
+
+---
+
+📁 BACKEND (FastAPI + GraphQL)
+
+backend/
+│
+├── app/
+│   ├── main.py
+│   │
+│   ├── config/
+│   │   ├── settings.py
+│   │   └── database.py
+│   │
+│   ├── graphql/
+│   │   ├── schema.py
+│   │   ├── types/
+│   │   │   ├── post.py
+│   │   │   ├── user.py
+│   │   │   └── template.py
+│   │   │
+│   │   ├── queries/
+│   │   │   ├── post_queries.py
+│   │   │   └── user_queries.py
+│   │   │
+│   │   └── mutations/
+│   │       ├── post_mutations.py
+│   │       └── auth_mutations.py
+│   │
+│   ├── api/
+│   │   ├── stats.py
+│   │   ├── leaderboard.py
+│   │   ├── projections.py
+│   │   └── course_history.py
+│   │
+│   ├── models/
+│   │   ├── app_models.py
+│   │   └── golf_models.py
+│   │
+│   ├── services/
+│   │   ├── post_service.py
+│   │   ├── stat_service.py
+│   │   └── embed_service.py
+│   │
+│   ├── auth/
+│   │   ├── jwt_handler.py
+│   │   └── permissions.py
+│   │
+│   ├── middleware/
+│   │   ├── logging.py
+│   │   └── rate_limit.py
+│   │
+│   └── utils/
+│       ├── slugify.py
+│       └── helpers.py
+│
+├── requirements.txt
+└── alembic/ (if migrations used)
+
+
+---
+
+📁 DATABASE
+
+database/
+│
+├── schemas/
+│   ├── app_schema.sql
+│   └── golf_schema.sql
+│
+├── views/
+│   ├── leaderboard_view.sql
+│   ├── player_trend_view.sql
+│   ├── rolling_form_view.sql
+│   └── projections_summary_view.sql
+│
+├── materialized_views/
+│   ├── leaderboard_mv.sql
+│   └── course_history_mv.sql
+│
+└── migrations/
+
+
+---
+
+📁 DOCKER
+
+docker/
+│
+├── frontend.Dockerfile
+├── backend.Dockerfile
+└── nginx.conf
+
+
+---
+
+🧠 Architecture Philosophy Behind This Structure
+
+Clear separation
+
+frontend = UI + UX
+
+backend = logic
+
+database = SQL objects
+
+
+GraphQL strictly for app data
+
+REST strictly for stats data
+
+Editor is modular and expandable
+
+Templates are isolated and reusable
+
+Stats blocks are pluggable
+
+Designed for scaling into premium tools later
+
+
+
+---
+
+🚀 If You Want Next
+
+We can now:
+
+Generate the exact app_schema.sql
+
+Generate the exact golf_schema.sql
+
+Build the minimal FastAPI main.py
+
+Create a starter React app shell
+
+Or create a Docker Compose file tying everything together
+
+
+What layer do we build first?
