@@ -1,0 +1,119 @@
+PHASE 9 – HOSTING & INFRASTRUCTURE (Production Deployment + Stability)
+│
+├── 9.0 Infrastructure Architecture Decisions
+│   ├── 9.0.1 Choose hosting model
+│   │   ├── Frontend: Vercel / VPS / CDN-hosted
+│   │   ├── Backend: Render / Railway / VPS
+│   │   ├── Database: Managed Postgres (Neon / Supabase / RDS)
+│   │   └── Object Storage: S3-compatible (future)
+│   ├── 9.0.2 Define environment tiers
+│   │   ├── local
+│   │   ├── staging
+│   │   └── production
+│   ├── 9.0.3 Define environment variable policy
+│   │   ├── API URLs
+│   │   ├── DB credentials
+│   │   ├── JWT secrets
+│   │   ├── AI API keys
+│   │   └── Stripe keys (future)
+│   └── 9.0.4 Define DNS + domain structure
+│       ├── caddystats.com
+│       ├── api.caddystats.com
+│       └── staging subdomain
+│
+├── 9.1 Docker Production Hardening
+│   ├── 9.1.1 Finalize backend Dockerfile
+│   │   ├── multi-stage build
+│   │   ├── production-only dependencies
+│   │   └── non-root user execution
+│   ├── 9.1.2 Finalize frontend Dockerfile
+│   │   ├── build static assets
+│   │   └── serve via Nginx or platform CDN
+│   ├── 9.1.3 Harden docker-compose (production override)
+│   ├── 9.1.4 Add health checks to containers
+│   ├── 9.1.5 Configure restart policies
+│   └── 9.1.6 Test container networking in staging
+│
+├── 9.2 Reverse Proxy & SSL
+│   ├── 9.2.1 Configure reverse proxy (Nginx or platform)
+│   │   ├── Route /api → backend
+│   │   ├── Route /graphql → backend
+│   │   └── Route / → frontend
+│   ├── 9.2.2 Enable HTTPS (Let’s Encrypt or provider SSL)
+│   ├── 9.2.3 Force HTTP → HTTPS redirect
+│   ├── 9.2.4 Configure HSTS
+│   ├── 9.2.5 Configure secure cookie flags
+│   └── 9.2.6 Validate SSL chain + renewals
+│
+├── 9.3 Database Production Setup
+│   ├── 9.3.1 Provision managed Postgres
+│   ├── 9.3.2 Apply migrations to production
+│   ├── 9.3.3 Configure connection pooling
+│   ├── 9.3.4 Restrict DB access to backend IP
+│   ├── 9.3.5 Enable automated backups
+│   ├── 9.3.6 Configure point-in-time recovery (if supported)
+│   └── 9.3.7 Validate read/write integrity in prod
+│
+├── 9.4 CI/CD Pipeline
+│   ├── 9.4.1 Configure GitHub Actions (or provider CI)
+│   │   ├── Install dependencies
+│   │   ├── Run lint + type check
+│   │   ├── Run backend tests
+│   │   └── Build frontend
+│   ├── 9.4.2 Auto-deploy to staging on dev branch
+│   ├── 9.4.3 Manual approval to deploy to production
+│   ├── 9.4.4 Run DB migration step in pipeline
+│   ├── 9.4.5 Add environment secrets to CI securely
+│   └── 9.4.6 Add rollback deployment strategy
+│
+├── 9.5 Performance Optimization
+│   ├── 9.5.1 Enable CDN for static assets
+│   ├── 9.5.2 Enable gzip/brotli compression
+│   ├── 9.5.3 Configure cache headers
+│   │   ├── Static assets (long TTL)
+│   │   ├── API responses (short TTL)
+│   │   └── HTML (no-store or short)
+│   ├── 9.5.4 Optimize image delivery
+│   │   ├── Lazy loading
+│   │   ├── Responsive image sizes
+│   │   └── WebP support
+│   ├── 9.5.5 Enable HTTP/2 or HTTP/3
+│   └── 9.5.6 Confirm Lighthouse 90+ in production
+│
+├── 9.6 Monitoring & Logging
+│   ├── 9.6.1 Configure application logs
+│   │   ├── Backend structured logs
+│   │   ├── Error logs
+│   │   └── Request timing logs
+│   ├── 9.6.2 Configure log aggregation (e.g., Logtail / provider logs)
+│   ├── 9.6.3 Configure uptime monitoring
+│   ├── 9.6.4 Configure alerting (email/Slack)
+│   ├── 9.6.5 Add API performance metrics dashboard
+│   └── 9.6.6 Track AI usage metrics in production
+│
+├── 9.7 Security Hardening
+│   ├── 9.7.1 Disable debug mode in production
+│   ├── 9.7.2 Remove GraphQL playground in prod
+│   ├── 9.7.3 Rate limit sensitive endpoints
+│   ├── 9.7.4 Validate CORS origin whitelist
+│   ├── 9.7.5 Sanitize HTML blocks server-side
+│   ├── 9.7.6 Add brute force protection for login
+│   └── 9.7.7 Run basic vulnerability scan
+│
+├── 9.8 Backup & Disaster Recovery
+│   ├── 9.8.1 Verify automated DB backups
+│   ├── 9.8.2 Test DB restore procedure
+│   ├── 9.8.3 Backup media storage
+│   ├── 9.8.4 Document recovery procedure
+│   └── 9.8.5 Store off-site backup copies (if required)
+│
+└── 9.9 Phase 9 Validation Gate
+    ├── 9.9.1 Production site accessible via HTTPS
+    ├── 9.9.2 API routes functional in production
+    ├── 9.9.3 DB reads/writes validated
+    ├── 9.9.4 CDN serving static assets
+    ├── 9.9.5 CI/CD successfully deploys update
+    ├── 9.9.6 Backup tested and restorable
+    ├── 9.9.7 Monitoring alerts operational
+    ├── 9.9.8 Lighthouse 90+ in production
+    └── 9.9.9 Commit stable “Phase 9 – Production Live” checkpoint
