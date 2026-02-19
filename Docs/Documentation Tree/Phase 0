@@ -1,0 +1,203 @@
+PHASE 0 – CORE DOCUMENTATION
+│
+├── README.md
+│   ├── Project summary
+│   ├── Value proposition
+│   ├── Tech stack overview
+│   ├── Architecture diagram reference
+│   ├── Local development setup
+│   ├── Docker boot instructions
+│   ├── Environment variables guide
+│   ├── Deployment overview
+│   └── Contribution workflow
+│
+├── PROJECT_OVERVIEW.md
+│   ├── Problem statement
+│   ├── Market opportunity
+│   ├── Target audience segments
+│   ├── Competitive positioning
+│   ├── Core feature set
+│   ├── Traffic acquisition strategy
+│   ├── Monetization structure
+│   └── 12-month execution vision
+│
+├── PRODUCT_VISION.md
+│   ├── 3-year roadmap
+│   ├── AI-first publishing model
+│   ├── Premium analytics dashboard vision
+│   ├── Model accuracy tracking system
+│   ├── Strik3Zone ecosystem integration
+│   ├── Multi-author expansion strategy
+│   └── Long-term scalability objectives
+│
+├── USER_PERSONAS.md
+│   ├── Persona 1 – Sports Bettor
+│   │   ├── Goals
+│   │   ├── Pain points
+│   │   └── Conversion triggers
+│   │
+│   ├── Persona 2 – DFS Player
+│   │   ├── Research workflow
+│   │   ├── Data needs
+│   │   └── Engagement points
+│   │
+│   ├── Persona 3 – Fantasy Player
+│   │   ├── Salary cap analysis needs
+│   │   ├── Weekly trend research
+│   │   └── Tool expectations
+│   │
+│   └── Persona 4 – Premium Subscriber
+│       ├── Model trust expectations
+│       ├── Advanced stat needs
+│       └── Dashboard usage behavior
+│
+├── TECH_STACK.md
+│   ├── Frontend
+│   │   ├── React + Vite
+│   │   ├── TanStack Query
+│   │   ├── Router
+│   │   └── Styling approach
+│   │
+│   ├── Backend
+│   │   ├── FastAPI
+│   │   ├── Strawberry GraphQL
+│   │   └── REST stats endpoints
+│   │
+│   ├── Database
+│   │   ├── PostgreSQL (Content DB)
+│   │   ├── PostgreSQL (Stats DB)
+│   │   └── JSONB usage strategy
+│   │
+│   ├── Infrastructure
+│   │   ├── Docker
+│   │   ├── Reverse proxy
+│   │   ├── CDN
+│   │   └── Hosting targets
+│   │
+│   └── AI & MCP Integration
+│
+├── SYSTEM_ARCHITECTURE.md
+│   ├── High-level architecture diagram
+│   ├── Content flow (Editor → GraphQL → DB)
+│   ├── Stats flow (API → REST → Views)
+│   ├── Frontend data consumption flow
+│   ├── Authentication flow
+│   ├── Revision & versioning logic
+│   ├── Caching strategy
+│   └── Deployment topology
+│
+├── DATABASE_SCHEMA.md
+│   ├── Content DB Tables
+│   │   ├── users
+│   │   ├── roles
+│   │   ├── authors
+│   │   ├── posts
+│   │   ├── revisions
+│   │   ├── tags
+│   │   ├── categories
+│   │   ├── seo_meta
+│   │   └── post_templates
+│   │
+│   ├── Stats DB Tables
+│   │   ├── golfers
+│   │   ├── tournaments
+│   │   ├── courses
+│   │   ├── event_stats
+│   │   ├── betting_odds
+│   │   ├── projections
+│   │   └── fantasy_scoring
+│   │
+│   ├── Views
+│   │   ├── leaderboard_view
+│   │   ├── rolling_form_view
+│   │   ├── betting_edge_view
+│   │   └── course_history_view
+│   │
+│   ├── Indexing strategy
+│   ├── JSONB strategy
+│   └── Performance targets
+│
+├── API_SPECIFICATION.md
+│   ├── GraphQL Schema
+│   │   ├── Post type
+│   │   ├── Author type
+│   │   ├── Template type
+│   │   └── Mutations
+│   │
+│   ├── REST Endpoints
+│   │   ├── /api/leaderboard
+│   │   ├── /api/player-trends
+│   │   ├── /api/projections
+│   │   ├── /api/betting-edges
+│   │   └── /api/course-history
+│   │
+│   ├── Error handling structure
+│   ├── Rate limiting policy
+│   ├── Auth middleware structure
+│   └── Logging rules
+│
+├── UI_UX_DESIGN_SYSTEM.md
+│   ├── Brand color tokens
+│   ├── Typography scale
+│   ├── Spacing system
+│   ├── 20/50/30 layout spec
+│   ├── Component library structure
+│   ├── Card system
+│   ├── Table system
+│   ├── Chart system
+│   ├── Badge system
+│   ├── Button variants
+│   ├── Dark mode rules
+│   └── Accessibility standards
+│
+├── SEO_STRATEGY.md
+│   ├── Content cluster model
+│   ├── Category landing pages
+│   ├── Author pages
+│   ├── Tag pages
+│   ├── Schema markup plan
+│   ├── JSON-LD structure
+│   ├── Sitemap generation logic
+│   ├── Internal linking automation
+│   ├── Canonical URL rules
+│   └── Performance SEO checklist
+│
+├── AI_PROMPT_LIBRARY.md
+│   ├── Tournament preview generator prompt
+│   ├── Betting edge explanation prompt
+│   ├── Player momentum summary prompt
+│   ├── SEO headline optimizer prompt
+│   ├── Meta description generator prompt
+│   ├── Newsletter draft generator prompt
+│   ├── Social media auto-post prompt
+│   └── Model accuracy analysis prompt
+│
+├── DEPLOYMENT_GUIDE.md
+│   ├── Local Docker setup
+│   ├── Production container build
+│   ├── Environment variable mapping
+│   ├── Reverse proxy config
+│   ├── SSL configuration
+│   ├── CDN integration
+│   ├── Backup strategy
+│   ├── Monitoring & logging setup
+│   └── Rollback process
+│
+├── ADMIN_WORKFLOW.md
+│   ├── Draft → Review → Publish flow
+│   ├── Role permission matrix
+│   ├── Revision control logic
+│   ├── Post performance tracking
+│   ├── Newsletter workflow
+│   ├── Betting ROI tracking
+│   └── Model accuracy tracking
+│
+└── FOLDER_STRUCTURE.md
+    ├── Root structure
+    ├── Frontend structure
+    ├── Backend structure
+    ├── Database directory
+    ├── Scripts directory
+    ├── Docker configuration directory
+    ├── Documentation directory
+    └── Naming conventions
