@@ -1,0 +1,104 @@
+PHASE 1 – FOLDER & ENVIRONMENT SETUP
+│
+├── 1.0 Repository Initialization
+│   ├── 1.0.1 Initialize GitHub repository
+│   ├── 1.0.2 Define branch strategy
+│   │   ├── main
+│   │   ├── dev
+│   │   └── feature/*
+│   ├── 1.0.3 Add .gitignore (Node + Python + Docker)
+│   ├── 1.0.4 Add README placeholder
+│   └── 1.0.5 Define commit convention rules
+│
+├── 1.1 Root Project Structure
+│   ├── 1.1.1 Create /frontend
+│   ├── 1.1.2 Create /backend
+│   ├── 1.1.3 Create /database
+│   ├── 1.1.4 Create /docs
+│   ├── 1.1.5 Create /scripts
+│   ├── 1.1.6 Create /docker
+│   ├── 1.1.7 Add docker-compose.yml
+│   └── 1.1.8 Add .env.example
+│
+├── 1.2 Backend Setup (FastAPI + Strawberry)
+│   ├── 1.2.1 Initialize Python virtual environment
+│   ├── 1.2.2 Install dependencies
+│   │   ├── fastapi
+│   │   ├── strawberry-graphql
+│   │   ├── uvicorn
+│   │   ├── sqlalchemy
+│   │   ├── psycopg2
+│   │   ├── pydantic
+│   │   └── python-jose (JWT)
+│   │
+│   ├── 1.2.3 Create backend folder tree
+│   │   ├── app/
+│   │   │   ├── api/
+│   │   │   ├── graphql/
+│   │   │   ├── models/
+│   │   │   ├── services/
+│   │   │   ├── schemas/
+│   │   │   ├── auth/
+│   │   │   ├── middleware/
+│   │   │   └── utils/
+│   │   └── main.py
+│   │
+│   ├── 1.2.4 Create settings/config loader
+│   ├── 1.2.5 Configure database connection module
+│   ├── 1.2.6 Initialize GraphQL root schema
+│   ├── 1.2.7 Add global exception handler
+│   ├── 1.2.8 Add logging middleware
+│   └── 1.2.9 Confirm API boots locally
+│
+├── 1.3 Frontend Setup (React + Vite + TanStack)
+│   ├── 1.3.1 Initialize Vite + React + TypeScript
+│   ├── 1.3.2 Install dependencies
+│   │   ├── @tanstack/react-query
+│   │   ├── @tanstack/react-table
+│   │   ├── react-router-dom
+│   │   ├── graphql
+│   │   ├── graphql-request (or Apollo client)
+│   │   └── chart library (e.g., chart.js)
+│   │
+│   ├── 1.3.3 Create frontend folder tree
+│   │   ├── src/
+│   │   │   ├── app/
+│   │   │   ├── views/
+│   │   │   ├── layouts/
+│   │   │   ├── components/
+│   │   │   ├── templates/
+│   │   │   ├── editor/
+│   │   │   ├── graphql/
+│   │   │   ├── hooks/
+│   │   │   ├── styles/
+│   │   │   ├── utils/
+│   │   │   └── assets/
+│   │
+│   ├── 1.3.4 Configure global QueryClient
+│   ├── 1.3.5 Configure router base routes
+│   ├── 1.3.6 Create layout wrapper component
+│   ├── 1.3.7 Create theme provider (dark/light toggle)
+│   └── 1.3.8 Confirm frontend boots locally
+│
+├── 1.4 Docker & Environment Configuration
+│   ├── 1.4.1 Create Dockerfile (backend)
+│   ├── 1.4.2 Create Dockerfile (frontend)
+│   ├── 1.4.3 Configure PostgreSQL container
+│   ├── 1.4.4 Configure docker-compose services
+│   │   ├── backend
+│   │   ├── frontend
+│   │   └── database
+│   │
+│   ├── 1.4.5 Add environment variable mapping
+│   ├── 1.4.6 Confirm containers network properly
+│   ├── 1.4.7 Validate backend → DB connection
+│   ├── 1.4.8 Validate frontend → backend connection
+│   └── 1.4.9 Confirm full stack boots via Docker
+│
+└── 1.5 Phase 1 Validation Gate
+    ├── 1.5.1 Backend accessible on port
+    ├── 1.5.2 GraphQL playground loads
+    ├── 1.5.3 Frontend renders root layout
+    ├── 1.5.4 DB container persistent
+    ├── 1.5.5 Environment variables validated
+    └── 1.5.6 Commit stable Phase 1 checkpoint
