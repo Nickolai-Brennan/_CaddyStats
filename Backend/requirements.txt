@@ -17,6 +17,7 @@ psycopg2-binary==2.9.11
 pyasn1==0.6.2
 pycparser==3.0
 pydantic==2.12.5
+pydantic-settings==2.11.0
 pydantic_core==2.41.5
 python-dateutil==2.9.0.post0
 python-jose==3.5.0
@@ -25,6 +26,11 @@ six==1.17.0
 SQLAlchemy==2.0.46
 starlette==0.52.1
 strawberry-graphql==0.296.2
+strawberry-graphql-fastapi==0.296.2
+strawberry-graphql-django==0.296.2
 typing-inspection==0.4.2
 typing_extensions==4.15.0
 uvicorn==0.41.0
+starlette-cors==0.1.1
+starlette-graphene3==0.1.0
+starlette-graphql==0.1.0

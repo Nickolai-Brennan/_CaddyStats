@@ -4,6 +4,25 @@
   background: #f6f7f9;
 }
 
+:root[data-theme="light"] {
+  color: #111;
+  background: #f6f7f9;
+}
+
+:root[data-theme="dark"] {
+  color: #f2f2f2;
+  background: #0f1115;
+}
+
+:root[data-theme="dark"] .card {
+  background: #1a1c22;
+  border-color: #333;
+}
+
+.header {
+  background: #f6f7f9;
+}
+
 .card {
   max-width: 900px;
   margin: 24px auto;
@@ -15,4 +34,40 @@
 
 .muted {
   color: #666;
+}
+
+.shell { min-height: 100vh; display: flex; flex-direction: column; }
+.header, .footer { padding: 14px 18px; background: white; border-bottom: 1px solid #e7e8ea; }
+.footer { border-top: 1px solid #e7e8ea; border-bottom: none; margin-top: auto; }
+.brand { display: flex; gap: 10px; align-items: center; }
+.logo { font-size: 18px; }
+.title { font-weight: 700; letter-spacing: 0.2px; }
+.main { padding: 18px; max-width: 1000px; width: 100%; margin: 0 auto; }
+.error { white-space: pre-wrap; background: #fff3f3; padding: 12px; border-radius: 10px; border: 1px solid #ffd1d1; }
+
+.btn {
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid #e7e8ea;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+:root[data-theme="dark"] .btn {
+  border-color: #2a3142;
+}
+
+
+
+.brand {
+  background: transparent;
+  border: none;
+  padding: 0;
+  font-size: inherit;
+  color: inherit;
+}
+
+.btn:hover {
+  background: #f0f1f4;
 }

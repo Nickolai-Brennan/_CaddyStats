@@ -6,7 +6,14 @@ Golf analytics + content platform (Strik3Zone).
 
 ```bash
 cp .env.example .env
-docker compose up --build
+docker compose --profile dev up --build
+```
+
+PowerShell:
+
+```powershell
+Copy-Item .env.example .env
+docker compose --profile dev up --build
 ```
 
 Services
