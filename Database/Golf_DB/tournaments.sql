@@ -27,3 +27,16 @@ CREATE TABLE IF NOT EXISTS golf_stats.tournaments (
     CONSTRAINT chk_tournament_dates
         CHECK (start_date <= end_date)
 );
+
+--- Indexing Strategy
+CREATE INDEX IF NOT EXISTS idx_tournaments_course
+    ON golf_stats.tournaments (course_id);
+
+CREATE INDEX IF NOT EXISTS idx_tournaments_season
+    ON golf_stats.tournaments (season_year);
+
+CREATE INDEX IF NOT EXISTS idx_tournaments_dates
+    ON golf_stats.tournaments (start_date, end_date);
+
+CREATE INDEX IF NOT EXISTS idx_tournaments_format
+    ON golf_stats.tournaments (format);
