@@ -56,3 +56,30 @@ CREATE INDEX IF NOT EXISTS idx_player_rankings_topn
 -- If you query extras, keep; otherwise drop to reduce write overhead
 CREATE INDEX IF NOT EXISTS idx_player_rankings_extras_gin
   ON golf_stats.player_rankings USING GIN (extras);
+
+-- Views
+CREATE OR REPLACE VIEW golf_stats.v_player_rankings_latest AS
+SELECT DISTINCT ON (player_id, ranking_system, COALESCE(tour,''), COALESCE(category,''), COALESCE(season_year, -1))
+  ranking_id,
+  player_id,
+  ranking_system,
+  tour,
+  category,
+  season_year,
+  ranking_date,
+  rank,
+  points,
+  rating,
+  rank_change,
+  points_change,
+  source,
+  extras
+FROM golf_stats.player_rankings
+ORDER BY
+  player_id,
+  ranking_system,
+  COALESCE(tour,''),
+  COALESCE(category,''),
+  COALESCE(season_year, -1),
+  ranking_date DESC,
+  ranking_id DESC;
