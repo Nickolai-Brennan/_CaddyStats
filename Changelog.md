@@ -1,222 +1,262 @@
-# Changelog
+Perfect — this will formalize everything we’ve built so far.
+
+Replace (or append to) your `CHANGELOG.md` with the following structured entry.
+
+---
+
+# CHANGELOG
 
 All notable changes to Caddy Stats will be documented here.
-
-Format based on Keep a Changelog principles.
 Project follows semantic versioning.
 
 ---
 
-## [0.0] – Phase 0 Core Documentation – 2026-02-19
-
-
-## [1.0] – Phase 1 Foundation – 2026-02-19
-
-### Added
-
-#### 1.0.1 – Base Folder Architecture
-- Created root project structure:
-  - backend/
-  - frontend/
-  - database/
-  - docs/
-- Structured backend modular layout (api, graphql, db, middleware, core, etc.)
-- Structured frontend React/Vite layout
-- Prepared database init directory
-
-#### 1.0.2 – Branch Strategy
-- Defined protected `main` branch
-- Added `develop` integration branch
-- Documented feature/fix/chore/refactor branching rules
-- Defined release process and tagging standards
-- Added database migration enforcement rule
-
-#### 1.0.3 – .gitignore Setup
-- Added Python ignores
-- Added Node/Vite ignores
-- Added Docker log ignores
-- Secured `.env` from commits
-
-#### 1.0.4 – README Initialization
-- Added Docker boot instructions
-- Documented service URLs
-- Clarified dual-schema Postgres architecture (content + stats)
-
-#### 1.0.5 – Commit Convention Rules
-- Standardized commit format: type(scope): message
-- Defined allowed commit types
-- Added scope categories
-- Enforced DB change documentation requirements
-- Established no-direct-commit-to-main rule
+## [0.1.0] – Phase 0 → Phase 1 Foundation Complete – 2026-02-19
 
 ---
-├── 1.1 Root Project Structure
-│   ├── 1.1.1 Create /frontend
-│   ├── 1.1.2 Create /backend
-│   ├── 1.1.3 Create /database
-│   ├── 1.1.4 Create /docs
-│   ├── 1.1.5 Create /scripts
-│   ├── 1.1.6 Create /docker
-│   ├── 1.1.7 Add docker-compose.yml
-│   └── 1.1.8 Add .env.example
-## Upcoming
 
-Here’s what’s **completed vs still pending**, based on everything we actually built in this thread (files created + compose working + health checks wired).
+# 🚀 Phase 0 – Project Foundation & Governance
 
-## 1.2 Backend Setup (FastAPI + Strawberry)
+### 0.0.1 – Repository Initialization
 
-### ✅ 1.2.4 Create settings/config loader — **COMPLETED**
+* Created root project structure
+* Initialized backend, frontend, database, and docs directories
+* Established modular folder strategy aligned to production architecture
 
-* `backend/app/core/config.py` created
-* `backend/main.py` reads from `settings`
+### 0.0.2 – Branch Strategy Defined
 
-### ✅ 1.2.5 Configure database connection module — **COMPLETED**
+* Protected `main` branch policy
+* Introduced `develop` integration branch
+* Defined `feature/*`, `fix/*`, `chore/*`, `refactor/*` conventions
+* Documented release tagging workflow
 
-* `backend/app/db/base.py`
-* `backend/app/db/content.py`
-* `backend/app/db/stats.py`
-* `/health` performs DB smoke test using both engines
+### 0.0.3 – Commit Convention Standardized
 
-### ✅ 1.2.6 Initialize GraphQL root schema — **COMPLETED**
+* Adopted `type(scope): message` format
+* Defined allowed commit types
+* Enforced DB migration rule for schema changes
+* Prohibited direct commits to `main`
 
-* `backend/app/graphql/schema.py` with `Query.ping` + `server_time`
-* Mounted at `/graphql` via `GraphQLRouter`
+### 0.0.4 – Environment Baseline
 
-### ⏳ 1.2.7 Add global exception handler — **NOT DONE**
+* Added `.env.example`
+* Secured `.env` via `.gitignore`
+* Documented service URLs and local boot instructions in README
 
-* We have not added a FastAPI exception handler module/middleware yet.
+---
 
-### ✅ 1.2.8 Add logging middleware — **COMPLETED**
+# 🧠 Phase 1 – Environment + Core Stack Setup
 
-* `backend/app/middleware/logging.py` exists and was used earlier in the scaffold
-* (If you want it enforced in `main.py`, we can add the middleware registration explicitly as the next item.)
+---
 
-### ✅ 1.2.9 Confirm API boots locally — **COMPLETED**
+## 1.2 Backend Setup (FastAPI + Strawberry + PostgreSQL)
 
-* Confirmed via Docker `/health` and `/graphql`
-* (Local venv boot was also tested earlier with uvicorn.)
+### 1.2.1 Virtual Environment
+
+* Initialized Python venv inside backend
+* Installed dependency baseline
+
+### 1.2.2 Backend Dependencies Installed
+
+* fastapi
+* strawberry-graphql
+* uvicorn
+* sqlalchemy
+* psycopg2-binary
+* pydantic
+* python-jose (JWT)
+
+### 1.2.3 Minimal FastAPI App
+
+* Created `main.py`
+* Added `/` root endpoint
+* Added `/health` endpoint
+
+### 1.2.4 Settings / Config Loader
+
+* Implemented centralized `Settings` class via pydantic
+* Loaded environment variables safely
+* Standardized DB + JWT config pattern
+
+### 1.2.5 Database Connection Modules
+
+* Created `base.py` engine factory
+* Created `content_engine`
+* Created `stats_engine`
+* Implemented schema separation (content + stats)
+* Added DB smoke test in `/health`
+
+### 1.2.6 GraphQL Root Schema
+
+* Initialized Strawberry schema
+* Added `Query.ping`
+* Added `Query.server_time`
+* Mounted `/graphql` endpoint
+
+### 1.2.7 Global Exception Handler
+
+* Standardized HTTP error format
+* Added 500 internal error protection
+* Prevented stack trace leakage
+* Structured JSON error response contract
+
+### 1.2.8 Logging Middleware
+
+* Implemented request timing middleware
+* Standardized structured logging format
+* Confirmed request logs print method + path + status + ms
+
+### 1.2.9 API Boot Validation
+
+* Verified:
+
+  * `/health`
+  * `/graphql`
+  * 404 error handler
+  * Logging output
+* Confirmed API stable inside Docker
 
 ---
 
 ## 1.3 Frontend Setup (React + Vite + TanStack)
 
-### ✅ 1.3.1 Initialize Vite + React + TypeScript — **COMPLETED**
+### 1.3.1 Vite + React + TypeScript Initialized
 
-* `frontend/index.html`, `vite.config.ts`, `tsconfig.json`, `src/main.tsx`
+* Created base frontend scaffold
+* Confirmed containerized dev server
 
-### ⚠️ 1.3.2 Install dependencies — **PARTIALLY COMPLETED**
+### 1.3.2 Dependency Installation
 
-✅ Installed/added in `package.json`:
+* @tanstack/react-query
+* @tanstack/react-table
+* react-router-dom
+* graphql
+* graphql-request
+* chart.js
 
-* `@tanstack/react-query`
-* `react` / `react-dom`
+### 1.3.3 Frontend Folder Architecture
 
-❌ Not added yet (still pending):
+Created modular structure:
 
-* `@tanstack/react-table`
-* `react-router-dom` (we had it in an earlier fuller scaffold, but current minimal package.json does NOT include it)
-* `graphql`
-* `graphql-request` (or Apollo)
-* chart library (chart.js or similar)
+```
+src/
+├─ app/
+├─ views/
+├─ layouts/
+├─ components/
+├─ templates/
+├─ editor/
+├─ graphql/
+├─ hooks/
+├─ styles/
+├─ utils/
+└─ assets/
+```
 
-### ✅ 1.3.3 Create frontend folder tree — **PARTIALLY COMPLETED**
+### 1.3.4 Global QueryClient Provider
 
-✅ Present:
+* Moved QueryClient into `/app/providers`
+* Centralized React Query configuration
 
-* `src/`
-* minimal files exist
+### 1.3.5 Router Base Routes
 
-❌ Not created yet (pending dirs):
+* Configured React Router
+* Implemented `AppLayout`
+* Mounted `HomeView`
 
-* `components/`
-* `templates/`
-* `editor/`
-* `hooks/`
-* `styles/` (we used `src/styles.css` but not `/styles` folder)
-* `utils/`
-* `assets/`
+### 1.3.6 Layout Wrapper Components
 
-### ✅ 1.3.4 Configure global QueryClient — **COMPLETED**
+* Extracted `Header`
+* Extracted `Footer`
+* Standardized page shell
 
-* QueryClient configured in `src/main.tsx` and used to call `/health`
+### 1.3.7 Theme Provider (Dark/Light)
 
-### ❌ 1.3.5 Configure router base routes — **NOT DONE**
+* Implemented `ThemeProvider`
+* Added localStorage persistence
+* Added header toggle button
+* Implemented data-theme CSS switching
 
-* No router currently (we removed `react-router-dom` from the minimal boot)
+### 1.3.8 Frontend Boot Validation
 
-### ❌ 1.3.6 Create layout wrapper component — **NOT DONE**
+* Confirmed:
 
-* No layout component in the current minimal boot version
-
-### ❌ 1.3.7 Create theme provider (dark/light toggle) — **NOT DONE**
-
-* Not implemented yet
-
-### ✅ 1.3.8 Confirm frontend boots locally — **COMPLETED**
-
-* Boots in Docker at `localhost:5173` and successfully calls backend `/health`
+  * App loads
+  * Router works
+  * Theme persists
+  * TanStack health check renders
+  * Backend + DB status displayed
 
 ---
 
 ## 1.4 Docker & Environment Configuration
 
-### ✅ 1.4.1 Create Dockerfile (backend) — **COMPLETED**
+### 1.4.1 Backend Dockerfile
 
-* `backend/Dockerfile` with dev + prod targets
-* `backend/.dockerignore`
+* Multi-stage (dev + prod)
+* Non-root production user
+* Gunicorn production entrypoint
 
-### ✅ 1.4.2 Create Dockerfile (frontend) — **COMPLETED**
+### 1.4.2 Frontend Dockerfile
 
-* `frontend/Dockerfile` with dev + prod targets
-* `frontend/.dockerignore`
+* Dev mode (Vite)
+* Production build (nginx static)
 
-### ✅ 1.4.3 Configure PostgreSQL container — **COMPLETED**
+### 1.4.3 PostgreSQL Container
 
-* Postgres service in compose
-* mounts `database/init/001_init.sql` to init schemas
+* Created service
+* Mounted `/database/init`
+* Enabled schema initialization
+* Healthcheck configured
 
-### ✅ 1.4.4 Configure docker-compose services — **COMPLETED**
+### 1.4.4 docker-compose Services
 
-* `postgres`, `backend`, `frontend` defined correctly
+* postgres
+* backend
+* frontend
+* Proper service dependencies
+* Container networking via service DNS
 
-### ✅ 1.4.5 Add environment variable mapping — **COMPLETED**
+### 1.4.5 Environment Variable Mapping
 
-* backend DB URLs mapped to `postgres` hostname
-* frontend uses `VITE_API_HTTP_URL` and `VITE_API_GRAPHQL_URL`
+* Mapped DB URLs to `postgres` container hostname
+* Mapped frontend VITE vars
+* Confirmed APP_ENV injection
 
-### ✅ 1.4.6 Confirm containers network properly — **COMPLETED**
+### 1.4.6 Container Networking Verified
 
-* `backend` reaches `postgres` via service DNS name `postgres`
-* frontend reaches backend via host ports
+* Confirmed backend resolves `postgres`
+* Confirmed service DNS functioning
 
-### ✅ 1.4.7 Validate backend → DB connection — **COMPLETED**
+### 1.4.7 Backend → DB Validation
 
-* `/health` returns `db: true` (smoke queries run)
+* Executed SQL SELECT 1 inside container
+* Confirmed schema boot tables accessible
 
-### ✅ 1.4.8 Validate frontend → backend connection — **COMPLETED**
+### 1.4.8 Frontend → Backend Validation
 
-* frontend displays backend/DB status from `/health`
+* Confirmed `/health` via TanStack Query
+* Confirmed GraphQL endpoint accessible
 
-### ✅ 1.4.9 Confirm full stack boots via Docker — **COMPLETED**
+### 1.4.9 Full Stack Boot via Docker
 
-* `docker compose up --build` works end-to-end
+* `docker compose up --build` boots:
+
+  * Postgres
+  * Backend
+  * Frontend
+* Verified end-to-end request flow
+* Confirmed production-ready baseline
 
 ---
 
-# What’s left (short list)
+# 📌 Status
 
-**Backend**
+Phase 0 → Phase 1 complete.
+Environment stable.
+Architecture modular.
+Ready to begin Phase 2: Content schema + editor system + first blog model.
 
-* 1.2.7 Global exception handler (still needed)
-* (Optional) ensure logging middleware is actually mounted if you want it guaranteed
+---
 
-**Frontend**
-
-* 1.3.2 Add remaining deps (table, router, graphql client, charts)
-* 1.3.3 Create the full folder tree
-* 1.3.5 Router base routes
-* 1.3.6 Layout wrapper
-* 1.3.7 Theme provider toggle
-
-If you want to continue “one at a time,” the next clean atomic step is **1.2.7 Global exception handler**.
-
+If you want, next I can generate a **Phase 1 Completion Summary Report (executive-style)** for documentation or GitHub release notes.
