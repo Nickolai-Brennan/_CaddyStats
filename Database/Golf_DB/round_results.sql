@@ -62,3 +62,10 @@ CREATE INDEX IF NOT EXISTS idx_round_results_status
 -- JSONB index if you actually query extras (otherwise remove to save write cost)
 CREATE INDEX IF NOT EXISTS idx_round_results_extras_gin
   ON golf_stats.round_results USING GIN (extras);
+
+-- Optional (Recommended) FK consistency with tournament_results
+ALTER TABLE golf_stats.round_results
+ADD CONSTRAINT fk_round_results_to_tournament_results
+FOREIGN KEY (tournament_id, player_id)
+REFERENCES golf_stats.tournament_results(tournament_id, player_id)
+ON DELETE CASCADE;
