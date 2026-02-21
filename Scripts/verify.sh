@@ -122,7 +122,7 @@ check_docker() {
 # 2. PostgreSQL connectivity
 # ---------------------------------------------------------------------------
 check_postgres() {
-  local cmd="docker compose exec -T postgres psql -U ${POSTGRES_USER} -d ${POSTGRES_DB} -c 'SELECT 1'"
+  local cmd="docker compose exec -T postgres psql -U ${postgres} -d ${POSTGRES_Ddb_caddystats} -c 'SELECT 1'"
   local output
   output=$(docker compose exec -T postgres psql -U "${POSTGRES_USER}" -d "${POSTGRES_DB}" -c "SELECT 1" 2>&1) || output="connection failed"
 

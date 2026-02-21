@@ -3,9 +3,9 @@ services:
     image: postgres:16-alpine
     container_name: container_postgres
     environment:
-      POSTGRES_DB: ${POSTGRES_DB:-caddystats}
-      POSTGRES_USER: ${POSTGRES_USER:-caddystats}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-caddystats_password}
+      POSTGRES_DB: ${POSTGRES_DB:-db_caddystats}
+      POSTGRES_USER: ${POSTGRES_USER:postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
     ports:
       - "${POSTGRES_PORT:-5432}:5432"
     volumes:
@@ -25,9 +25,9 @@ services:
     environment:
       PGHOST: postgres
       PGPORT: 5432
-      PGDATABASE: ${POSTGRES_DB:-caddystats}
-      PGUSER: ${POSTGRES_USER:-caddystats}
-      PGPASSWORD: ${POSTGRES_PASSWORD:-caddystats_password}
+      PGDATABASE: ${POSTGRES_DB:-db_caddystats}
+      PGUSER: ${POSTGRES_USER:-postgres}
+      PGPASSWORD: ${POSTGRES_PASSWORD:-postgres}
     volumes:
       - ./Database/migrations:/migrations:ro
     entrypoint: ["/bin/sh","-lc"]
