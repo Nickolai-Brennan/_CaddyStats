@@ -34,3 +34,21 @@ export interface BettingOdds {
   odds: number;
   impliedProb: number;
 }
+
+export interface LeaderboardEntry {
+  position: number;
+  playerId: string;
+  playerName: string;
+  totalScore: number;
+  roundScores: number[];
+  thru?: string;
+  status: 'active' | 'cut' | 'wd' | 'dq';
+}
+
+export interface LeaderboardDTO {
+  tournamentId: string;
+  tournamentName: string;
+  round: number;
+  entries: LeaderboardEntry[];
+  lastUpdated: string;
+}

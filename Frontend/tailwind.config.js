@@ -1,11 +1,17 @@
 /** @type {import('tailwindcss').Config} */
-// Tailwind CSS configuration
-// Populated in Phase 4+ (UI design system)
 export default {
   content: ['./index.html', './src/**/*.{ts,tsx}'],
   darkMode: 'class',
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        brand: {
+          primary: '#16a34a',
+          secondary: '#0ea5e9',
+          accent: '#f59e0b',
+        },
+      },
+    },
   },
   plugins: [],
 };

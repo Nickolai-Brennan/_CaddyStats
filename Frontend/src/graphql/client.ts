@@ -6,7 +6,7 @@ import { GraphQLClient } from 'graphql-request';
 const GRAPHQL_URL = import.meta.env.VITE_API_GRAPHQL_URL ?? '/graphql';
 
 export const gqlClient = new GraphQLClient(GRAPHQL_URL, {
-  headers: () => {
+  headers: (): Record<string, string> => {
     const token = localStorage.getItem('access_token');
     return token ? { Authorization: `Bearer ${token}` } : {};
   },
