@@ -2,7 +2,7 @@ services:
   postgres:
     image: postgres:16-alpine
     container_name: container_postgres
-    environment: 
+    environment:
       POSTGRES_DB: ${POSTGRES_DB:-caddystats}
       POSTGRES_USER: ${POSTGRES_USER:-caddystats}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-caddystats_password}
@@ -10,16 +10,37 @@ services:
       - "${POSTGRES_PORT:-5432}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./Database/migrations:/docker-entrypoint-initdb.d:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
       interval: 5s
       timeout: 3s
       retries: 20
 
-  # -----------------------
-  # DEV SERVICES (hot reload)
-  # -----------------------
+  migrations:
+    image: postgres:16-alpine
+    container_name: caddystats_migrations
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      PGHOST: postgres
+      PGPORT: 5432
+      PGDATABASE: ${POSTGRES_DB:-caddystats}
+      PGUSER: ${POSTGRES_USER:-caddystats}
+      PGPASSWORD: ${POSTGRES_PASSWORD:-caddystats_password}
+    volumes:
+      - ./Database/migrations:/migrations:ro
+    entrypoint: ["/bin/sh","-lc"]
+    command: |
+      set -e
+      echo "Running migrations..."
+      for f in $(ls -1 /migrations/*.sql | sort); do
+        echo "Applying $f"
+        psql -v ON_ERROR_STOP=1 -f "$f"
+      done
+      echo "Migrations complete."
+    profiles: ["dev","prod"]
+
   backend:
     profiles: ["dev"]
     build:
@@ -27,9 +48,18 @@ services:
       target: dev
     container_name: caddystats_backend
     environment:
-      CONTENT_DATABASE_URL: "postgresql+psycopg2://caddystats:caddystats_password@postgres:5432/caddystats"
+      CONTENT_DATABASE_URL: "postgresql+psycopg2://db_caddystats:postgres@postgres:5432/db_caddystats"
       STATS_API_URL: "${STATS_API_URL:-http://localhost:9000}"
       APP_ENV: "development"
+    depends_on:
+      migrations:
+        condition: service_completed_successfully
+    ports:
+      - "${BACKEND_PORT:-8000}:8000"
+    volumes:
+      - ./Backend:/app:cached
+
+  frontend:
     profiles: ["dev"]
     build:
       context: ./Frontend
@@ -46,9 +76,6 @@ services:
       - ./Frontend:/app:cached
       - frontend_node_modules:/app/node_modules
 
-  # -----------------------
-  # PROD SERVICES (hardened)
-  # -----------------------
   backend_prod:
     profiles: ["prod"]
     build:
@@ -56,13 +83,12 @@ services:
       target: prod
     container_name: caddystats_backend_prod
     environment:
-      CONTENT_DATABASE_URL: "postgresql+psycopg2://caddystats:caddystats_password@postgres:5432/caddystats"
-      CONTENT_DATABASE_URL: "postgresql+psycopg2://caddystats:caddystats_password@postgres:5432/caddystats"
+      CONTENT_DATABASE_URL: "postgresql+psycopg2://db_caddystats:postgres@postgres:5432/db_caddystats"
       STATS_API_URL: "${STATS_API_URL:-http://localhost:9000}"
       APP_ENV: "production"
     depends_on:
-      postgres:
-        condition: service_healthy
+      migrations:
+        condition: service_completed_successfully
     ports:
       - "8000:8000"
 
