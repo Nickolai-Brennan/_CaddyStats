@@ -47,3 +47,15 @@ def health():
         print(f"DB Error: {e}")
 
     return {"ok": True, "db": db_ok}
+
+# Backend/app/main.py
+from fastapi import FastAPI
+from app.api.graphql_router import router as graphql_router
+
+app = FastAPI()
+
+@app.get("/health")
+def health():
+    return {"status": "ok"}
+
+app.include_router(graphql_router)
