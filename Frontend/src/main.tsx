@@ -1,5 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import "./styles/tailwind.css";
 import "./styles.css";
 import { QueryProvider } from "./app/providers/QueryProvider";
 import { ThemeProvider } from "./app/providers/ThemeProvider";
