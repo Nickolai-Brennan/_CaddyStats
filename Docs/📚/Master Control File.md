@@ -85,17 +85,17 @@
 
 ## Frontend Structure
 
-* [ ] `src/app`
-* [ ] `src/views`
-* [ ] `src/layouts`
-* [ ] `src/components`
-* [ ] `src/templates`
-* [ ] `src/editor`
-* [ ] `src/graphql`
-* [ ] `src/hooks`
-* [ ] `src/styles`
-* [ ] `src/utils`
-* [ ] `src/assets`
+* [x] `src/app`
+* [x] `src/views`
+* [x] `src/layouts`
+* [x] `src/components`
+* [x] `src/templates`
+* [x] `src/editor`
+* [x] `src/graphql`
+* [x] `src/hooks`
+* [x] `src/styles`
+* [x] `src/utils`
+* [x] `src/assets`
 
 ---
 
@@ -115,32 +115,32 @@
 # 2️⃣ DATABASE DEVELOPMENT (PostgreSQL)
 ## PHASE 2 COMPLETE CRITERIA
 
-- [ ] All website_content tables exist
-- [ ] UUID PK everywhere
-- [ ] updated_at triggers working
-- [ ] Full index pack applied
-- [ ] GraphQL contract live
-- [ ] RBAC enforced in resolvers
-- [ ] Publish workflow tested
-- [ ] Docker bootstrap verified
-- [ ] No golf_stats schema present
+- [x] All website_content tables exist
+- [x] UUID PK everywhere
+- [x] updated_at triggers working
+- [x] Full index pack applied
+- [x] GraphQL contract live
+- [x] RBAC enforced in resolvers
+- [x] Publish workflow tested
+- [x] Docker bootstrap verified
+- [x] No golf_stats schema present
 
 
 ## Website Content DB
 
-* [ ] users
-* [ ] roles
-* [ ] authors
-* [ ] posts
-* [ ] post_templates
-* [ ] tags
-* [ ] categories
-* [ ] seo_meta
-* [ ] comments
-* [ ] media_library
-* [ ] newsletters
-* [ ] page_views
-* [ ] revisions (version history)
+* [x] users
+* [x] roles
+* [x] authors
+* [x] posts
+* [x] post_templates
+* [x] tags
+* [x] categories
+* [x] seo_meta
+* [x] comments
+* [x] media_library
+* [x] newsletters
+* [x] page_views
+* [x] revisions (version history)
 
 ---
 
@@ -161,17 +161,17 @@
 
 ## GraphQL Content Layer
 
-* [ ] Post CRUD
-* [ ] Template CRUD
-* [ ] Author CRUD
-* [ ] SEO injection
-* [ ] Slug generator
-* [ ] Search resolver
-* [ ] Tag filtering
-* [ ] Category filtering
-* [ ] Role-based permissions
-* [ ] Draft / publish workflow
-* [ ] Revision tracking
+* [x] Post CRUD
+* [x] Template CRUD
+* [x] Author CRUD
+* [x] SEO injection
+* [x] Slug generator
+* [x] Search resolver
+* [x] Tag filtering
+* [x] Category filtering
+* [x] Role-based permissions
+* [x] Draft / publish workflow
+* [x] Revision tracking
 
 ---
 
@@ -181,20 +181,20 @@
 * [ ] `/api/player-trends`
 * [ ] `/api/course-history`
 * [ ] `/api/projections`
-* [ ] `/api/betting-edges`
+* [x] `/api/betting-edges`
 * [ ] `/api/fantasy-values`
 
 ---
 
 ## Auth & Security
 
-* [ ] JWT auth
-* [ ] Admin role
-* [ ] Editor role
-* [ ] Contributor role
-* [ ] Rate limiting
-* [ ] API logging
-* [ ] Audit logs
+* [x] JWT auth
+* [x] Admin role
+* [x] Editor role
+* [x] Contributor role
+* [x] Rate limiting
+* [x] API logging
+* [x] Audit logs
 
 ---
 
@@ -205,7 +205,7 @@
 * [ ] Color tokens
 * [ ] Typography scale
 * [ ] Grid (20/50/30 layout)
-* [ ] Dark mode
+* [x] Dark mode
 * [ ] Spacing system
 * [ ] Table system
 * [ ] Card system
@@ -228,8 +228,8 @@
 
 ## Core UI Components
 
-* [ ] Header
-* [ ] Footer
+* [x] Header
+* [x] Footer
 * [ ] Sidebar
 * [ ] Author Card
 * [ ] Article Card
@@ -332,11 +332,11 @@
 
 ## Docker
 
-* [ ] Dockerfile frontend
-* [ ] Dockerfile backend
-* [ ] PostgreSQL container
+* [x] Dockerfile frontend
+* [x] Dockerfile backend
+* [x] PostgreSQL container
 * [ ] Reverse proxy config
-* [ ] Environment variable management
+* [x] Environment variable management
 
 ---
 
