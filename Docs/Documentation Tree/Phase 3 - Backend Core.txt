@@ -98,38 +98,9 @@ PHASE 3 – BACKEND CORE (FastAPI + Strawberry GraphQL)
 │   ├── 3.2.10 Add GraphQL auth context
 │   │   ├── inject current user
 │   │   └── enforce RBAC per resolver
-│   └── 3.2.11 Enable GraphQL IDE in dev (playground)
-│
-├── 3.3 REST Stats API (Read-Only)
-│   ├── 3.3.1 Define response schemas (Pydantic)
-│   │   ├── LeaderboardRow
-│   │   ├── PlayerTrendRow
-│   │   ├── CourseHistoryRow
-│   │   ├── ProjectionRow
-│   │   ├── BettingEdgeRow
-│   │   └── FantasyValueRow
-│   ├── 3.3.2 Implement GET /api/leaderboard
-│   │   ├── params: tournament_id, season_year
-│   │   └── query: stats.leaderboard_view
-│   ├── 3.3.3 Implement GET /api/player-trends
-│   │   ├── params: golfer_id, window (8/16/32)
-│   │   └── query: stats.player_trend_view
-│   ├── 3.3.4 Implement GET /api/course-history
-│   │   ├── params: course_id, golfer_id (optional)
-│   │   └── query: stats.course_history_view
-│   ├── 3.3.5 Implement GET /api/projections
-│   │   ├── params: tournament_id, model_version
-│   │   └── query: stats.materialized_projections_view
-│   ├── 3.3.6 Implement GET /api/betting-edges
-│   │   ├── params: tournament_id, market
-│   │   └── query: stats.betting_edge_view
-│   ├── 3.3.7 Implement GET /api/fantasy-values
-│   │   ├── params: tournament_id, platform
-│   │   └── join: salary_cap_values + projections
-│   ├── 3.3.8 Add caching headers (optional dev)
-│   ├── 3.3.9 Add pagination + limits for all endpoints
-│   └── 3.3.10 Add timing logs (endpoint duration)
-│
+│   └── 3.2.11 Enable GraphQL IDE in dev 
+
+
 ├── 3.4 Media + Upload Plumbing (Backend-ready for Editor)
 │   ├── 3.4.1 Define upload config (size limits, allowed mime)
 │   ├── 3.4.2 Implement POST /api/media/upload
