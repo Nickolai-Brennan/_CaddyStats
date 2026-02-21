@@ -278,9 +278,8 @@ class NavMenu:
 class License:
     id: uuid.UUID
     product_id: uuid.UUID
-    user: Optional[User]
     license_key: str
-    status: str
+    max_activations: int
     expires_at: Optional[datetime]
     created_at: datetime
     updated_at: datetime
@@ -289,13 +288,13 @@ class License:
 @strawberry.type
 class Purchase:
     id: uuid.UUID
-    user: Optional[User]
+    buyer: Optional[User]
     product_id: uuid.UUID
     license: Optional[License]
     amount_cents: int
     currency: str
     provider: str
-    provider_txn_id: Optional[str]
+    provider_ref: Optional[str]
     status: str
     created_at: datetime
     updated_at: datetime
@@ -311,9 +310,6 @@ class Product:
     price_cents: int
     currency: str
     status: str
-    published_at: Optional[datetime]
-    seo: Optional[SEO]
-    is_deleted: bool
     created_at: datetime
     updated_at: datetime
 
@@ -330,8 +326,11 @@ class Event:
     session_id: Optional[str]
     path: Optional[str]
     referrer: Optional[str]
-    properties: Optional[strawberry.scalars.JSON]
+    user_agent: Optional[str]
+    ip_hash: Optional[str]
+    properties: strawberry.scalars.JSON
     created_at: datetime
+    updated_at: datetime
 
 
 # ---------------------------------------------------------------------------

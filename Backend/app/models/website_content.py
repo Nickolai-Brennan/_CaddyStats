@@ -416,16 +416,11 @@ class Product(Base):
     product_type: Mapped[str] = mapped_column(Text, nullable=False, default="template")
     price_cents: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     currency: Mapped[str] = mapped_column(String(10), nullable=False, default="USD")
-    status: Mapped[str] = mapped_column(Text, nullable=False, default="draft")
-    published_at: Mapped[datetime | None] = mapped_column(nullable=True)
-    seo_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey(f"{_SCHEMA}.seo.id", ondelete="SET NULL"), nullable=True)
+    status: Mapped[str] = mapped_column(Text, nullable=False, default="active")
     search_vector: Mapped[str | None] = mapped_column(TSVECTOR, nullable=True)
-    deleted_at: Mapped[datetime | None] = mapped_column(nullable=True)
-    is_deleted: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
     created_at: Mapped[datetime] = mapped_column(nullable=False, server_default=func.now())
     updated_at: Mapped[datetime] = mapped_column(nullable=False, server_default=func.now())
 
-    seo: Mapped["SEO | None"] = relationship()
     licenses: Mapped[list["License"]] = relationship(back_populates="product")
     purchases: Mapped[list["Purchase"]] = relationship(back_populates="product")
 
@@ -435,10 +430,9 @@ class License(Base):
     __table_args__ = {"schema": _SCHEMA}
 
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    product_id: Mapped[uuid.UUID] = mapped_column(ForeignKey(f"{_SCHEMA}.products.id", ondelete="RESTRICT"), nullable=False)
-    user_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey(f"{_SCHEMA}.users.id", ondelete="SET NULL"), nullable=True)
+    product_id: Mapped[uuid.UUID] = mapped_column(ForeignKey(f"{_SCHEMA}.products.id", ondelete="CASCADE"), nullable=False)
     license_key: Mapped[str] = mapped_column(Text, nullable=False, unique=True)
-    status: Mapped[str] = mapped_column(Text, nullable=False, default="active")
+    max_activations: Mapped[int] = mapped_column(Integer, nullable=False, default=1)
     expires_at: Mapped[datetime | None] = mapped_column(nullable=True)
     created_at: Mapped[datetime] = mapped_column(nullable=False, server_default=func.now())
     updated_at: Mapped[datetime] = mapped_column(nullable=False, server_default=func.now())
@@ -451,14 +445,14 @@ class Purchase(Base):
     __table_args__ = {"schema": _SCHEMA}
 
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    user_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey(f"{_SCHEMA}.users.id", ondelete="SET NULL"), nullable=True)
+    buyer_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey(f"{_SCHEMA}.users.id", ondelete="SET NULL"), nullable=True)
     product_id: Mapped[uuid.UUID] = mapped_column(ForeignKey(f"{_SCHEMA}.products.id", ondelete="RESTRICT"), nullable=False)
     license_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey(f"{_SCHEMA}.licenses.id", ondelete="SET NULL"), nullable=True)
     amount_cents: Mapped[int] = mapped_column(Integer, nullable=False)
     currency: Mapped[str] = mapped_column(String(10), nullable=False, default="USD")
     provider: Mapped[str] = mapped_column(Text, nullable=False, default="manual")
-    provider_txn_id: Mapped[str | None] = mapped_column(Text, nullable=True)
-    status: Mapped[str] = mapped_column(Text, nullable=False, default="completed")
+    provider_ref: Mapped[str | None] = mapped_column(Text, nullable=True)
+    status: Mapped[str] = mapped_column(Text, nullable=False, default="paid")
     created_at: Mapped[datetime] = mapped_column(nullable=False, server_default=func.now())
     updated_at: Mapped[datetime] = mapped_column(nullable=False, server_default=func.now())
 
@@ -479,5 +473,8 @@ class Event(Base):
     session_id: Mapped[str | None] = mapped_column(Text, nullable=True)
     path: Mapped[str | None] = mapped_column(Text, nullable=True)
     referrer: Mapped[str | None] = mapped_column(Text, nullable=True)
-    properties: Mapped[dict | None] = mapped_column(JSONB, nullable=True)
+    user_agent: Mapped[str | None] = mapped_column(Text, nullable=True)
+    ip_hash: Mapped[str | None] = mapped_column(Text, nullable=True)
+    properties: Mapped[dict] = mapped_column(JSONB, nullable=False, default=dict, server_default="{}")
     created_at: Mapped[datetime] = mapped_column(nullable=False, server_default=func.now())
+    updated_at: Mapped[datetime] = mapped_column(nullable=False, server_default=func.now())

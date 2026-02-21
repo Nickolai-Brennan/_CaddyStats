@@ -105,27 +105,17 @@ CREATE TABLE IF NOT EXISTS website_content.products (
   price_cents  INTEGER NOT NULL DEFAULT 0,
   currency     TEXT NOT NULL DEFAULT 'USD',
 
-  status       TEXT NOT NULL DEFAULT 'draft',
-  published_at TIMESTAMPTZ NULL,
-
-  seo_id       UUID NULL REFERENCES website_content.seo(id) ON DELETE SET NULL,
+  status       TEXT NOT NULL DEFAULT 'active', -- active|inactive|archived
 
   -- FTS
   search_vector TSVECTOR NULL,
-
-  deleted_at   TIMESTAMPTZ NULL,
-  is_deleted   BOOLEAN NOT NULL DEFAULT FALSE,
 
   created_at   TIMESTAMPTZ NOT NULL DEFAULT now(),
   updated_at   TIMESTAMPTZ NOT NULL DEFAULT now(),
 
   CONSTRAINT products_slug_unique UNIQUE (slug),
-  CONSTRAINT products_status_check CHECK (status IN ('draft','active','archived')),
   CONSTRAINT products_type_check CHECK (product_type IN ('template','doc','bundle','other')),
-  CONSTRAINT products_soft_delete_consistency CHECK (
-    (is_deleted = FALSE AND deleted_at IS NULL) OR
-    (is_deleted = TRUE  AND deleted_at IS NOT NULL)
-  )
+  CONSTRAINT products_status_check CHECK (status IN ('active','inactive','archived'))
 );
 
 DO $$
@@ -144,19 +134,16 @@ BEGIN
 END $$;
 
 CREATE TABLE IF NOT EXISTS website_content.licenses (
-  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  product_id  UUID NOT NULL REFERENCES website_content.products(id) ON DELETE RESTRICT,
-  user_id     UUID NULL REFERENCES website_content.users(id) ON DELETE SET NULL,
+  id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  product_id      UUID NOT NULL REFERENCES website_content.products(id) ON DELETE CASCADE,
+  license_key     TEXT NOT NULL, -- store hashed later if desired
+  max_activations INTEGER NOT NULL DEFAULT 1,
+  expires_at      TIMESTAMPTZ NULL,
 
-  license_key TEXT NOT NULL,
-  status      TEXT NOT NULL DEFAULT 'active', -- active|revoked|expired
-  expires_at  TIMESTAMPTZ NULL,
+  created_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
 
-  created_at  TIMESTAMPTZ NOT NULL DEFAULT now(),
-  updated_at  TIMESTAMPTZ NOT NULL DEFAULT now(),
-
-  CONSTRAINT licenses_key_unique UNIQUE (license_key),
-  CONSTRAINT licenses_status_check CHECK (status IN ('active','revoked','expired'))
+  CONSTRAINT licenses_key_unique UNIQUE (license_key)
 );
 
 DO $$
@@ -169,24 +156,23 @@ BEGIN
 END $$;
 
 CREATE TABLE IF NOT EXISTS website_content.purchases (
-  id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id         UUID NULL REFERENCES website_content.users(id) ON DELETE SET NULL,
-  product_id      UUID NOT NULL REFERENCES website_content.products(id) ON DELETE RESTRICT,
-  license_id      UUID NULL REFERENCES website_content.licenses(id) ON DELETE SET NULL,
+  id           UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  buyer_id     UUID NULL REFERENCES website_content.users(id) ON DELETE SET NULL,
+  product_id   UUID NOT NULL REFERENCES website_content.products(id) ON DELETE RESTRICT,
+  license_id   UUID NULL REFERENCES website_content.licenses(id) ON DELETE SET NULL,
 
-  amount_cents    INTEGER NOT NULL,
-  currency        TEXT NOT NULL DEFAULT 'USD',
+  amount_cents INTEGER NOT NULL,
+  currency     TEXT NOT NULL DEFAULT 'USD',
 
-  provider        TEXT NOT NULL DEFAULT 'manual', -- stripe|paddle|manual
-  provider_txn_id TEXT NULL,
+  provider     TEXT NOT NULL DEFAULT 'manual', -- stripe|paddle|manual
+  provider_ref TEXT NULL,
 
-  status          TEXT NOT NULL DEFAULT 'completed',
+  status       TEXT NOT NULL DEFAULT 'paid',   -- pending|paid|refunded|failed
 
-  created_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
-  updated_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
+  created_at   TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at   TIMESTAMPTZ NOT NULL DEFAULT now(),
 
-  CONSTRAINT purchases_status_check CHECK (status IN ('pending','completed','refunded','failed')),
-  CONSTRAINT purchases_provider_check CHECK (provider IN ('stripe','paddle','manual'))
+  CONSTRAINT purchases_status_check CHECK (status IN ('pending','paid','refunded','failed'))
 );
 
 DO $$
@@ -198,15 +184,30 @@ BEGIN
   END IF;
 END $$;
 
--- Analytics Events (pageview, click, purchase, search)
+-- Simple analytics events
 CREATE TABLE IF NOT EXISTS website_content.events (
   id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  event_type  TEXT NOT NULL, -- pageview|click|purchase|search
+  event_type  TEXT NOT NULL, -- pageview|click|search|purchase|custom
   user_id     UUID NULL REFERENCES website_content.users(id) ON DELETE SET NULL,
   session_id  TEXT NULL,
   path        TEXT NULL,
   referrer    TEXT NULL,
-  properties  JSONB NULL,
+  user_agent  TEXT NULL,
+  ip_hash     TEXT NULL, -- store a hash, not raw IP (privacy)
 
-  created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+  properties  JSONB NOT NULL DEFAULT '{}'::jsonb,
+
+  created_at  TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at  TIMESTAMPTZ NOT NULL DEFAULT now(),
+
+  CONSTRAINT events_type_check CHECK (event_type IN ('pageview','click','search','purchase','custom'))
 );
+
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_trigger WHERE tgname = 'events_set_updated_at') THEN
+    CREATE TRIGGER events_set_updated_at
+    BEFORE UPDATE ON website_content.events
+    FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
+  END IF;
+END $$;
