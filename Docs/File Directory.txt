@@ -1,1 +1,253 @@
+# Caddy Stats – Complete File & Folder Directory
+# Auto-generated reference. Last updated: Phase 1 → Phase 2 transition.
+# Root: repository root (_CaddyStats/)
 
+_CaddyStats/
+│
+├── .env.example
+├── .gitignore
+├── Changelog.md
+├── README.md
+├── docker-compose.yml
+│
+├── Backend/                              # FastAPI + Strawberry GraphQL backend
+│   ├── .dockerignore
+│   ├── Dockerfile
+│   ├── requirements.txt
+│   └── app/
+│       ├── __init__.py
+│       ├── main.py                       # FastAPI app entry point
+│       ├── api/
+│       │   ├── betting_edges.py          # Betting edges REST endpoint
+│       │   ├── course_history.py         # Course history REST endpoint
+│       │   ├── graphql_router.py         # GraphQL router
+│       │   ├── leaderboard.py            # Leaderboard REST endpoint
+│       │   └── projections.py            # Projections REST endpoint
+│       ├── auth/
+│       │   ├── __init__.py
+│       │   ├── jwt_handler.py            # JWT issue / verify
+│       │   └── permissions.py            # Role-based access control
+│       ├── core/
+│       │   ├── __init__.py
+│       │   └── config.py                 # Pydantic settings / env loader
+│       ├── db/
+│       │   ├── __init__.py
+│       │   ├── base.py                   # SQLAlchemy engine factory
+│       │   ├── content.py                # Content DB engine
+│       │   ├── mutations.py              # Mutation helpers
+│       │   ├── queries.py                # Query helpers
+│       │   ├── session.py                # Session management
+│       │   ├── stats.py                  # Stats DB engine
+│       │   └── repos/
+│       │       └── posts_repo.py         # Posts repository
+│       ├── graphql/
+│       │   ├── __init__.py
+│       │   ├── context.py                # GraphQL context
+│       │   ├── mutations.py              # Mutation resolvers
+│       │   ├── queries.py                # Query resolvers
+│       │   ├── schema.py                 # Root GraphQL schema
+│       │   ├── types.py                  # GraphQL type definitions
+│       │   ├── inputs/
+│       │   │   └── post_inputs.py
+│       │   └── types/
+│       │       ├── pagination.py
+│       │       └── posts.py
+│       ├── middleware/
+│       │   ├── __init__.py
+│       │   ├── exceptions.py             # Global exception handlers
+│       │   ├── rate_limit.py             # Rate-limit middleware
+│       │   └── request_logging.py        # Request logging middleware
+│       ├── models/
+│       │   ├── __init__.py
+│       │   ├── app_models.py             # CMS model re-exports
+│       │   ├── golf_models.py            # Golf stats ORM models
+│       │   └── website_content.py        # CMS ORM models (full)
+│       ├── schemas/
+│       │   └── __init__.py               # Pydantic schemas
+│       ├── services/
+│       │   ├── __init__.py
+│       │   ├── embed_service.py          # Stat embed resolver
+│       │   ├── post_service.py           # CMS post business logic
+│       │   ├── stat_service.py           # Stats API orchestration
+│       │   └── stats_api_client.py       # External Stats API client
+│       └── utils/
+│           ├── __init__.py
+│           ├── helpers.py                # General-purpose helpers
+│           ├── logging.py                # Logging configuration
+│           └── slugify.py                # URL slug generator
+│
+├── Database/                             # PostgreSQL schema, views, migrations
+│   ├── Overview.md
+│   ├── SQL Migration Set.sql             # Combined migration reference
+│   ├── materialized_views/
+│   │   ├── leaderboard_mv.sql
+│   │   ├── projections_summary_mv.sql
+│   │   └── rolling_form_mv.sql
+│   ├── migrations/                       # Numbered incremental SQL migrations
+│   │   ├── 0000_extensions.sql
+│   │   ├── 0001_create_schema.sql
+│   │   ├── 0002_triggers.sql
+│   │   ├── 0003_auth_rbac.sql
+│   │   ├── 0004_taxonomy_seo.sql
+│   │   ├── 0005_cms_content.sql
+│   │   ├── 0006_media_nav_marketplace.sql
+│   │   ├── 0007_indexes_search.sql
+│   │   ├── 0008_seed_minimal.sql
+│   │   ├── 0009_options_meta.sql
+│   │   ├── 0010_editorial_workflow.sql
+│   │   ├── 0011_seo_redirects.sql
+│   │   ├── 0012_memberships_subscriptions.sql
+│   │   ├── 0013_newsletters.sql
+│   │   ├── 0014_engagement_notifications.sql
+│   │   ├── 0015_admin_safety.sql
+│   │   ├── 0016_marketplace_plus_optional.sql
+│   │   ├── 0017_indexes_addons.sql
+│   │   └── 0018_authors.sql
+│   ├── schemas/
+│   │   ├── app_schema.sql                # CMS schema reference
+│   │   └── golf_schema.sql               # Golf stats schema reference
+│   └── views/
+│       ├── betting_edge_view.sql
+│       ├── course_history_view.sql
+│       ├── leaderboard_view.sql
+│       └── rolling_form_view.sql
+│
+├── Docker/                               # Docker / Nginx configuration
+│   ├── Overview.md
+│   └── nginx.conf                        # Nginx reverse proxy config
+│
+├── Docs/                                 # Project documentation (Phase 0+)
+│   ├── File Directory.txt                # ← this file
+│   ├── P0-01 Readme.md
+│   ├── P0-02 Project Overview.md
+│   ├── P0-03 Product Vision.md
+│   ├── P0-04 User Personas.md
+│   ├── P0-05 System Architecture.md
+│   ├── P0-06 Database Schema.md
+│   ├── P0-07 API Specifications.md
+│   ├── P0-08 UI UX Design System.md
+│   ├── P0-09 SEO Strategy.md
+│   ├── P0-10 AI Prompt Library.md
+│   ├── P0-11 Deployment Guide.md
+│   ├── P0-12 Workflows.md
+│   ├── P0-13 Folder Structure.txt
+│   ├── P0-14 Tech Stack.md
+│   ├── P1.0.3 Git_Branch_Strategy.md
+│   ├── P1.0.5 Commit_Convention_Rules.md
+│   ├── Documentation Tree/
+│   │   ├── Phase 0 - Core Documentation.txt
+│   │   ├── Phase 1 - Folder & Environment Setup.txt
+│   │   ├── Phase 2 - DB Dev.txt
+│   │   ├── Phase 2 - WEBSITE DATABASE + GRAPHQL.txt
+│   │   ├── Phase 3 - Backend Core.txt
+│   │   ├── Phase 4 - Frontend UI Base.txt
+│   │   ├── Phase 5 - Blog Editor System.txt
+│   │   ├── Phase 6 - Post Templates and Views.txt
+│   │   ├── Phase 7 - SEO & Meta Engineering.txt
+│   │   ├── Phase 8 - AI & MCP System.txt
+│   │   ├── Phase 9 - Hosting & Infrastructure.txt
+│   │   ├── Phase 10 - Admin & Analytics.txt
+│   │   ├── Phase 11 - API Integrations.txt
+│   │   ├── Phase 12 - Scale & Expansion.txt
+│   │   └── Phase X - Business Management.txt
+│   ├── Prompts/
+│   │   ├── AI Prompt Library.md
+│   │   ├── Blog Post Complete Start to Production.md
+│   │   ├── Full Project General Prompt.md
+│   │   ├── Prompts Per Phase.md
+│   │   └── SEO Visibility Audit.md
+│   ├── Tables/
+│   │   └── Golf_DB/
+│   │       ├── Headshot.md
+│   │       └── Player_Info.md
+│   └── 📚/
+│       └── Master Control File.md
+│
+├── Frontend/                             # React + Vite + TypeScript frontend
+│   ├── .dockerignore
+│   ├── Dockerfile
+│   ├── index.html
+│   ├── package.json
+│   ├── package-lock.json
+│   ├── tailwind.config.js
+│   ├── tsconfig.json
+│   ├── vite.config.ts
+│   ├── public/
+│   │   └── robots.txt
+│   └── src/
+│       ├── App.tsx
+│       ├── config.ts
+│       ├── main.tsx
+│       ├── styles.css
+│       ├── api/
+│       │   ├── auth.ts                   # Auth REST client
+│       │   └── stats.ts                  # Stats REST client
+│       ├── app/
+│       │   ├── router.tsx                # React Router config
+│       │   └── providers/
+│       │       ├── QueryProvider.tsx     # TanStack Query setup
+│       │       └── ThemeProvider.tsx     # Dark/light theme
+│       ├── assets/                       # Static assets (images, icons)
+│       ├── components/
+│       │   ├── Footer.tsx
+│       │   ├── Header.tsx
+│       │   ├── ThemeToggle.tsx
+│       │   ├── article/                  # Article-specific components
+│       │   ├── charts/                   # Chart components
+│       │   ├── layout/                   # Layout sub-components
+│       │   ├── stats/                    # Stats display components
+│       │   └── ui/                       # Base UI component library
+│       ├── editor/
+│       │   ├── BlockRenderer.tsx         # Block-to-JSX renderer
+│       │   ├── EditorRoot.tsx            # Editor entry point
+│       │   ├── blocks/                   # Individual block components
+│       │   └── templates/                # Editor templates
+│       ├── graphql/
+│       │   ├── client.ts                 # GraphQL client (graphql-request)
+│       │   ├── fragments.ts              # Shared GraphQL fragments
+│       │   ├── mutations.ts              # GraphQL mutations
+│       │   └── queries.ts                # GraphQL queries
+│       ├── hooks/
+│       │   ├── useAuth.ts
+│       │   ├── useLeaderboard.ts
+│       │   ├── usePosts.ts
+│       │   └── useProjections.ts
+│       ├── layouts/
+│       │   ├── AdminLayout.tsx
+│       │   ├── AppLayout.tsx
+│       │   ├── ArticleLayout.tsx
+│       │   └── MagazineLayout.tsx
+│       ├── lib/
+│       │   └── api.ts                    # Low-level API/GraphQL client
+│       ├── styles/
+│       │   ├── globals.css               # Global base styles
+│       │   └── tailwind.css              # Tailwind CSS entry
+│       ├── templates/                    # Content templates (future)
+│       ├── types/
+│       │   ├── post.ts
+│       │   ├── stats.ts
+│       │   └── user.ts
+│       ├── utils/
+│       │   ├── constants.ts
+│       │   ├── formatters.ts
+│       │   └── seo.ts
+│       └── views/
+│           ├── HomeView.tsx
+│           ├── about/                    # About page views
+│           ├── admin/                    # Admin dashboard views
+│           ├── archive/                  # Archive / listing views
+│           ├── article/                  # Article detail views
+│           ├── contact/                  # Contact page views
+│           └── home/                     # Home page views
+│
+├── Scripts/                              # Utility & automation scripts
+│   ├── Purge Golf Stats.md
+│   ├── init-docs.js
+│   └── verify.sh
+│
+├── docs/                                 # Additional phase docs
+│   └── PHASE2_DOUBLECHECK.md
+│
+└── scripts/                              # Shell utility scripts
+    ├── db_reset.sh
+    └── health_check.sh

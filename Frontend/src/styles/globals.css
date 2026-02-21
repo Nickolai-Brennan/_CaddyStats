@@ -1,0 +1,18 @@
+/* globals.css – global base styles */
+/* Populated in Phase 4+ (UI design system) */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, sans-serif;
+}
