@@ -113,6 +113,18 @@
 ---
 
 # 2️⃣ DATABASE DEVELOPMENT (PostgreSQL)
+## PHASE 2 COMPLETE CRITERIA
+
+- [ ] All website_content tables exist
+- [ ] UUID PK everywhere
+- [ ] updated_at triggers working
+- [ ] Full index pack applied
+- [ ] GraphQL contract live
+- [ ] RBAC enforced in resolvers
+- [ ] Publish workflow tested
+- [ ] Docker bootstrap verified
+- [ ] No golf_stats schema present
+
 
 ## Website Content DB
 
@@ -129,21 +141,6 @@
 * [ ] newsletters
 * [ ] page_views
 * [ ] revisions (version history)
-
----
-
-## Golf Stats Database
-
-* [ ] golfers
-* [ ] tournaments
-* [ ] courses
-* [ ] historical_results
-* [ ] event_stats
-* [ ] player_round_stats
-* [ ] betting_odds
-* [ ] projections
-* [ ] salary_cap_values
-* [ ] fantasy_scoring
 
 ---
 
