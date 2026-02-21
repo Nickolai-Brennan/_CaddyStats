@@ -16,9 +16,12 @@ class Settings(BaseSettings):
     # Environment
     app_env: str = "development"
 
-    # Database URLs (single DB, 2 schemas: content + stats)
+    # Database URL (single Postgres cluster, website_content schema)
     content_database_url: str = "postgresql+psycopg2://caddystats:caddystats_password@localhost:5432/caddystats"
-    stats_database_url: str = "postgresql+psycopg2://caddystats:caddystats_password@localhost:5432/caddystats"
+
+    # External Stats API (no local stats DB)
+    stats_api_url: str = "http://localhost:9000"
+    stats_api_timeout: int = 10
 
     # Auth
     jwt_secret: str = "change_me"
