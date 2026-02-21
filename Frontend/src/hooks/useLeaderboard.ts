@@ -3,10 +3,11 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { fetchLeaderboard } from '../api/stats';
+import { queryKeys } from '../lib/queryKeys';
 
 export function useLeaderboard(tournamentId: string) {
   return useQuery({
-    queryKey: ['leaderboard', tournamentId],
+    queryKey: queryKeys.leaderboard.byTournament(tournamentId),
     queryFn: () => fetchLeaderboard(tournamentId),
     enabled: !!tournamentId,
   });

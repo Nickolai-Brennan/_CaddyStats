@@ -7,27 +7,28 @@ const HomeView = lazy(() =>
   import('../views/HomeView').then((m) => ({ default: m.HomeView })),
 );
 const ArchiveView = lazy(() =>
-  import('../views/ArchiveView').then((m) => ({ default: m.ArchiveView })),
+  import('../views/archive/ArchiveView').then((m) => ({ default: m.ArchiveView })),
 );
-const PostView = lazy(() =>
-  import('../views/PostView').then((m) => ({ default: m.PostView })),
+const ArticleView = lazy(() =>
+  import('../views/article/ArticleView').then((m) => ({ default: m.ArticleView })),
 );
 const AboutView = lazy(() =>
-  import('../views/AboutView').then((m) => ({ default: m.AboutView })),
+  import('../views/about/AboutView').then((m) => ({ default: m.AboutView })),
 );
 const ContactView = lazy(() =>
-  import('../views/ContactView').then((m) => ({ default: m.ContactView })),
+  import('../views/contact/ContactView').then((m) => ({ default: m.ContactView })),
 );
 const DirectoryView = lazy(() =>
-  import('../views/DirectoryView').then((m) => ({ default: m.DirectoryView })),
+  import('../views/directory/DirectoryView').then((m) => ({ default: m.DirectoryView })),
 );
 const NotFound = lazy(() =>
   import('../views/NotFound').then((m) => ({ default: m.NotFound })),
 );
 
 const Spinner = () => (
-  <div className="flex items-center justify-center min-h-[40vh]">
+  <div className="flex items-center justify-center min-h-[40vh]" role="status" aria-label="Loading">
     <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
+    <span className="sr-only">Loading…</span>
   </div>
 );
 
@@ -56,7 +57,7 @@ export function AppRouter() {
             path="/post/:slug"
             element={
               <Suspense fallback={<Spinner />}>
-                <PostView />
+                <ArticleView />
               </Suspense>
             }
           />
@@ -97,4 +98,5 @@ export function AppRouter() {
     </BrowserRouter>
   );
 }
+
 
