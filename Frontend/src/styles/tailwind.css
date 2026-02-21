@@ -1,0 +1,6 @@
+/* tailwind.css – Tailwind CSS entry point */
+/* Populated in Phase 4+ (Tailwind integration) */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
