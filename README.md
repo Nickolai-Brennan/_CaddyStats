@@ -16,25 +16,53 @@ Copy-Item .env.example .env
 docker compose --profile dev up --build
 ```
 
-Services
+### Services
 
-Frontend: http://localhost:5173
+| Service  | URL                           |
+|----------|-------------------------------|
+| Frontend | http://localhost:5173         |
+| Backend  | http://localhost:8000         |
+| Health   | http://localhost:8000/health  |
+| GraphQL  | http://localhost:8000/graphql |
 
-Backend: http://localhost:8000
+## Stack Verification
 
-Health: http://localhost:8000/health
+After starting the stack, run the verification script to confirm all services are healthy:
 
-GraphQL: http://localhost:8000/graphql
+```bash
+bash Scripts/verify.sh
+```
 
+To verify the production profile:
 
-Notes
+```bash
+bash Scripts/verify.sh --profile prod
+```
+
+The script performs 10 checks and prints a structured health report:
+
+```
+CADDY STATS — SYSTEM HEALTH REPORT
+
+Docker:                      PASS
+Postgres:                    PASS
+Backend API:                 PASS
+GraphQL:                     PASS
+Health Endpoint:             PASS
+Frontend:                    PASS
+Database Schema:             PASS
+Port Conflicts:              PASS
+API → DB Query:              PASS
+GraphQL → DB Query:          PASS
+
+OVERALL STATUS: HEALTHY
+```
+
+Exit code is `0` when all checks pass, non-zero on any failure.
+
+## Notes
 
 Postgres uses one database with two schemas:
 
-content (site + editor + users + posts)
-
-stats (golf analytics tables, projections, models)
-
-
-
-Reply **“done”** and I’ll give you **Item 1.0.5** (commit convention rules).
+- `content` — site content, editor, users, posts
+- `stats` — golf analytics tables, projections, models
