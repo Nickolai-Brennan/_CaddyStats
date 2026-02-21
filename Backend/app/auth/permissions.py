@@ -1,9 +1,8 @@
 """
 Permissions – role-based access control helpers.
-Populated in Phase 2+ (auth integration).
 """
 
-from typing import Callable
+from typing import Callable, Set
 
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
@@ -37,3 +36,15 @@ def require_role(minimum_role: str) -> Callable:
             )
 
     return Depends(_check)
+
+
+def has_permission(user_permissions: Set[str], permission_key: str) -> bool:
+    """Check if the given set of permissions contains the requested key."""
+    return permission_key in user_permissions
+
+
+def get_user_permissions_from_viewer(viewer) -> Set[str]:
+    """Return all permission keys from a Viewer context object."""
+    if viewer is None:
+        return set()
+    return set(viewer.permissions)

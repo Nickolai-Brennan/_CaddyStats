@@ -1,18 +1,30 @@
 """
 GraphQL Query resolvers.
 
-All resolvers return stubs until the DB session layer is wired in.
+All resolvers return real data from PostgreSQL via SQLAlchemy ORM.
 RBAC guards are enforced via the viewer context.
 """
 
 from __future__ import annotations
 
+import logging
 import uuid
 from typing import List, Optional
 
 import strawberry
+from sqlalchemy.orm import joinedload
 from strawberry.types import Info
 
+from app.db.session import SessionLocal
+from app.graphql.context import GQLContext, require_perm
+from app.graphql.converters import (
+    orm_nav_menu_to_gql,
+    orm_page_to_gql,
+    orm_post_to_gql,
+    orm_product_to_gql,
+    orm_template_to_gql,
+    orm_user_to_gql,
+)
 from app.graphql.types import (
     Category,
     Event,
@@ -30,6 +42,52 @@ from app.graphql.types import (
     TournamentCard,
     User,
 )
+from app.models.website_content import (
+    NavMenu as OrmNavMenu,
+    NavItem as OrmNavItem,
+    Page as OrmPage,
+    Post as OrmPost,
+    PostCategory as OrmPostCategory,
+    PostTag as OrmPostTag,
+    Product as OrmProduct,
+    Role,
+    RolePermission,
+    Template as OrmTemplate,
+    User as OrmUser,
+    UserRole,
+)
+
+logger = logging.getLogger("caddystats.queries")
+
+_POST_EAGER = [
+    joinedload(OrmPost.author)
+    .joinedload(OrmUser.user_roles)
+    .joinedload(UserRole.role)
+    .joinedload(Role.role_permissions)
+    .joinedload(RolePermission.permission),
+    joinedload(OrmPost.seo),
+    joinedload(OrmPost.post_tags).joinedload(OrmPostTag.tag),
+    joinedload(OrmPost.post_categories).joinedload(OrmPostCategory.category),
+    joinedload(OrmPost.comments),
+]
+
+_PAGE_EAGER = [
+    joinedload(OrmPage.author)
+    .joinedload(OrmUser.user_roles)
+    .joinedload(UserRole.role)
+    .joinedload(Role.role_permissions)
+    .joinedload(RolePermission.permission),
+    joinedload(OrmPage.seo),
+]
+
+_TEMPLATE_EAGER = [
+    joinedload(OrmTemplate.author)
+    .joinedload(OrmUser.user_roles)
+    .joinedload(UserRole.role)
+    .joinedload(Role.role_permissions)
+    .joinedload(RolePermission.permission),
+    joinedload(OrmTemplate.seo),
+]
 
 
 @strawberry.type
@@ -40,8 +98,27 @@ class Query:
 
     @strawberry.field(description="Returns the currently authenticated user.")
     def viewer(self, info: Info) -> Optional[User]:
-        # TODO: decode JWT from info.context.request, load user from DB
-        return None
+        if not info.context.viewer:
+            return None
+        db = SessionLocal()
+        try:
+            user = (
+                db.query(OrmUser)
+                .options(
+                    joinedload(OrmUser.user_roles)
+                    .joinedload(UserRole.role)
+                    .joinedload(Role.role_permissions)
+                    .joinedload(RolePermission.permission)
+                )
+                .filter(
+                    OrmUser.id == info.context.viewer.user_id,
+                    OrmUser.is_deleted == False,
+                )
+                .first()
+            )
+            return orm_user_to_gql(user) if user else None
+        finally:
+            db.close()
 
     # ------------------------------------------------------------------
     # Users
@@ -49,8 +126,24 @@ class Query:
 
     @strawberry.field(description="List all users. Requires user:manage permission.")
     def users(self, info: Info) -> List[User]:
-        # TODO: RBAC check for user:manage, load from DB
-        return []
+        require_perm(info.context, "user:manage")
+        db = SessionLocal()
+        try:
+            rows = (
+                db.query(OrmUser)
+                .options(
+                    joinedload(OrmUser.user_roles)
+                    .joinedload(UserRole.role)
+                    .joinedload(Role.role_permissions)
+                    .joinedload(RolePermission.permission)
+                )
+                .filter(OrmUser.is_deleted == False)
+                .order_by(OrmUser.created_at.desc())
+                .all()
+            )
+            return [orm_user_to_gql(u) for u in rows]
+        finally:
+            db.close()
 
     # ------------------------------------------------------------------
     # Posts
@@ -65,13 +158,61 @@ class Query:
         first: int = 20,
         after: Optional[str] = None,
     ) -> List[Post]:
-        # TODO: query website_content.posts with filter/sort/cursor
-        return []
+        db = SessionLocal()
+        try:
+            q = (
+                db.query(OrmPost)
+                .options(*_POST_EAGER)
+                .filter(OrmPost.is_deleted == False)
+            )
+            if filter:
+                if filter.status:
+                    q = q.filter(OrmPost.status == filter.status)
+                if filter.author_id:
+                    q = q.filter(OrmPost.author_id == filter.author_id)
+                if filter.tag_ids:
+                    q = q.join(OrmPost.post_tags).filter(
+                        OrmPostTag.tag_id.in_(filter.tag_ids)
+                    )
+                if filter.category_ids:
+                    q = q.join(OrmPost.post_categories).filter(
+                        OrmPostCategory.category_id.in_(filter.category_ids)
+                    )
+
+            sort_field = OrmPost.created_at
+            if sort:
+                field_map = {
+                    "CREATED_AT": OrmPost.created_at,
+                    "UPDATED_AT": OrmPost.updated_at,
+                    "PUBLISHED_AT": OrmPost.published_at,
+                    "TITLE": OrmPost.title,
+                }
+                sort_field = field_map.get(sort.field.upper(), OrmPost.created_at)
+
+            if sort and sort.direction.upper() == "ASC":
+                q = q.order_by(sort_field.asc())
+            else:
+                q = q.order_by(sort_field.desc())
+
+            first = max(1, min(first, 100))
+            rows = q.limit(first).all()
+            return [orm_post_to_gql(p) for p in rows]
+        finally:
+            db.close()
 
     @strawberry.field(description="Fetch a single post by slug.")
     def post(self, info: Info, slug: str) -> Optional[Post]:
-        # TODO: load from DB
-        return None
+        db = SessionLocal()
+        try:
+            p = (
+                db.query(OrmPost)
+                .options(*_POST_EAGER)
+                .filter(OrmPost.slug == slug, OrmPost.is_deleted == False)
+                .first()
+            )
+            return orm_post_to_gql(p) if p else None
+        finally:
+            db.close()
 
     @strawberry.field(description="Full-text search across posts.")
     def search_posts(
@@ -80,8 +221,28 @@ class Query:
         query: str,
         first: int = 20,
     ) -> List[Post]:
-        # TODO: use posts.search_vector GIN index
-        return []
+        db = SessionLocal()
+        try:
+            from sqlalchemy import func
+            first = max(1, min(first, 100))
+            rows = (
+                db.query(OrmPost)
+                .options(*_POST_EAGER)
+                .filter(
+                    OrmPost.is_deleted == False,
+                    OrmPost.search_vector.op("@@")(
+                        func.to_tsquery("english", query)
+                    ),
+                )
+                .order_by(
+                    func.ts_rank(OrmPost.search_vector, func.to_tsquery("english", query)).desc()
+                )
+                .limit(first)
+                .all()
+            )
+            return [orm_post_to_gql(p) for p in rows]
+        finally:
+            db.close()
 
     # ------------------------------------------------------------------
     # Pages
@@ -94,11 +255,34 @@ class Query:
         first: int = 20,
         after: Optional[str] = None,
     ) -> List[Page]:
-        return []
+        db = SessionLocal()
+        try:
+            first = max(1, min(first, 100))
+            rows = (
+                db.query(OrmPage)
+                .options(*_PAGE_EAGER)
+                .filter(OrmPage.is_deleted == False)
+                .order_by(OrmPage.created_at.desc())
+                .limit(first)
+                .all()
+            )
+            return [orm_page_to_gql(p) for p in rows]
+        finally:
+            db.close()
 
     @strawberry.field(description="Fetch a single page by slug.")
     def page(self, info: Info, slug: str) -> Optional[Page]:
-        return None
+        db = SessionLocal()
+        try:
+            p = (
+                db.query(OrmPage)
+                .options(*_PAGE_EAGER)
+                .filter(OrmPage.slug == slug, OrmPage.is_deleted == False)
+                .first()
+            )
+            return orm_page_to_gql(p) if p else None
+        finally:
+            db.close()
 
     # ------------------------------------------------------------------
     # Templates
@@ -111,11 +295,33 @@ class Query:
         first: int = 20,
         after: Optional[str] = None,
     ) -> List[Template]:
-        return []
+        db = SessionLocal()
+        try:
+            first = max(1, min(first, 100))
+            rows = (
+                db.query(OrmTemplate)
+                .options(*_TEMPLATE_EAGER)
+                .order_by(OrmTemplate.created_at.desc())
+                .limit(first)
+                .all()
+            )
+            return [orm_template_to_gql(t) for t in rows]
+        finally:
+            db.close()
 
     @strawberry.field(description="Fetch a single template by slug.")
     def template(self, info: Info, slug: str) -> Optional[Template]:
-        return None
+        db = SessionLocal()
+        try:
+            t = (
+                db.query(OrmTemplate)
+                .options(*_TEMPLATE_EAGER)
+                .filter(OrmTemplate.slug == slug)
+                .first()
+            )
+            return orm_template_to_gql(t) if t else None
+        finally:
+            db.close()
 
     # ------------------------------------------------------------------
     # Products
@@ -130,11 +336,28 @@ class Query:
         first: int = 20,
         after: Optional[str] = None,
     ) -> List[Product]:
-        return []
+        db = SessionLocal()
+        try:
+            first = max(1, min(first, 100))
+            q = db.query(OrmProduct)
+            if filter:
+                if filter.status:
+                    q = q.filter(OrmProduct.status == filter.status)
+                if filter.product_type:
+                    q = q.filter(OrmProduct.product_type == filter.product_type)
+            q = q.order_by(OrmProduct.created_at.desc()).limit(first)
+            return [orm_product_to_gql(p) for p in q.all()]
+        finally:
+            db.close()
 
     @strawberry.field(description="Fetch a single product by slug.")
     def product(self, info: Info, slug: str) -> Optional[Product]:
-        return None
+        db = SessionLocal()
+        try:
+            p = db.query(OrmProduct).filter(OrmProduct.slug == slug).first()
+            return orm_product_to_gql(p) if p else None
+        finally:
+            db.close()
 
     @strawberry.field(description="Full-text search across products.")
     def search_products(
@@ -143,8 +366,23 @@ class Query:
         query: str,
         first: int = 20,
     ) -> List[Product]:
-        # TODO: use products.search_vector GIN index
-        return []
+        db = SessionLocal()
+        try:
+            from sqlalchemy import func
+            first = max(1, min(first, 100))
+            rows = (
+                db.query(OrmProduct)
+                .filter(
+                    OrmProduct.search_vector.op("@@")(
+                        func.to_tsquery("english", query)
+                    )
+                )
+                .limit(first)
+                .all()
+            )
+            return [orm_product_to_gql(p) for p in rows]
+        finally:
+            db.close()
 
     # ------------------------------------------------------------------
     # Navigation
@@ -152,7 +390,19 @@ class Query:
 
     @strawberry.field(description="Fetch a nav menu by slug.")
     def nav_menu(self, info: Info, slug: str) -> Optional[NavMenu]:
-        return None
+        db = SessionLocal()
+        try:
+            m = (
+                db.query(OrmNavMenu)
+                .options(
+                    joinedload(OrmNavMenu.items).joinedload(OrmNavItem.children)
+                )
+                .filter(OrmNavMenu.slug == slug)
+                .first()
+            )
+            return orm_nav_menu_to_gql(m) if m else None
+        finally:
+            db.close()
 
     # ------------------------------------------------------------------
     # External Stats API gateway (no local stats DB)
@@ -211,3 +461,4 @@ class Query:
             )
         except Exception:
             return None
+

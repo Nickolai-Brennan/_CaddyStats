@@ -1,9 +1,11 @@
 # Backend/app/graphql/context.py
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Optional, Set, Tuple
 import base64
+
+from starlette.requests import Request
 
 
 @dataclass(frozen=True)
@@ -15,7 +17,8 @@ class Viewer:
 
 @dataclass
 class GQLContext:
-    viewer: Optional[Viewer]
+    request: Optional[Request] = None
+    viewer: Optional[Viewer] = None
 
 
 def require_auth(ctx: GQLContext) -> Viewer:
