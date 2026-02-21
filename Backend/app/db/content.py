@@ -6,6 +6,10 @@ from app.db.base import make_engine
 
 content_engine: Engine = make_engine(settings.content_database_url)
 
+if settings.app_env == "development":
+    import logging
+    logging.getLogger("sqlalchemy.engine").setLevel(logging.INFO)
+
 
 def set_content_search_path(conn) -> None:
     """
