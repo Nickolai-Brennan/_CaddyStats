@@ -9,6 +9,7 @@ from app.middleware.exceptions import http_exception_handler, unhandled_exceptio
 
 from app.core.config import settings
 from app.graphql.schema import schema
+from app.api.graphql_router import get_context
 from app.db.content import content_engine
 from app.utils.logging import configure_logging
 from app.middleware.request_logging import RequestLoggingMiddleware
@@ -27,8 +28,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# GraphQL endpoint
-app.include_router(GraphQLRouter(schema), prefix="/graphql")
+# GraphQL endpoint with auth context
+app.include_router(GraphQLRouter(schema, context_getter=get_context), prefix="/graphql")
 
 
 @app.get("/")
@@ -47,15 +48,3 @@ def health():
         print(f"DB Error: {e}")
 
     return {"ok": True, "db": db_ok}
-
-# Backend/app/main.py
-from fastapi import FastAPI
-from app.api.graphql_router import router as graphql_router
-
-app = FastAPI()
-
-@app.get("/health")
-def health():
-    return {"status": "ok"}
-
-app.include_router(graphql_router)
