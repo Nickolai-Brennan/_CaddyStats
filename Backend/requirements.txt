@@ -12,7 +12,7 @@ fastapi==0.129.0
 graphql-core==3.2.7
 greenlet==3.3.1
 h11==0.16.0
-httpx==0.25.2
+httpx==0.28.1
 idna==3.11
 packaging==26.0
 passlib[bcrypt]==1.7.4
@@ -24,12 +24,17 @@ pydantic-settings==2.11.0
 pydantic_core==2.41.5
 python-dateutil==2.9.0.post0
 python-jose==3.5.0
+python-json-logger==2.0.7
+python-multipart==0.0.22
 python-slugify==8.0.1
 rsa==4.9.1
 six==1.17.0
+slowapi==0.1.9
 SQLAlchemy==2.0.46
 starlette==0.52.1
 strawberry-graphql==0.296.2
 typing-inspection==0.4.2
 typing_extensions==4.15.0
 uvicorn==0.41.0
+pytest==8.3.5
+pytest-asyncio==0.25.2
