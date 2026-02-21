@@ -37,6 +37,11 @@ def decode_access_token(token: str) -> dict[str, Any]:
     return jwt.decode(token, settings.jwt_secret, algorithms=[ALGORITHM])
 
 
+def decode_refresh_token(token: str) -> dict[str, Any]:
+    """Decode and verify a JWT refresh token. Raises JWTError on failure."""
+    return jwt.decode(token, settings.jwt_secret, algorithms=[ALGORITHM])
+
+
 def decode_token(token: str) -> dict[str, Any] | None:
     """Decode a token, returning None on any failure (expired / invalid)."""
     try:

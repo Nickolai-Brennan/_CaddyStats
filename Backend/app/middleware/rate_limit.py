@@ -1,17 +1,27 @@
 """
-Rate-limit middleware.
-Populated in Phase 3+ (Backend Core hardening).
+Rate-limit helpers using slowapi (wraps limits library).
+
+Usage
+-----
+Import ``limiter`` and apply ``@limiter.limit("10/minute")`` to route handlers,
+or use the :func:`apply_rate_limiting` helper to attach the slowapi middleware
+to a FastAPI application instance.
 """
 
-from starlette.middleware.base import BaseHTTPMiddleware
-from starlette.requests import Request
-from starlette.responses import Response
+from slowapi import Limiter
+from slowapi.util import get_remote_address
+
+# One global limiter instance; keyed by client IP by default.
+limiter = Limiter(key_func=get_remote_address)
 
 
-class RateLimitMiddleware(BaseHTTPMiddleware):
-    """Placeholder rate-limit middleware.  Replace with a Redis-backed
-    sliding-window implementation in Phase 3."""
+def apply_rate_limiting(app) -> None:
+    """Attach slowapi state and error handler to *app*."""
+    from slowapi import _rate_limit_exceeded_handler
+    from slowapi.errors import RateLimitExceeded
+    from slowapi.middleware import SlowAPIMiddleware
 
-    async def dispatch(self, request: Request, call_next) -> Response:
-        # TODO: implement token-bucket / sliding-window rate limiting
-        return await call_next(request)
+    app.state.limiter = limiter
+    app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+    app.add_middleware(SlowAPIMiddleware)
+

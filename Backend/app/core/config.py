@@ -34,5 +34,15 @@ class Settings(BaseSettings):
         "http://127.0.0.1:5173",
     ]
 
+    # Media uploads
+    upload_max_size_mb: int = 10
+    upload_allowed_mimes: list[str] = [
+        "image/jpeg",
+        "image/png",
+        "image/webp",
+        "image/gif",
+    ]
+    upload_storage_path: str = "./media_uploads"
+
 
 settings = Settings()
