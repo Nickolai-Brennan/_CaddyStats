@@ -1,141 +1,212 @@
--- 0006_media_nav_marketplace.sql
--- Media assets, navigation, marketplace (products/licenses/purchases), analytics events
+-- =========================
+-- Media assets (uploads), Navigation, Marketplace, Events
+-- =========================
 
-SET search_path TO website_content;
+CREATE TABLE IF NOT EXISTS website_content.media_assets (
+  id               UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  uploader_id      UUID NULL REFERENCES website_content.users(id) ON DELETE SET NULL,
 
--- Media Assets ------------------------------------------------------------
-CREATE TABLE media_assets (
-    id               UUID        PRIMARY KEY DEFAULT gen_random_uuid(),
-    uploader_id      UUID        REFERENCES users(id),
-    storage_provider TEXT        NOT NULL DEFAULT 'local',
-    bucket           TEXT,
-    key              TEXT        NOT NULL,
-    url              TEXT        NOT NULL,
-    filename         TEXT        NOT NULL,
-    mime_type        TEXT,
-    file_size        BIGINT,
-    width            INT,
-    height           INT,
-    alt_text         TEXT,
-    deleted_at       TIMESTAMPTZ NULL,
-    created_at       TIMESTAMPTZ NOT NULL DEFAULT now(),
-    updated_at       TIMESTAMPTZ NOT NULL DEFAULT now()
+  file_name        TEXT NOT NULL,
+  content_type     TEXT NOT NULL,
+  byte_size        BIGINT NOT NULL,
+
+  storage_provider TEXT NOT NULL DEFAULT 's3', -- s3|r2|gcs|local
+  storage_bucket   TEXT NULL,
+  storage_key      TEXT NOT NULL,
+  public_url       TEXT NULL,
+
+  checksum_sha256  TEXT NULL,
+
+  created_at       TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at       TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
-CREATE TRIGGER trg_media_assets_updated_at
-    BEFORE UPDATE ON media_assets
-    FOR EACH ROW EXECUTE FUNCTION set_updated_at();
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_trigger WHERE tgname = 'media_assets_set_updated_at') THEN
+    CREATE TRIGGER media_assets_set_updated_at
+    BEFORE UPDATE ON website_content.media_assets
+    FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
+  END IF;
+END $$;
 
--- Asset Links (where-used tracking) ---------------------------------------
-CREATE TABLE asset_links (
-    id          UUID        PRIMARY KEY DEFAULT gen_random_uuid(),
-    asset_id    UUID        NOT NULL REFERENCES media_assets(id) ON DELETE CASCADE,
-    entity_type TEXT        NOT NULL,
-    entity_id   UUID        NOT NULL,
-    created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+-- Optional: where-used tracking
+CREATE TABLE IF NOT EXISTS website_content.asset_links (
+  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  asset_id    UUID NOT NULL REFERENCES website_content.media_assets(id) ON DELETE CASCADE,
+  owner_type  TEXT NOT NULL, -- post|page|template
+  owner_id    UUID NOT NULL,
+  note        TEXT NULL,
+  created_at  TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at  TIMESTAMPTZ NOT NULL DEFAULT now(),
+  CONSTRAINT asset_links_owner_type_check CHECK (owner_type IN ('post','page','template'))
 );
 
--- Navigation Menus --------------------------------------------------------
-CREATE TABLE nav_menus (
-    id          UUID        PRIMARY KEY DEFAULT gen_random_uuid(),
-    name        TEXT        NOT NULL,
-    slug        TEXT        NOT NULL UNIQUE,
-    description TEXT,
-    deleted_at  TIMESTAMPTZ NULL,
-    created_at  TIMESTAMPTZ NOT NULL DEFAULT now(),
-    updated_at  TIMESTAMPTZ NOT NULL DEFAULT now()
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_trigger WHERE tgname = 'asset_links_set_updated_at') THEN
+    CREATE TRIGGER asset_links_set_updated_at
+    BEFORE UPDATE ON website_content.asset_links
+    FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
+  END IF;
+END $$;
+
+-- Navigation
+CREATE TABLE IF NOT EXISTS website_content.nav_menus (
+  id         UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  slug       TEXT NOT NULL,
+  name       TEXT NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  CONSTRAINT nav_menus_slug_unique UNIQUE (slug)
 );
 
-CREATE TRIGGER trg_nav_menus_updated_at
-    BEFORE UPDATE ON nav_menus
-    FOR EACH ROW EXECUTE FUNCTION set_updated_at();
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_trigger WHERE tgname = 'nav_menus_set_updated_at') THEN
+    CREATE TRIGGER nav_menus_set_updated_at
+    BEFORE UPDATE ON website_content.nav_menus
+    FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
+  END IF;
+END $$;
 
--- Navigation Items (tree via parent_id + sort_order) ----------------------
-CREATE TABLE nav_items (
-    id         UUID        PRIMARY KEY DEFAULT gen_random_uuid(),
-    menu_id    UUID        NOT NULL REFERENCES nav_menus(id) ON DELETE CASCADE,
-    parent_id  UUID        REFERENCES nav_items(id),
-    label      TEXT        NOT NULL,
-    url        TEXT,
-    target     TEXT        NOT NULL DEFAULT '_self',
-    sort_order INT         NOT NULL DEFAULT 0,
-    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-    updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+CREATE TABLE IF NOT EXISTS website_content.nav_items (
+  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  menu_id     UUID NOT NULL REFERENCES website_content.nav_menus(id) ON DELETE CASCADE,
+
+  parent_id   UUID NULL REFERENCES website_content.nav_items(id) ON DELETE CASCADE,
+  sort_order  INTEGER NOT NULL DEFAULT 0,
+
+  label       TEXT NOT NULL,
+  href        TEXT NULL,
+  page_id     UUID NULL REFERENCES website_content.pages(id) ON DELETE SET NULL,
+
+  created_at  TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at  TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
-CREATE TRIGGER trg_nav_items_updated_at
-    BEFORE UPDATE ON nav_items
-    FOR EACH ROW EXECUTE FUNCTION set_updated_at();
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_trigger WHERE tgname = 'nav_items_set_updated_at') THEN
+    CREATE TRIGGER nav_items_set_updated_at
+    BEFORE UPDATE ON website_content.nav_items
+    FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
+  END IF;
+END $$;
 
--- Products (Docs/Templates Store) -----------------------------------------
-CREATE TABLE products (
-    id              UUID        PRIMARY KEY DEFAULT gen_random_uuid(),
-    name            TEXT        NOT NULL,
-    slug            TEXT        NOT NULL UNIQUE,
-    description     TEXT,
-    price_cents     INT         NOT NULL DEFAULT 0,
-    currency        TEXT        NOT NULL DEFAULT 'USD',
-    status          TEXT        NOT NULL DEFAULT 'draft'
-                                CHECK (status IN ('draft', 'active', 'archived')),
-    provider        TEXT        NOT NULL DEFAULT 'manual'
-                                CHECK (provider IN ('stripe', 'paddle', 'manual')),
-    provider_id     TEXT,
-    seo_id          UUID        REFERENCES seo(id),
-    deleted_at      TIMESTAMPTZ NULL,
-    created_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
-    updated_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
-    search_vector   TSVECTOR
+-- Marketplace
+CREATE TABLE IF NOT EXISTS website_content.products (
+  id           UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  slug         TEXT NOT NULL,
+  name         TEXT NOT NULL,
+  description  TEXT NULL,
+
+  product_type TEXT NOT NULL DEFAULT 'template', -- template|doc|bundle|other
+  price_cents  INTEGER NOT NULL DEFAULT 0,
+  currency     TEXT NOT NULL DEFAULT 'USD',
+
+  status       TEXT NOT NULL DEFAULT 'draft',
+  published_at TIMESTAMPTZ NULL,
+
+  seo_id       UUID NULL REFERENCES website_content.seo(id) ON DELETE SET NULL,
+
+  -- FTS
+  search_vector TSVECTOR NULL,
+
+  deleted_at   TIMESTAMPTZ NULL,
+  is_deleted   BOOLEAN NOT NULL DEFAULT FALSE,
+
+  created_at   TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at   TIMESTAMPTZ NOT NULL DEFAULT now(),
+
+  CONSTRAINT products_slug_unique UNIQUE (slug),
+  CONSTRAINT products_status_check CHECK (status IN ('draft','active','archived')),
+  CONSTRAINT products_type_check CHECK (product_type IN ('template','doc','bundle','other')),
+  CONSTRAINT products_soft_delete_consistency CHECK (
+    (is_deleted = FALSE AND deleted_at IS NULL) OR
+    (is_deleted = TRUE  AND deleted_at IS NOT NULL)
+  )
 );
 
-CREATE TRIGGER trg_products_updated_at
-    BEFORE UPDATE ON products
-    FOR EACH ROW EXECUTE FUNCTION set_updated_at();
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_trigger WHERE tgname = 'products_set_updated_at') THEN
+    CREATE TRIGGER products_set_updated_at
+    BEFORE UPDATE ON website_content.products
+    FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
+  END IF;
 
--- Licenses ----------------------------------------------------------------
-CREATE TABLE licenses (
-    id         UUID        PRIMARY KEY DEFAULT gen_random_uuid(),
-    product_id UUID        NOT NULL REFERENCES products(id),
-    key        TEXT        NOT NULL UNIQUE,
-    user_id    UUID        REFERENCES users(id),
-    status     TEXT        NOT NULL DEFAULT 'active'
-                           CHECK (status IN ('active', 'revoked', 'expired')),
-    expires_at TIMESTAMPTZ NULL,
-    created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-    updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+  IF NOT EXISTS (SELECT 1 FROM pg_trigger WHERE tgname = 'products_set_search_vector') THEN
+    CREATE TRIGGER products_set_search_vector
+    BEFORE INSERT OR UPDATE OF name, description ON website_content.products
+    FOR EACH ROW EXECUTE FUNCTION website_content.set_product_search_vector();
+  END IF;
+END $$;
+
+CREATE TABLE IF NOT EXISTS website_content.licenses (
+  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  product_id  UUID NOT NULL REFERENCES website_content.products(id) ON DELETE RESTRICT,
+  user_id     UUID NULL REFERENCES website_content.users(id) ON DELETE SET NULL,
+
+  license_key TEXT NOT NULL,
+  status      TEXT NOT NULL DEFAULT 'active', -- active|revoked|expired
+  expires_at  TIMESTAMPTZ NULL,
+
+  created_at  TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at  TIMESTAMPTZ NOT NULL DEFAULT now(),
+
+  CONSTRAINT licenses_key_unique UNIQUE (license_key),
+  CONSTRAINT licenses_status_check CHECK (status IN ('active','revoked','expired'))
 );
 
-CREATE TRIGGER trg_licenses_updated_at
-    BEFORE UPDATE ON licenses
-    FOR EACH ROW EXECUTE FUNCTION set_updated_at();
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_trigger WHERE tgname = 'licenses_set_updated_at') THEN
+    CREATE TRIGGER licenses_set_updated_at
+    BEFORE UPDATE ON website_content.licenses
+    FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
+  END IF;
+END $$;
 
--- Purchases ---------------------------------------------------------------
-CREATE TABLE purchases (
-    id              UUID        PRIMARY KEY DEFAULT gen_random_uuid(),
-    user_id         UUID        REFERENCES users(id),
-    product_id      UUID        NOT NULL REFERENCES products(id),
-    license_id      UUID        REFERENCES licenses(id),
-    amount_cents    INT         NOT NULL,
-    currency        TEXT        NOT NULL DEFAULT 'USD',
-    provider        TEXT        NOT NULL DEFAULT 'manual',
-    provider_txn_id TEXT,
-    status          TEXT        NOT NULL DEFAULT 'completed'
-                                CHECK (status IN ('pending', 'completed', 'refunded', 'failed')),
-    created_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
-    updated_at      TIMESTAMPTZ NOT NULL DEFAULT now()
+CREATE TABLE IF NOT EXISTS website_content.purchases (
+  id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id         UUID NULL REFERENCES website_content.users(id) ON DELETE SET NULL,
+  product_id      UUID NOT NULL REFERENCES website_content.products(id) ON DELETE RESTRICT,
+  license_id      UUID NULL REFERENCES website_content.licenses(id) ON DELETE SET NULL,
+
+  amount_cents    INTEGER NOT NULL,
+  currency        TEXT NOT NULL DEFAULT 'USD',
+
+  provider        TEXT NOT NULL DEFAULT 'manual', -- stripe|paddle|manual
+  provider_txn_id TEXT NULL,
+
+  status          TEXT NOT NULL DEFAULT 'completed',
+
+  created_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
+
+  CONSTRAINT purchases_status_check CHECK (status IN ('pending','completed','refunded','failed')),
+  CONSTRAINT purchases_provider_check CHECK (provider IN ('stripe','paddle','manual'))
 );
 
-CREATE TRIGGER trg_purchases_updated_at
-    BEFORE UPDATE ON purchases
-    FOR EACH ROW EXECUTE FUNCTION set_updated_at();
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_trigger WHERE tgname = 'purchases_set_updated_at') THEN
+    CREATE TRIGGER purchases_set_updated_at
+    BEFORE UPDATE ON website_content.purchases
+    FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
+  END IF;
+END $$;
 
--- Analytics Events (pageview, click, purchase, search) --------------------
-CREATE TABLE events (
-    id         UUID        PRIMARY KEY DEFAULT gen_random_uuid(),
-    event_type TEXT        NOT NULL,
-    user_id    UUID        REFERENCES users(id),
-    session_id TEXT,
-    path       TEXT,
-    referrer   TEXT,
-    properties JSONB,
-    created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+-- Analytics Events (pageview, click, purchase, search)
+CREATE TABLE IF NOT EXISTS website_content.events (
+  id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  event_type  TEXT NOT NULL, -- pageview|click|purchase|search
+  user_id     UUID NULL REFERENCES website_content.users(id) ON DELETE SET NULL,
+  session_id  TEXT NULL,
+  path        TEXT NULL,
+  referrer    TEXT NULL,
+  properties  JSONB NULL,
+
+  created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
 );
