@@ -10,7 +10,6 @@ from app.middleware.exceptions import http_exception_handler, unhandled_exceptio
 from app.core.config import settings
 from app.graphql.schema import schema
 from app.db.content import content_engine
-from app.db.stats import stats_engine
 from app.utils.logging import configure_logging
 from app.middleware.request_logging import RequestLoggingMiddleware
 
@@ -41,14 +40,10 @@ def root():
 def health():
     db_ok = False
     try:
-        # DB smoke tests (both engines must connect)
         with content_engine.connect() as conn:
-            conn.execute(text("SELECT 1"))
-        with stats_engine.connect() as conn:
             conn.execute(text("SELECT 1"))
         db_ok = True
     except Exception as e:
         print(f"DB Error: {e}")
-        pass
 
     return {"ok": True, "db": db_ok}

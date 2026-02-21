@@ -10,7 +10,7 @@ services:
       - "${POSTGRES_PORT:-5432}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./Database/init:/docker-entrypoint-initdb.d:ro
+      - ./Database/migrations:/docker-entrypoint-initdb.d:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
       interval: 5s
@@ -28,17 +28,8 @@ services:
     container_name: caddystats_backend
     environment:
       CONTENT_DATABASE_URL: "postgresql+psycopg2://caddystats:caddystats_password@postgres:5432/caddystats"
-      STATS_DATABASE_URL: "postgresql+psycopg2://caddystats:caddystats_password@postgres:5432/caddystats"
+      STATS_API_URL: "${STATS_API_URL:-http://localhost:9000}"
       APP_ENV: "development"
-    depends_on:
-      postgres:
-        condition: service_healthy
-    ports:
-      - "${BACKEND_PORT:-8000}:8000"
-    volumes:
-      - ./Backend:/app:cached
-
-  frontend:
     profiles: ["dev"]
     build:
       context: ./Frontend
@@ -66,7 +57,8 @@ services:
     container_name: caddystats_backend_prod
     environment:
       CONTENT_DATABASE_URL: "postgresql+psycopg2://caddystats:caddystats_password@postgres:5432/caddystats"
-      STATS_DATABASE_URL: "postgresql+psycopg2://caddystats:caddystats_password@postgres:5432/caddystats"
+      CONTENT_DATABASE_URL: "postgresql+psycopg2://caddystats:caddystats_password@postgres:5432/caddystats"
+      STATS_API_URL: "${STATS_API_URL:-http://localhost:9000}"
       APP_ENV: "production"
     depends_on:
       postgres:

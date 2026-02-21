@@ -9,7 +9,7 @@ content_engine: Engine = make_engine(settings.content_database_url)
 
 def set_content_search_path(conn) -> None:
     """
-    Sets the default schema for this connection/session to 'content'.
+    Sets the default schema for this connection/session to 'website_content'.
     Call this right after opening a connection/session.
     """
-    conn.execute(text("SET search_path TO content"))
+    conn.execute(text("SET search_path TO website_content"))
