@@ -8,11 +8,9 @@ export function Header() {
         <span className="title">Caddy Stats</span>
       </div>
 
-      <div style={{ marginLeft: "auto" }}>
+      <div className="header-actions">
         <ThemeToggle />
       </div>
     </header>
   );
 }
-
-<style> </style>
