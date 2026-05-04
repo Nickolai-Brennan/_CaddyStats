@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Caddy Stats — Design System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  @page { size: A4 landscape; margin: 0; }
+
+  body {
+    background: #0E0F0D;
+    font-family: 'DM Sans', sans-serif;
+    color: #F0EDE8;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* ── PAGE SHELL ── */
+  .page {
+    width: 297mm;
+    min-height: 210mm;
+    max-height: 210mm;
+    overflow: hidden;
+    background: #0E0F0D;
+    padding: 0;
+    break-before: page;
+    break-inside: avoid;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+  .page:first-child { break-before: avoid; }
+
+  /* top stripe */
+  .stripe-bar {
+    display: flex;
+    height: 5px;
+    width: 100%;
+    flex-shrink: 0;
+  }
+  .stripe-bar div { flex: 1; }
+
+  /* page header */
+  .page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 28px 10px;
+    border-bottom: 1px solid #2A2B26;
+    flex-shrink: 0;
+  }
+  .page-header .section-label {
+    font-family: 'Oswald', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #9A9488;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .page-header .section-label::before {
+    content: '';
+    display: inline-block;
+    width: 3px; height: 16px;
+    background: linear-gradient(135deg, #FFE998 0%, #D4A017 50%, #57370D 100%);
+    border-radius: 2px;
+  }
+  .page-header .wordmark {
+    font-family: 'Oswald', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    color: #55524A;
+  }
+
+  /* page body */
+  .page-body {
+    flex: 1;
+    padding: 20px 28px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    overflow: hidden;
+  }
+
+  /* panels */
+  .panel {
+    background: #181917;
+    border: 1px solid #2A2B26;
+    border-radius: 8px;
+    padding: 16px 20px;
+  }
+  .panel-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #55524A;
+    margin-bottom: 14px;
+  }
+
+  /* layout helpers */
+  .row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  .row-nowrap { display: flex; gap: 12px; align-items: center; }
+  .col { display: flex; flex-direction: column; gap: 8px; }
+  .flex1 { flex: 1; }
+
+  /* ── SWATCHES ── */
+  .swatch { display: flex; flex-direction: column; gap: 5px; width: 72px; }
+  .swatch-box { height: 44px; border-radius: 5px; border: 1px solid rgba(255,255,255,0.05); }
+  .swatch-name { font-family: 'DM Mono', monospace; font-size: 9px; color: #9A9488; }
+  .swatch-hex  { font-family: 'DM Mono', monospace; font-size: 9px; color: #55524A; }
+
+  /* ── TYPOGRAPHY SPECIMENS ── */
+  .type-row { display: flex; align-items: baseline; gap: 20px; border-bottom: 1px solid #2A2B26; padding-bottom: 10px; }
+  .type-label { font-family: 'DM Mono', monospace; font-size: 9px; color: #55524A; width: 140px; flex-shrink: 0; }
+
+  /* ── SPACING ── */
+  .space-row { display: flex; align-items: center; gap: 12px; }
+  .space-label { font-family: 'DM Mono', monospace; font-size: 10px; color: #55524A; width: 36px; }
+  .space-bar { height: 10px; background: #D4A017; border-radius: 1px; opacity: 0.8; }
+
+  /* ── BUTTONS ── */
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 16px;
+    font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 600;
+    border-radius: 5px; border: none; cursor: default;
+  }
+  .btn-primary  { background: linear-gradient(135deg,#FFE998 0%,#D4A017 50%,#57370D 100%); color: #1A0F00; }
+  .btn-secondary{ background: #252620; color: #F0EDE8; border: 1px solid #383930; }
+  .btn-ghost    { background: transparent; color: #9A9488; border: 1px solid #2A2B26; }
+  .btn-green    { background: #1B6B1B; color: #F0EDE8; }
+  .btn-outline  { background: transparent; color: #D4A017; border: 1px solid #A87820; }
+  .btn-danger   { background: #7B2D2D; color: #F0EDE8; }
+
+  /* ── BADGES ── */
+  .badge {
+    display: inline-flex; align-items: center;
+    padding: 3px 10px;
+    font-family: 'Oswald', sans-serif; font-size: 10px; font-weight: 600;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    border-radius: 9999px;
+  }
+  .badge-eagle    { background:rgba(212,160,23,0.18);  color:#FFE998; border:1px solid rgba(212,160,23,0.38); }
+  .badge-birdie   { background:rgba(35,107,66,0.22);   color:#5DD190; border:1px solid rgba(93,209,144,0.38); }
+  .badge-par      { background:#252620;                color:#9A9488; border:1px solid #383930; }
+  .badge-bogey    { background:rgba(194,88,30,0.18);   color:#E8855A; border:1px solid rgba(194,88,30,0.35); }
+  .badge-double   { background:rgba(139,43,43,0.22);   color:#E57373; border:1px solid rgba(229,115,115,0.38); }
+  .badge-gold     { background:rgba(212,160,23,0.12);  color:#F5C842; border:1px solid rgba(212,160,23,0.28); }
+  .badge-green    { background:rgba(61,170,61,0.12);   color:#72C872; border:1px solid rgba(61,170,61,0.3); }
+  .badge-success  { background:rgba(35,107,66,0.2);    color:#5DD190; border:1px solid rgba(93,209,144,0.3); }
+  .badge-error    { background:rgba(139,40,40,0.2);    color:#E57373; border:1px solid rgba(229,115,115,0.3); }
+  .badge-dark     { background:#252620;                color:#9A9488; border:1px solid #2A2B26; }
+
+  /* ── SCORE BUBBLES ── */
+  .score-cell {
+    width: 30px; height: 30px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 500;
+  }
+
+  /* ── PROGRESS BAR ── */
+  .progress-track { height: 5px; background: #252620; border-radius: 9999px; overflow: hidden; }
+  .progress-fill  { height: 100%; border-radius: 9999px; }
+
+  /* ── DONUT ── */
+  .donut-wrap { display: flex; flex-direction: column; align-items: center; gap: 6px; width: 90px; }
+  .donut-val  { font-family: 'DM Mono', monospace; font-size: 15px; color: #F0EDE8; }
+  .donut-lbl  { font-family: 'DM Sans', sans-serif; font-size: 10px; color: #9A9488; text-align: center; }
+
+  /* ── STAT CARD ── */
+  .stat-card {
+    background: #181917; border: 1px solid #2A2B26; border-radius: 8px;
+    padding: 14px 16px; flex: 1;
+  }
+  .stat-card-label { font-family: 'DM Sans', sans-serif; font-size: 9px; color: #55524A; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+  .stat-card-value { font-family: 'DM Mono', monospace; font-size: 28px; color: #F0EDE8; line-height: 1; margin-bottom: 4px; }
+  .stat-card-sub   { font-family: 'DM Sans', sans-serif; font-size: 10px; color: #9A9488; }
+  .stat-card-delta { font-family: 'DM Sans', sans-serif; font-size: 10px; margin-top: 6px; }
+
+  /* ── SCORECARD TABLE ── */
+  .sc-table { width: 100%; border-collapse: separate; border-spacing: 0; }
+  .sc-table th {
+    font-family: 'Oswald', sans-serif; font-size: 9px; font-weight: 600;
+    letter-spacing: 0.14em; color: #55524A; text-align: center; padding: 6px 8px;
+    border-bottom: 1px solid #2A2B26;
+  }
+  .sc-table td { font-family: 'DM Mono', monospace; font-size: 12px; color: #9A9488; text-align: center; padding: 7px 8px; }
+  .sc-table tr:nth-child(even) td { background: #141512; }
+  .sc-table tr.total td { border-top: 2px solid #383930; background: #1C1D1A; font-size: 13px; }
+
+  /* ── ROUND CARD ── */
+  .round-card { background: #181917; border: 1px solid #2A2B26; border-radius: 8px; padding: 16px; width: 200px; }
+  .round-card-course { font-family: 'Playfair Display', serif; font-size: 13px; font-weight: 700; color: #F0EDE8; margin-bottom: 3px; }
+  .round-card-date   { font-family: 'DM Sans', sans-serif; font-size: 10px; color: #55524A; }
+  .round-card-divider{ height: 1px; background: #2A2B26; margin: 10px 0; }
+  .round-card-stats  { display: flex; justify-content: space-between; }
+  .round-card-num    { font-family: 'DM Mono', monospace; font-size: 22px; font-weight: 500; text-align: center; line-height: 1; }
+  .round-card-sub    { font-family: 'DM Sans', sans-serif; font-size: 9px; color: #55524A; text-align: center; margin-top: 2px; }
+
+  /* ── INPUT MOCK ── */
+  .input-mock {
+    width: 100%; padding: 9px 12px;
+    background: #1C1D1A; border-radius: 5px;
+    border: 1px solid #2A2B26;
+    font-family: 'DM Sans', sans-serif; font-size: 12px; color: #55524A;
+  }
+  .input-mock.focus { border-color: #A87820; box-shadow: 0 0 0 2px rgba(212,160,23,0.12); }
+  .input-mock.error { border-color: #7B2D2D; }
+  .input-label { font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 600; color: #9A9488; margin-bottom: 5px; }
+  .input-hint  { font-family: 'DM Sans', sans-serif; font-size: 10px; color: #55524A; margin-top: 4px; }
+  .input-err   { font-family: 'DM Sans', sans-serif; font-size: 10px; color: #C04848; margin-top: 4px; }
+
+  /* ── RADIUS SAMPLES ── */
+  .r-box { width: 48px; height: 48px; background: #252620; border: 1px solid #383930; }
+
+  /* ── MOTION ── */
+  .motion-row { display: flex; align-items: center; gap: 14px; padding: 7px 0; border-bottom: 1px solid #2A2B26; }
+  .motion-name { font-family: 'DM Mono', monospace; font-size: 11px; color: #D4A017; width: 56px; }
+  .motion-dur  { font-family: 'DM Mono', monospace; font-size: 10px; color: #55524A; width: 44px; }
+  .motion-desc { font-family: 'DM Sans', sans-serif; font-size: 11px; color: #9A9488; flex: 1; }
+  .motion-bar-track { width: 120px; height: 5px; background: #252620; border-radius: 9999px; overflow: hidden; }
+  .motion-bar-fill  { height: 100%; background: linear-gradient(90deg,#FFE998,#D4A017); border-radius: 9999px; }
+
+  @media print {
+    body { background: #0E0F0D !important; }
+    .page { page-break-before: always; break-before: page; }
+    .page:first-child { page-break-before: avoid; break-before: avoid; }
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════
+     PAGE 1 — COVER
+══════════════════════════════════════════════ -->
+<div class="page" style="background: linear-gradient(180deg,#060E06 0%,#0E0F0D 100%); justify-content: center; align-items: flex-start; padding: 0;">
+  <div class="stripe-bar" style="position:absolute;top:0;left:0;right:0;">
+    <div style="background:#2A6B4A"></div><div style="background:#2E8C72"></div>
+    <div style="background:#D4A017"></div><div style="background:#C2581E"></div>
+    <div style="background:#8B2B2B"></div>
+  </div>
+  <div style="padding: 48px 56px; display:flex; align-items:center; gap:40px; margin-top:5px; width:100%;">
+    <!-- crest SVG -->
+    <svg width="120" height="120" viewBox="0 0 80 80" fill="none" style="flex-shrink:0">
+      <path d="M12 40 Q8 30 12 22 Q16 26 14 32 Q18 26 20 20 Q24 25 20 32 Q25 24 28 18 Q31 24 26 30" stroke="#1B6B1B" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <path d="M68 40 Q72 30 68 22 Q64 26 66 32 Q62 26 60 20 Q56 25 60 32 Q55 24 52 18 Q49 24 54 30" stroke="#1B6B1B" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <circle cx="40" cy="36" r="22" stroke="#1B6B1B" stroke-width="2" fill="none"/>
+      <circle cx="40" cy="36" r="15" fill="#113511"/>
+      <circle cx="34" cy="30" r="3" fill="none" stroke="#3DAA3D" stroke-width="1.2"/>
+      <circle cx="43" cy="28" r="2.5" fill="none" stroke="#3DAA3D" stroke-width="1.2"/>
+      <circle cx="46" cy="37" r="3" fill="none" stroke="#3DAA3D" stroke-width="1.2"/>
+      <circle cx="39" cy="42" r="2.5" fill="none" stroke="#3DAA3D" stroke-width="1.2"/>
+      <circle cx="30" cy="39" r="2.5" fill="none" stroke="#3DAA3D" stroke-width="1.2"/>
+      <path d="M36 58 L44 58 L42 64 L38 64 Z" fill="#1B6B1B"/>
+      <rect x="38" y="55" width="4" height="4" fill="#1B6B1B"/>
+      <path d="M40 8 L41.5 12.5 L46 12.5 L42.5 15 L44 19.5 L40 17 L36 19.5 L37.5 15 L34 12.5 L38.5 12.5 Z" fill="#1B6B1B"/>
+    </svg>
+
+    <div style="display:flex;flex-direction:column;gap:14px;">
+      <div style="font-family:'Oswald',sans-serif;font-size:11px;letter-spacing:0.22em;color:#55524A;text-transform:uppercase;">Design System — v1.0</div>
+      <div style="font-family:'Playfair Display',serif;font-weight:900;font-size:72px;color:#F0EDE8;line-height:0.92;letter-spacing:-0.01em;">Caddy<br/>Stats</div>
+      <!-- stripes -->
+      <div style="display:flex;height:6px;width:260px;overflow:hidden;border-radius:1px;margin-top:4px;">
+        <div style="flex:1;background:#2A6B4A"></div><div style="flex:1;background:#2E8C72"></div>
+        <div style="flex:1;background:#D4A017"></div><div style="flex:1;background:#C2581E"></div>
+        <div style="flex:1;background:#8B2B2B"></div>
+      </div>
+      <div style="font-family:'DM Sans',sans-serif;font-size:14px;color:#9A9488;max-width:460px;line-height:1.6;margin-top:4px;">
+        Tokens, components, and patterns for building premium golf analytics products. Built on a dark base with a gold accent system and retro-sport DNA.
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:4px;">
+        <span style="font-family:'Oswald',sans-serif;font-size:11px;font-weight:600;letter-spacing:0.1em;padding:4px 12px;border-radius:9999px;background:rgba(212,160,23,0.08);color:#F5C842;border:1px solid rgba(212,160,23,0.2);">2 Typefaces</span>
+        <span style="font-family:'Oswald',sans-serif;font-size:11px;font-weight:600;letter-spacing:0.1em;padding:4px 12px;border-radius:9999px;background:rgba(212,160,23,0.08);color:#F5C842;border:1px solid rgba(212,160,23,0.2);">50+ Tokens</span>
+        <span style="font-family:'Oswald',sans-serif;font-size:11px;font-weight:600;letter-spacing:0.1em;padding:4px 12px;border-radius:9999px;background:rgba(212,160,23,0.08);color:#F5C842;border:1px solid rgba(212,160,23,0.2);">20+ Components</span>
+        <span style="font-family:'Oswald',sans-serif;font-size:11px;font-weight:600;letter-spacing:0.1em;padding:4px 12px;border-radius:9999px;background:rgba(212,160,23,0.08);color:#F5C842;border:1px solid rgba(212,160,23,0.2);">EST. 2026</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     PAGE 2 — BRAND IDENTITY
+══════════════════════════════════════════════ -->
+<div class="page">
+  <div class="stripe-bar"><div style="background:#2A6B4A"></div><div style="background:#2E8C72"></div><div style="background:#D4A017"></div><div style="background:#C2581E"></div><div style="background:#8B2B2B"></div></div>
+  <div class="page-header">
+    <div class="section-label">Brand Identity</div>
+    <div class="wordmark">CADDY STATS DS</div>
+  </div>
+  <div class="page-body">
+    <div class="row" style="gap:16px;align-items:stretch;">
+      <!-- Primary logo on green -->
+      <div style="background:#113511;border:1px solid #165016;border-radius:8px;padding:24px 28px;flex:1;display:flex;flex-direction:column;gap:16px;align-items:center;justify-content:center;">
+        <div class="panel-label" style="margin-bottom:0;color:#3DAA3D;">Primary Logo — Dark Green</div>
+        <div style="display:flex;align-items:center;gap:14px;">
+          <svg width="44" height="44" viewBox="0 0 48 48" fill="none">
+            <circle cx="24" cy="24" r="22" fill="#1B6B1B"/>
+            <circle cx="24" cy="22" r="13" fill="#A8E63D" opacity="0.9"/>
+            <path d="M16 28 Q24 18 32 28" stroke="white" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+            <circle cx="24" cy="22" r="2.5" fill="white" opacity="0.9"/>
+            <rect x="22" y="34" width="4" height="6" rx="1" fill="#D4A017"/>
+            <path d="M19 40 L29 40" stroke="#D4A017" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <div>
+            <div style="font-family:'Oswald',sans-serif;font-size:22px;font-weight:700;letter-spacing:0.14em;color:white;line-height:1;">GOLF</div>
+            <div style="height:1px;background:rgba(255,255,255,0.3);margin:3px 0;"></div>
+            <div style="font-family:'Oswald',sans-serif;font-size:10px;font-weight:500;letter-spacing:0.22em;color:rgba(255,255,255,0.85);">CADDY STATS</div>
+          </div>
+        </div>
+      </div>
+      <!-- Crest on light -->
+      <div style="background:#F5F3EE;border:none;border-radius:8px;padding:24px 28px;flex:1;display:flex;flex-direction:column;gap:12px;align-items:center;justify-content:center;">
+        <div class="panel-label" style="color:#888;margin-bottom:0;">Crest / Medallion</div>
+        <svg width="68" height="68" viewBox="0 0 80 80" fill="none">
+          <path d="M12 40 Q8 30 12 22 Q16 26 14 32 Q18 26 20 20 Q24 25 20 32 Q25 24 28 18 Q31 24 26 30" stroke="#1B6B1B" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <path d="M68 40 Q72 30 68 22 Q64 26 66 32 Q62 26 60 20 Q56 25 60 32 Q55 24 52 18 Q49 24 54 30" stroke="#1B6B1B" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <circle cx="40" cy="36" r="22" stroke="#1B6B1B" stroke-width="2" fill="none"/>
+          <circle cx="40" cy="36" r="15" fill="#165016"/>
+          <circle cx="34" cy="30" r="3" fill="none" stroke="#3DAA3D" stroke-width="1.2"/>
+          <circle cx="43" cy="28" r="2.5" fill="none" stroke="#3DAA3D" stroke-width="1.2"/>
+          <circle cx="46" cy="37" r="3" fill="none" stroke="#3DAA3D" stroke-width="1.2"/>
+          <circle cx="39" cy="42" r="2.5" fill="none" stroke="#3DAA3D" stroke-width="1.2"/>
+          <circle cx="30" cy="39" r="2.5" fill="none" stroke="#3DAA3D" stroke-width="1.2"/>
+          <path d="M36 58 L44 58 L42 64 L38 64 Z" fill="#1B6B1B"/>
+          <rect x="38" y="55" width="4" height="4" fill="#1B6B1B"/>
+          <path d="M40 8 L41.5 12.5 L46 12.5 L42.5 15 L44 19.5 L40 17 L36 19.5 L37.5 15 L34 12.5 L38.5 12.5 Z" fill="#1B6B1B"/>
+        </svg>
+        <div style="font-family:'Oswald',sans-serif;font-size:10px;font-weight:600;letter-spacing:0.22em;color:#1B6B1B;">CADDY STATS</div>
+      </div>
+      <!-- Retro wordmark dark -->
+      <div style="background:#181917;border:1px solid #2A2B26;border-radius:8px;padding:24px 28px;flex:1;display:flex;flex-direction:column;gap:12px;align-items:center;justify-content:center;">
+        <div class="panel-label" style="margin-bottom:0;">Retro Wordmark — Dark</div>
+        <div>
+          <div style="font-family:'Playfair Display',serif;font-weight:900;font-size:42px;color:#7B2D2D;line-height:0.92;letter-spacing:-0.01em;">Caddy<br/>Stats</div>
+          <div style="display:flex;height:5px;width:100%;margin-top:5px;overflow:hidden;border-radius:1px;">
+            <div style="flex:1;background:#2A6B4A"></div><div style="flex:1;background:#2E8C72"></div>
+            <div style="flex:1;background:#D4A017"></div><div style="flex:1;background:#C2581E"></div>
+            <div style="flex:1;background:#8B2B2B"></div>
+          </div>
+          <div style="font-family:'DM Sans',sans-serif;font-size:9px;color:#55524A;letter-spacing:0.08em;margin-top:4px;text-align:right;">EST 2026</div>
+        </div>
+      </div>
+      <!-- Retro wordmark inverted -->
+      <div style="background:#7B2D2D;border:1px solid #6A2020;border-radius:8px;padding:24px 28px;flex:1;display:flex;flex-direction:column;gap:12px;align-items:center;justify-content:center;">
+        <div class="panel-label" style="margin-bottom:0;color:rgba(255,255,255,0.5);">Retro Wordmark — Inverted</div>
+        <div>
+          <div style="font-family:'Playfair Display',serif;font-weight:900;font-size:42px;color:#F0EDE8;line-height:0.92;letter-spacing:-0.01em;">Caddy<br/>Stats</div>
+          <div style="display:flex;height:5px;width:100%;margin-top:5px;overflow:hidden;border-radius:1px;">
+            <div style="flex:1;background:#2A6B4A"></div><div style="flex:1;background:#2E8C72"></div>
+            <div style="flex:1;background:#D4A017"></div><div style="flex:1;background:#C2581E"></div>
+            <div style="flex:1;background:#8B2B2B"></div>
+          </div>
+          <div style="font-family:'DM Sans',sans-serif;font-size:9px;color:rgba(255,255,255,0.5);letter-spacing:0.08em;margin-top:4px;text-align:right;">EST 2026</div>
+        </div>
+      </div>
+    </div>
+    <!-- Stripe system -->
+    <div class="panel">
+      <div class="panel-label">Accent Stripe System</div>
+      <div style="display:flex;height:10px;border-radius:2px;overflow:hidden;width:100%;margin-bottom:14px;">
+        <div style="flex:1;background:#2A6B4A"></div><div style="flex:1;background:#2E8C72"></div>
+        <div style="flex:1;background:#D4A017"></div><div style="flex:1;background:#C2581E"></div>
+        <div style="flex:1;background:#8B2B2B"></div>
+      </div>
+      <div class="row" style="gap:20px;">
+        <div class="row" style="gap:8px;"><div style="width:28px;height:28px;border-radius:5px;background:#2A6B4A;flex-shrink:0;"></div><div><div style="font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;color:#F0EDE8;">Stripe Green</div><div style="font-family:'DM Mono',monospace;font-size:10px;color:#55524A;">#2A6B4A</div></div></div>
+        <div class="row" style="gap:8px;"><div style="width:28px;height:28px;border-radius:5px;background:#2E8C72;flex-shrink:0;"></div><div><div style="font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;color:#F0EDE8;">Stripe Teal</div><div style="font-family:'DM Mono',monospace;font-size:10px;color:#55524A;">#2E8C72</div></div></div>
+        <div class="row" style="gap:8px;"><div style="width:28px;height:28px;border-radius:5px;background:#D4A017;flex-shrink:0;"></div><div><div style="font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;color:#F0EDE8;">Stripe Yellow</div><div style="font-family:'DM Mono',monospace;font-size:10px;color:#55524A;">#D4A017</div></div></div>
+        <div class="row" style="gap:8px;"><div style="width:28px;height:28px;border-radius:5px;background:#C2581E;flex-shrink:0;"></div><div><div style="font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;color:#F0EDE8;">Stripe Orange</div><div style="font-family:'DM Mono',monospace;font-size:10px;color:#55524A;">#C2581E</div></div></div>
+        <div class="row" style="gap:8px;"><div style="width:28px;height:28px;border-radius:5px;background:#8B2B2B;flex-shrink:0;"></div><div><div style="font-family:'DM Sans',sans-serif;font-size:11px;font-weight:600;color:#F0EDE8;">Stripe Burgundy</div><div style="font-family:'DM Mono',monospace;font-size:10px;color:#55524A;">#8B2B2B</div></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     PAGE 3 — COLORS
+══════════════════════════════════════════════ -->
+<div class="page">
+  <div class="stripe-bar"><div style="background:#2A6B4A"></div><div style="background:#2E8C72"></div><div style="background:#D4A017"></div><div style="background:#C2581E"></div><div style="background:#8B2B2B"></div></div>
+  <div class="page-header"><div class="section-label">Color Tokens</div><div class="wordmark">CADDY STATS DS</div></div>
+  <div class="page-body">
+    <div class="row" style="gap:16px;align-items:flex-start;">
+      <div class="panel" style="flex:1;">
+        <div class="panel-label">Dark Base Scale</div>
+        <div class="row" style="gap:8px;flex-wrap:wrap;">
+          <div class="swatch"><div class="swatch-box" style="background:#090A08;"></div><div class="swatch-name">bg0</div><div class="swatch-hex">#090A08</div></div>
+          <div class="swatch"><div class="swatch-box" style="background:#0E0F0D;"></div><div class="swatch-name">bg1</div><div class="swatch-hex">#0E0F0D</div></div>
+          <div class="swatch"><div class="swatch-box" style="background:#141512;"></div><div class="swatch-name">bg2</div><div class="swatch-hex">#141512</div></div>
+          <div class="swatch"><div class="swatch-box" style="background:#1C1D1A;"></div><div class="swatch-name">bg3</div><div class="swatch-hex">#1C1D1A</div></div>
+          <div class="swatch"><div class="swatch-box" style="background:#252620;"></div><div class="swatch-name">bg4</div><div class="swatch-hex">#252620</div></div>
+          <div class="swatch"><div class="swatch-box" style="background:#181917;"></div><div class="swatch-name">bgCard</div><div class="swatch-hex">#181917</div></div>
+          <div class="swatch"><div class="swatch-box" style="background:#2A2B26;"></div><div class="swatch-name">border</div><div class="swatch-hex">#2A2B26</div></div>
+          <div class="swatch"><div class="swatch-box" style="background:#383930;"></div><div class="swatch-name">borderMid</div><div class="swatch-hex">#383930</div></div>
+        </div>
+      </div>
+      <div class="panel" style="flex:1;">
+        <div class="panel-label">Text & Status</div>
+        <div class="row" style="gap:8px;flex-wrap:wrap;margin-bottom:12px;">
+          <div class="swatch"><div class="swatch-box" style="background:#F0EDE8;"></div><div class="swatch-name">Primary</div><div class="swatch-hex">#F0EDE8</div></div>
+          <div class="swatch"><div class="swatch-box" style="background:#9A9488;"></div><div class="swatch-name">Secondary</div><div class="swatch-hex">#9A9488</div></div>
+          <div class="swatch"><div class="swatch-box" style="background:#55524A;"></div><div class="swatch-name">Muted</div><div class="swatch-hex">#55524A</div></div>
+          <div class="swatch"><div class="swatch-box" style="background:#D4A017;"></div><div class="swatch-name">Gold</div><div class="swatch-hex">#D4A017</div></div>
+          <div class="swatch"><div class="swatch-box" style="background:#3DAA3D;"></div><div class="swatch-name">Green</div><div class="swatch-hex">#3DAA3D</div></div>
+        </div>
+        <div class="row" style="gap:8px;flex-wrap:wrap;">
+          <div class="swatch"><div class="swatch-box" style="background:#236B42;"></div><div class="swatch-name">success</div><div class="swatch-hex">#236B42</div></div>
+          <div class="swatch"><div class="swatch-box" style="background:#B87218;"></div><div class="swatch-name">warning</div><div class="swatch-hex">#B87218</div></div>
+          <div class="swatch"><div class="swatch-box" style="background:#8B2828;"></div><div class="swatch-name">error</div><div class="swatch-hex">#8B2828</div></div>
+          <div class="swatch"><div class="swatch-box" style="background:#245C8A;"></div><div class="swatch-name">info</div><div class="swatch-hex">#245C8A</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-label">Gold Scale</div>
+      <div class="row" style="gap:10px;align-items:flex-end;">
+        <div style="width:160px;">
+          <div style="height:52px;border-radius:5px;background:linear-gradient(135deg,#FFE998 0%,#D4A017 50%,#57370D 100%);box-shadow:0 0 20px rgba(212,160,23,0.2);"></div>
+          <div class="swatch-name" style="margin-top:5px;">goldGrad</div>
+          <div class="swatch-hex">#FFE998→#57370D</div>
+        </div>
+        <div class="swatch"><div class="swatch-box" style="background:#FFE998;"></div><div class="swatch-name">gold200</div><div class="swatch-hex">#FFE998</div></div>
+        <div class="swatch"><div class="swatch-box" style="background:#F5C842;"></div><div class="swatch-name">gold300</div><div class="swatch-hex">#F5C842</div></div>
+        <div class="swatch"><div class="swatch-box" style="background:#D4A017;"></div><div class="swatch-name">gold400</div><div class="swatch-hex">#D4A017</div></div>
+        <div class="swatch"><div class="swatch-box" style="background:#A87820;"></div><div class="swatch-name">gold500</div><div class="swatch-hex">#A87820</div></div>
+        <div class="swatch"><div class="swatch-box" style="background:#7A5210;"></div><div class="swatch-name">gold600</div><div class="swatch-hex">#7A5210</div></div>
+        <div class="swatch"><div class="swatch-box" style="background:#57370D;"></div><div class="swatch-name">gold700</div><div class="swatch-hex">#57370D</div></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-label">Forest Green Scale</div>
+      <div class="row" style="gap:10px;flex-wrap:wrap;">
+        <div class="swatch"><div class="swatch-box" style="background:#060E06;"></div><div class="swatch-name">green900</div><div class="swatch-hex">#060E06</div></div>
+        <div class="swatch"><div class="swatch-box" style="background:#0C1E0C;"></div><div class="swatch-name">green800</div><div class="swatch-hex">#0C1E0C</div></div>
+        <div class="swatch"><div class="swatch-box" style="background:#113511;"></div><div class="swatch-name">green700</div><div class="swatch-hex">#113511</div></div>
+        <div class="swatch"><div class="swatch-box" style="background:#165016;"></div><div class="swatch-name">green600</div><div class="swatch-hex">#165016</div></div>
+        <div class="swatch"><div class="swatch-box" style="background:#1B6B1B;"></div><div class="swatch-name">green</div><div class="swatch-hex">#1B6B1B</div></div>
+        <div class="swatch"><div class="swatch-box" style="background:#267E26;"></div><div class="swatch-name">green400</div><div class="swatch-hex">#267E26</div></div>
+        <div class="swatch"><div class="swatch-box" style="background:#3DAA3D;"></div><div class="swatch-name">green300</div><div class="swatch-hex">#3DAA3D</div></div>
+        <div class="swatch"><div class="swatch-box" style="background:#72C872;"></div><div class="swatch-name">green200</div><div class="swatch-hex">#72C872</div></div>
+        <div class="swatch"><div class="swatch-box" style="background:#A8E63D;"></div><div class="swatch-name">limeGreen</div><div class="swatch-hex">#A8E63D</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     PAGE 4 — TYPOGRAPHY
+══════════════════════════════════════════════ -->
+<div class="page">
+  <div class="stripe-bar"><div style="background:#2A6B4A"></div><div style="background:#2E8C72"></div><div style="background:#D4A017"></div><div style="background:#C2581E"></div><div style="background:#8B2B2B"></div></div>
+  <div class="page-header"><div class="section-label">Typography</div><div class="wordmark">CADDY STATS DS</div></div>
+  <div class="page-body" style="gap:12px;">
+    <div class="row" style="gap:16px;align-items:flex-start;">
+      <div class="panel" style="flex:1;">
+        <div class="panel-label">Playfair Display — Display / Hero</div>
+        <div class="col" style="gap:12px;">
+          <div class="type-row">
+            <span class="type-label">900 / 56px</span>
+            <span style="font-family:'Playfair Display',serif;font-size:56px;font-weight:900;color:#F0EDE8;line-height:1;">Caddy Stats</span>
+          </div>
+          <div class="type-row">
+            <span class="type-label">Italic / 48px</span>
+            <span style="font-family:'Playfair Display',serif;font-size:48px;font-weight:700;font-style:italic;background:linear-gradient(135deg,#FFE998,#D4A017);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.1;">EST. 2026</span>
+          </div>
+          <div class="type-row">
+            <span class="type-label">700 / 32px</span>
+            <span style="font-family:'Playfair Display',serif;font-size:32px;font-weight:700;color:#F0EDE8;line-height:1.1;">Season Highlights</span>
+          </div>
+          <div class="type-row">
+            <span class="type-label">700 / 22px</span>
+            <span style="font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:#F0EDE8;line-height:1.2;">Course Performance Overview</span>
+          </div>
+        </div>
+      </div>
+      <div style="width:1px;background:#2A2B26;align-self:stretch;"></div>
+      <div class="panel" style="flex:1;">
+        <div class="panel-label">Oswald — Retro / Labels / Caps</div>
+        <div class="col" style="gap:12px;">
+          <div class="type-row">
+            <span class="type-label">700 / 28px</span>
+            <span style="font-family:'Oswald',sans-serif;font-size:28px;font-weight:700;letter-spacing:0.1em;color:#F0EDE8;">GOLF CADDY STATS</span>
+          </div>
+          <div class="type-row">
+            <span class="type-label">600 / 18px</span>
+            <span style="font-family:'Oswald',sans-serif;font-size:18px;font-weight:600;letter-spacing:0.1em;color:#F0EDE8;">STROKE PLAY · PAR 72</span>
+          </div>
+          <div class="type-row">
+            <span class="type-label">500 / 14px</span>
+            <span style="font-family:'Oswald',sans-serif;font-size:14px;font-weight:500;letter-spacing:0.1em;color:#9A9488;">ROUND SUMMARY · PEBBLE BEACH</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row" style="gap:16px;align-items:flex-start;">
+      <div class="panel" style="flex:1;">
+        <div class="panel-label">DM Sans — Body / UI</div>
+        <div class="col" style="gap:10px;">
+          <div class="type-row"><span class="type-label">700 / 22px</span><span style="font-family:'DM Sans',sans-serif;font-size:22px;font-weight:700;color:#F0EDE8;">Fairway Performance Index</span></div>
+          <div class="type-row"><span class="type-label">600 / 17px</span><span style="font-family:'DM Sans',sans-serif;font-size:17px;font-weight:600;color:#F0EDE8;">Greens in Regulation: 71.4%</span></div>
+          <div class="type-row"><span class="type-label">400 / 14px</span><span style="font-family:'DM Sans',sans-serif;font-size:14px;color:#9A9488;line-height:1.55;">Track every stroke, analyze your game, and sharpen your handicap with precision data.</span></div>
+          <div class="type-row"><span class="type-label">400 / 12px</span><span style="font-family:'DM Sans',sans-serif;font-size:12px;color:#9A9488;">Updated 3 hours ago · Pebble Beach · 18 holes</span></div>
+          <div class="type-row"><span class="type-label">500 / 11px CAP</span><span style="font-family:'DM Sans',sans-serif;font-size:11px;font-weight:500;color:#55524A;letter-spacing:0.1em;text-transform:uppercase;">HANDICAP INDEX · CERTIFIED STATS</span></div>
+        </div>
+      </div>
+      <div style="width:1px;background:#2A2B26;align-self:stretch;"></div>
+      <div class="panel" style="flex:1;">
+        <div class="panel-label">DM Mono — Scores / Data</div>
+        <div class="col" style="gap:14px;">
+          <div class="row" style="gap:16px;align-items:flex-end;">
+            <div><div style="font-family:'DM Mono',monospace;font-size:11px;color:#55524A;margin-bottom:4px;">Score XL / 64px</div><div style="font-family:'DM Mono',monospace;font-size:64px;font-weight:500;color:#3DAA3D;line-height:1;">-4</div></div>
+            <div><div style="font-family:'DM Mono',monospace;font-size:11px;color:#55524A;margin-bottom:4px;">Score L / 40px</div><div style="font-family:'DM Mono',monospace;font-size:40px;font-weight:500;color:#F0EDE8;line-height:1;">72</div></div>
+            <div><div style="font-family:'DM Mono',monospace;font-size:11px;color:#55524A;margin-bottom:4px;">Data M / 20px</div><div style="font-family:'DM Mono',monospace;font-size:20px;color:#D4A017;line-height:1;">14.7 HCP</div></div>
+          </div>
+          <div><div style="font-family:'DM Mono',monospace;font-size:11px;color:#55524A;margin-bottom:4px;">Data S / 13px</div><div style="font-family:'DM Mono',monospace;font-size:13px;color:#9A9488;">FIR: 9/14 · GIR: 11/18 · PUTTS: 28</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     PAGE 5 — SPACING, RADIUS, BUTTONS, BADGES
+══════════════════════════════════════════════ -->
+<div class="page">
+  <div class="stripe-bar"><div style="background:#2A6B4A"></div><div style="background:#2E8C72"></div><div style="background:#D4A017"></div><div style="background:#C2581E"></div><div style="background:#8B2B2B"></div></div>
+  <div class="page-header"><div class="section-label">Spacing, Radius & Buttons & Badges</div><div class="wordmark">CADDY STATS DS</div></div>
+  <div class="page-body" style="gap:12px;">
+    <div class="row" style="gap:14px;align-items:flex-start;">
+      <!-- spacing -->
+      <div class="panel" style="width:200px;flex-shrink:0;">
+        <div class="panel-label">Spacing Scale</div>
+        <div class="col" style="gap:8px;">
+          <div class="space-row"><div class="space-label">4px</div><div class="space-bar" style="width:4px;"></div></div>
+          <div class="space-row"><div class="space-label">8px</div><div class="space-bar" style="width:8px;"></div></div>
+          <div class="space-row"><div class="space-label">12px</div><div class="space-bar" style="width:12px;"></div></div>
+          <div class="space-row"><div class="space-label">16px</div><div class="space-bar" style="width:16px;"></div></div>
+          <div class="space-row"><div class="space-label">24px</div><div class="space-bar" style="width:24px;"></div></div>
+          <div class="space-row"><div class="space-label">32px</div><div class="space-bar" style="width:32px;"></div></div>
+          <div class="space-row"><div class="space-label">48px</div><div class="space-bar" style="width:48px;"></div></div>
+          <div class="space-row"><div class="space-label">64px</div><div class="space-bar" style="width:64px;"></div></div>
+        </div>
+      </div>
+      <!-- radius -->
+      <div class="panel" style="flex:1;">
+        <div class="panel-label">Border Radius</div>
+        <div class="row" style="gap:14px;flex-wrap:wrap;align-items:flex-start;">
+          <div class="col" style="align-items:center;gap:6px;"><div class="r-box" style="border-radius:0px;"></div><div style="font-family:'DM Mono',monospace;font-size:9px;color:#9A9488;text-align:center;">r0 / 0</div></div>
+          <div class="col" style="align-items:center;gap:6px;"><div class="r-box" style="border-radius:2px;"></div><div style="font-family:'DM Mono',monospace;font-size:9px;color:#9A9488;text-align:center;">r1 / 2px</div></div>
+          <div class="col" style="align-items:center;gap:6px;"><div class="r-box" style="border-radius:5px;"></div><div style="font-family:'DM Mono',monospace;font-size:9px;color:#9A9488;text-align:center;">r2 / 5px</div></div>
+          <div class="col" style="align-items:center;gap:6px;"><div class="r-box" style="border-radius:8px;"></div><div style="font-family:'DM Mono',monospace;font-size:9px;color:#9A9488;text-align:center;">r3 / 8px</div></div>
+          <div class="col" style="align-items:center;gap:6px;"><div class="r-box" style="border-radius:14px;"></div><div style="font-family:'DM Mono',monospace;font-size:9px;color:#9A9488;text-align:center;">r4 / 14px</div></div>
+          <div class="col" style="align-items:center;gap:6px;"><div class="r-box" style="border-radius:9999px;"></div><div style="font-family:'DM Mono',monospace;font-size:9px;color:#9A9488;text-align:center;">rFull</div></div>
+        </div>
+      </div>
+    </div>
+    <!-- buttons -->
+    <div class="panel">
+      <div class="panel-label">Buttons — Variants & Sizes</div>
+      <div class="row" style="gap:10px;margin-bottom:12px;flex-wrap:wrap;">
+        <button class="btn btn-primary">Primary Gold</button>
+        <button class="btn btn-secondary">Secondary</button>
+        <button class="btn btn-ghost">Ghost</button>
+        <button class="btn btn-green">Brand Green</button>
+        <button class="btn btn-outline">Outline</button>
+        <button class="btn btn-danger">Danger</button>
+      </div>
+      <div class="row" style="gap:10px;flex-wrap:wrap;">
+        <button class="btn btn-primary" style="padding:6px 12px;font-size:11px;">Small</button>
+        <button class="btn btn-primary">Medium</button>
+        <button class="btn btn-primary" style="padding:12px 24px;font-size:14px;">Large</button>
+        <button class="btn btn-primary" style="opacity:0.4;cursor:not-allowed;">Disabled</button>
+        <button class="btn btn-primary">⛳ Log Round</button>
+        <button class="btn btn-secondary">📊 View Stats</button>
+        <button class="btn btn-green">＋ Add Course</button>
+      </div>
+    </div>
+    <!-- badges -->
+    <div class="panel">
+      <div class="panel-label">Badges — Score Outcomes & Status</div>
+      <div class="row" style="gap:10px;flex-wrap:wrap;margin-bottom:10px;">
+        <span class="badge badge-eagle">Eagle</span>
+        <span class="badge badge-birdie">Birdie</span>
+        <span class="badge badge-par">Par</span>
+        <span class="badge badge-bogey">Bogey</span>
+        <span class="badge badge-double">Double</span>
+      </div>
+      <div class="row" style="gap:10px;flex-wrap:wrap;">
+        <span class="badge badge-gold">Pro</span>
+        <span class="badge badge-green">Verified</span>
+        <span class="badge badge-success">Live</span>
+        <span class="badge badge-error">Error</span>
+        <span class="badge badge-dark">Archive</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     PAGE 6 — COMPONENTS: CARDS + INPUTS
+══════════════════════════════════════════════ -->
+<div class="page">
+  <div class="stripe-bar"><div style="background:#2A6B4A"></div><div style="background:#2E8C72"></div><div style="background:#D4A017"></div><div style="background:#C2581E"></div><div style="background:#8B2B2B"></div></div>
+  <div class="page-header"><div class="section-label">Cards & Form Inputs</div><div class="wordmark">CADDY STATS DS</div></div>
+  <div class="page-body" style="gap:14px;">
+    <div class="row" style="gap:14px;align-items:flex-start;">
+      <!-- round cards -->
+      <div class="panel" style="flex:2;">
+        <div class="panel-label">Round Cards</div>
+        <div class="row" style="gap:12px;flex-wrap:wrap;align-items:flex-start;">
+          <!-- card 1 -->
+          <div class="round-card">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+              <div><div class="round-card-course">Pebble Beach</div><div class="round-card-date">Oct 14, 2026</div></div>
+              <span class="badge badge-birdie">-4</span>
+            </div>
+            <div class="round-card-divider"></div>
+            <div class="round-card-stats">
+              <div><div class="round-card-num" style="color:#3DAA3D;">68</div><div class="round-card-sub">SCORE</div></div>
+              <div style="width:1px;background:#2A2B26;"></div>
+              <div><div class="round-card-num" style="color:#9A9488;">72</div><div class="round-card-sub">PAR</div></div>
+              <div style="width:1px;background:#2A2B26;"></div>
+              <div><div class="round-card-num" style="color:#3DAA3D;">↑</div><div class="round-card-sub">TREND</div></div>
+            </div>
+          </div>
+          <!-- card 2 -->
+          <div class="round-card">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+              <div><div class="round-card-course">Augusta National</div><div class="round-card-date">Sep 28, 2026</div></div>
+              <span class="badge badge-bogey">+3</span>
+            </div>
+            <div class="round-card-divider"></div>
+            <div class="round-card-stats">
+              <div><div class="round-card-num" style="color:#E06060;">75</div><div class="round-card-sub">SCORE</div></div>
+              <div style="width:1px;background:#2A2B26;"></div>
+              <div><div class="round-card-num" style="color:#9A9488;">72</div><div class="round-card-sub">PAR</div></div>
+              <div style="width:1px;background:#2A2B26;"></div>
+              <div><div class="round-card-num" style="color:#E06060;">↓</div><div class="round-card-sub">TREND</div></div>
+            </div>
+          </div>
+          <!-- card 3 -->
+          <div class="round-card">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+              <div><div class="round-card-course">St. Andrews</div><div class="round-card-date">Sep 12, 2026</div></div>
+              <span class="badge badge-par">E</span>
+            </div>
+            <div class="round-card-divider"></div>
+            <div class="round-card-stats">
+              <div><div class="round-card-num">72</div><div class="round-card-sub">SCORE</div></div>
+              <div style="width:1px;background:#2A2B26;"></div>
+              <div><div class="round-card-num" style="color:#9A9488;">72</div><div class="round-card-sub">PAR</div></div>
+              <div style="width:1px;background:#2A2B26;"></div>
+              <div><div class="round-card-num" style="color:#3DAA3D;">↑</div><div class="round-card-sub">TREND</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- stat summary cards -->
+      <div class="panel" style="flex:2;">
+        <div class="panel-label">Stat Summary Cards</div>
+        <div class="row" style="gap:10px;flex-wrap:wrap;align-items:stretch;">
+          <div class="stat-card"><div class="stat-card-label">Handicap Index</div><div class="stat-card-value">8.4</div><div class="stat-card-sub">USGA Certified</div><div class="stat-card-delta" style="color:#3DAA3D;">▼ 1.2% vs last month</div></div>
+          <div class="stat-card"><div class="stat-card-label">Scoring Avg</div><div class="stat-card-value" style="color:#3DAA3D;">76.2</div><div class="stat-card-sub">Last 20 rounds</div><div class="stat-card-delta" style="color:#3DAA3D;">▼ 2.1%</div></div>
+          <div class="stat-card"><div class="stat-card-label">GIR %</div><div class="stat-card-value">61%</div><div class="stat-card-sub">Greens in Reg.</div><div class="stat-card-delta" style="color:#3DAA3D;">▲ 4.5%</div></div>
+          <div class="stat-card"><div class="stat-card-label">Putts / Round</div><div class="stat-card-value" style="color:#F5C842;">29.1</div><div class="stat-card-sub">18-hole avg</div><div class="stat-card-delta" style="color:#3DAA3D;">▼ 3.2%</div></div>
+        </div>
+      </div>
+    </div>
+    <!-- inputs -->
+    <div class="panel">
+      <div class="panel-label">Form Inputs — Text Fields & States</div>
+      <div class="row" style="gap:20px;flex-wrap:wrap;align-items:flex-start;">
+        <div class="col" style="gap:6px;flex:1;min-width:180px;">
+          <div class="input-label">Course Name</div>
+          <div class="input-mock">⛳  e.g. Pebble Beach Golf Links</div>
+        </div>
+        <div class="col" style="gap:6px;flex:1;min-width:160px;">
+          <div class="input-label">Handicap Index</div>
+          <div class="input-mock focus">14.7</div>
+          <div class="input-hint">Official USGA handicap</div>
+        </div>
+        <div class="col" style="gap:6px;flex:1;min-width:160px;">
+          <div class="input-label">Score</div>
+          <div class="input-mock error">abc</div>
+          <div class="input-err">Score must be a valid number</div>
+        </div>
+        <div class="col" style="gap:6px;flex:1;min-width:180px;">
+          <div class="input-label">Round Type</div>
+          <div class="input-mock" style="display:flex;justify-content:space-between;align-items:center;">Stroke Play <span style="color:#55524A;">▾</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     PAGE 7 — STATS WIDGETS + SCORECARD
+══════════════════════════════════════════════ -->
+<div class="page">
+  <div class="stripe-bar"><div style="background:#2A6B4A"></div><div style="background:#2E8C72"></div><div style="background:#D4A017"></div><div style="background:#C2581E"></div><div style="background:#8B2B2B"></div></div>
+  <div class="page-header"><div class="section-label">Stat Widgets & Scorecard</div><div class="wordmark">CADDY STATS DS</div></div>
+  <div class="page-body" style="gap:12px;">
+    <div class="row" style="gap:14px;align-items:flex-start;">
+      <!-- progress bars -->
+      <div class="panel" style="flex:1;">
+        <div class="panel-label">Progress Bars</div>
+        <div class="col" style="gap:10px;">
+          <div class="col" style="gap:4px;"><div style="display:flex;justify-content:space-between;"><span style="font-family:'DM Sans',sans-serif;font-size:11px;color:#9A9488;">Fairways in Reg.</span><span style="font-family:'DM Mono',monospace;font-size:11px;color:#F0EDE8;">64%</span></div><div class="progress-track"><div class="progress-fill" style="width:64%;background:linear-gradient(90deg,#FFE998,#D4A017);"></div></div></div>
+          <div class="col" style="gap:4px;"><div style="display:flex;justify-content:space-between;"><span style="font-family:'DM Sans',sans-serif;font-size:11px;color:#9A9488;">Greens in Reg.</span><span style="font-family:'DM Mono',monospace;font-size:11px;color:#F0EDE8;">71%</span></div><div class="progress-track"><div class="progress-fill" style="width:71%;background:linear-gradient(90deg,#1B6B1B,#A8E63D);"></div></div></div>
+          <div class="col" style="gap:4px;"><div style="display:flex;justify-content:space-between;"><span style="font-family:'DM Sans',sans-serif;font-size:11px;color:#9A9488;">Up & Down %</span><span style="font-family:'DM Mono',monospace;font-size:11px;color:#F0EDE8;">48%</span></div><div class="progress-track"><div class="progress-fill" style="width:48%;background:linear-gradient(90deg,#2E8C72,#2A6B4A);"></div></div></div>
+          <div class="col" style="gap:4px;"><div style="display:flex;justify-content:space-between;"><span style="font-family:'DM Sans',sans-serif;font-size:11px;color:#9A9488;">Sand Save %</span><span style="font-family:'DM Mono',monospace;font-size:11px;color:#F0EDE8;">35%</span></div><div class="progress-track"><div class="progress-fill" style="width:35%;background:linear-gradient(90deg,#C2581E,#D4A017);"></div></div></div>
+        </div>
+      </div>
+      <!-- donuts -->
+      <div class="panel" style="flex:1;">
+        <div class="panel-label">Donut Gauges</div>
+        <div class="row" style="gap:12px;justify-content:space-around;">
+          <div class="donut-wrap">
+            <svg width="80" height="80" viewBox="0 0 100 100"><circle cx="50" cy="50" r="38" fill="none" stroke="#252620" stroke-width="8"/><circle cx="50" cy="50" r="38" fill="none" stroke="#3DAA3D" stroke-width="8" stroke-dasharray="170 239" stroke-dashoffset="60" stroke-linecap="round" transform="rotate(-90 50 50)"/><text x="50" y="55" text-anchor="middle" font-family="DM Mono,monospace" font-size="18" fill="#F0EDE8">71%</text></svg>
+            <div class="donut-lbl">GIR</div>
+          </div>
+          <div class="donut-wrap">
+            <svg width="80" height="80" viewBox="0 0 100 100"><circle cx="50" cy="50" r="38" fill="none" stroke="#252620" stroke-width="8"/><circle cx="50" cy="50" r="38" fill="none" stroke="#D4A017" stroke-width="8" stroke-dasharray="153 239" stroke-dashoffset="60" stroke-linecap="round" transform="rotate(-90 50 50)"/><text x="50" y="55" text-anchor="middle" font-family="DM Mono,monospace" font-size="18" fill="#F0EDE8">64%</text></svg>
+            <div class="donut-lbl">FIR</div>
+          </div>
+          <div class="donut-wrap">
+            <svg width="80" height="80" viewBox="0 0 100 100"><circle cx="50" cy="50" r="38" fill="none" stroke="#252620" stroke-width="8"/><circle cx="50" cy="50" r="38" fill="none" stroke="#2E8C72" stroke-width="8" stroke-dasharray="115 239" stroke-dashoffset="60" stroke-linecap="round" transform="rotate(-90 50 50)"/><text x="50" y="55" text-anchor="middle" font-family="DM Mono,monospace" font-size="18" fill="#F0EDE8">48%</text></svg>
+            <div class="donut-lbl">U&D</div>
+          </div>
+          <div class="donut-wrap">
+            <svg width="80" height="80" viewBox="0 0 100 100"><circle cx="50" cy="50" r="38" fill="none" stroke="#252620" stroke-width="8"/><circle cx="50" cy="50" r="38" fill="none" stroke="#C2581E" stroke-width="8" stroke-dasharray="84 239" stroke-dashoffset="60" stroke-linecap="round" transform="rotate(-90 50 50)"/><text x="50" y="55" text-anchor="middle" font-family="DM Mono,monospace" font-size="18" fill="#F0EDE8">35%</text></svg>
+            <div class="donut-lbl">Sand</div>
+          </div>
+        </div>
+      </div>
+      <!-- distribution -->
+      <div class="panel" style="flex:1;">
+        <div class="panel-label">Score Distribution</div>
+        <div class="col" style="gap:8px;">
+          <div class="row" style="gap:8px;"><span class="badge badge-eagle" style="width:64px;justify-content:center;">Eagle</span><div class="progress-track" style="flex:1;"><div class="progress-fill" style="width:2%;background:#D4A017;"></div></div><span style="font-family:'DM Mono',monospace;font-size:11px;color:#9A9488;width:16px;text-align:right;">2</span></div>
+          <div class="row" style="gap:8px;"><span class="badge badge-birdie" style="width:64px;justify-content:center;">Birdie</span><div class="progress-track" style="flex:1;"><div class="progress-fill" style="width:15%;background:#3DAA3D;"></div></div><span style="font-family:'DM Mono',monospace;font-size:11px;color:#9A9488;width:16px;text-align:right;">18</span></div>
+          <div class="row" style="gap:8px;"><span class="badge badge-par" style="width:64px;justify-content:center;">Par</span><div class="progress-track" style="flex:1;"><div class="progress-fill" style="width:58%;background:#55524A;"></div></div><span style="font-family:'DM Mono',monospace;font-size:11px;color:#9A9488;width:16px;text-align:right;">72</span></div>
+          <div class="row" style="gap:8px;"><span class="badge badge-bogey" style="width:64px;justify-content:center;">Bogey</span><div class="progress-track" style="flex:1;"><div class="progress-fill" style="width:19%;background:#C2581E;"></div></div><span style="font-family:'DM Mono',monospace;font-size:11px;color:#9A9488;width:16px;text-align:right;">24</span></div>
+          <div class="row" style="gap:8px;"><span class="badge badge-double" style="width:64px;justify-content:center;">Double</span><div class="progress-track" style="flex:1;"><div class="progress-fill" style="width:6%;background:#8B2B2B;"></div></div><span style="font-family:'DM Mono',monospace;font-size:11px;color:#9A9488;width:16px;text-align:right;">8</span></div>
+        </div>
+      </div>
+    </div>
+    <!-- scorecard -->
+    <div class="panel">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+        <div>
+          <div style="font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:#F0EDE8;margin-bottom:3px;">Pebble Beach Golf Links</div>
+          <div style="font-family:'DM Sans',sans-serif;font-size:10px;color:#55524A;">Oct 14, 2026 · Stroke Play · Championship Tees</div>
+        </div>
+        <div style="display:flex;gap:16px;align-items:center;">
+          <div style="text-align:center;"><div style="font-family:'DM Mono',monospace;font-size:28px;font-weight:500;color:#3DAA3D;">68</div><div style="font-family:'DM Sans',sans-serif;font-size:9px;color:#55524A;">SCORE</div></div>
+          <div style="text-align:center;"><div style="font-family:'DM Mono',monospace;font-size:20px;color:#9A9488;">72</div><div style="font-family:'DM Sans',sans-serif;font-size:9px;color:#55524A;">PAR</div></div>
+          <span class="badge badge-birdie" style="font-size:12px;padding:5px 14px;">-4</span>
+        </div>
+      </div>
+      <table class="sc-table">
+        <thead><tr><th>HOLE</th><th>PAR</th><th>YDS</th><th>SCORE</th><th style="text-align:left;">RESULT</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>4</td><td>421</td><td><div class="score-cell" style="margin:auto;background:#252620;color:#9A9488;border:1px solid #383930;">4</div></td><td></td></tr>
+          <tr><td>2</td><td>5</td><td>532</td><td><div class="score-cell" style="margin:auto;background:rgba(35,107,66,0.25);color:#5DD190;border:1px solid rgba(93,209,144,0.38);">4</div></td><td style="text-align:left;"><span class="badge badge-birdie">Birdie</span></td></tr>
+          <tr><td>3</td><td>3</td><td>183</td><td><div class="score-cell" style="margin:auto;background:#252620;color:#9A9488;border:1px solid #383930;">3</div></td><td></td></tr>
+          <tr><td>4</td><td>4</td><td>374</td><td><div class="score-cell" style="margin:auto;background:rgba(194,88,30,0.22);color:#E8855A;border:1px solid rgba(194,88,30,0.4);">5</div></td><td style="text-align:left;"><span class="badge badge-bogey">Bogey</span></td></tr>
+          <tr><td>5</td><td>5</td><td>496</td><td><div class="score-cell" style="margin:auto;background:#252620;color:#9A9488;border:1px solid #383930;">5</div></td><td></td></tr>
+          <tr><td>6</td><td>4</td><td>388</td><td><div class="score-cell" style="margin:auto;background:rgba(35,107,66,0.25);color:#5DD190;border:1px solid rgba(93,209,144,0.38);">3</div></td><td style="text-align:left;"><span class="badge badge-birdie">Birdie</span></td></tr>
+          <tr><td>7</td><td>3</td><td>107</td><td><div class="score-cell" style="margin:auto;background:rgba(212,160,23,0.18);color:#FFE998;border:1px solid rgba(212,160,23,0.38);">1</div></td><td style="text-align:left;"><span class="badge badge-eagle">Eagle</span></td></tr>
+          <tr><td>8</td><td>4</td><td>418</td><td><div class="score-cell" style="margin:auto;background:#252620;color:#9A9488;border:1px solid #383930;">4</div></td><td></td></tr>
+          <tr><td>9</td><td>4</td><td>464</td><td><div class="score-cell" style="margin:auto;background:#252620;color:#9A9488;border:1px solid #383930;">4</div></td><td></td></tr>
+          <tr class="total"><td style="font-family:'Oswald',sans-serif;letter-spacing:0.1em;color:#9A9488;">OUT</td><td>36</td><td style="font-size:10px;color:#55524A;">3383</td><td><div class="score-cell" style="margin:auto;background:rgba(35,107,66,0.2);color:#5DD190;border:1px solid rgba(93,209,144,0.38);">33</div></td><td style="text-align:left;"><span class="badge badge-birdie">-3</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.fonts.ready.then(function() {
+    setTimeout(function() { window.print(); }, 500);
+  });
+</script>
+</body>
+</html>
