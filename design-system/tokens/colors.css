@@ -1,0 +1,4 @@
+│   │   ├── colors.css              ← CSS custom properties (--color-gold-400, etc.)
+│   │   ├── typography.css          ← Font-face, type scale vars
+│   │   ├── spacing.css             ← Space, radius, shadow vars
+│   │   └── tokens.json             ← Raw JSON for Figma / Style Dictionary
